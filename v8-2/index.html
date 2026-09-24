@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#12151A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Log V8.2">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="../icon-180.png">
+<link rel="icon" href="../icon-192.png">
+<title>Trainingslog V8.2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#12151A;
+  --slab:#1B2028;
+  --slab-2:#232935;
+  --line:#2E3644;
+  --paper:#E9ECF0;
+  --steel:#8C97A6;
+  --steel-dim:#5D6875;
+  --go:#7BB661;
+  --go-deep:#3E6B2E;
+  --under:#CB6146;
+  --amber:#D9A441;
+  --r:10px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+  font-size:15px;line-height:1.45;
+  padding-bottom:env(safe-area-inset-bottom);
+  overscroll-behavior-y:contain;
+}
+button,input,select{font-family:inherit;color:inherit}
+button{border:0;background:none;cursor:pointer}
+
+/* ---------- Kopf ---------- */
+.top{
+  position:sticky;top:0;z-index:40;
+  background:rgba(18,21,26,.94);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  padding:calc(10px + env(safe-area-inset-top)) 12px 0;
+}
+.top-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.brand{
+  font-family:"IBM Plex Sans Condensed",sans-serif;
+  font-weight:700;letter-spacing:.14em;font-size:11px;
+  color:var(--steel-dim);text-transform:uppercase;
+}
+.pickers{margin-left:auto;display:flex;gap:6px}
+.pick{
+  background:var(--slab);border:1px solid var(--line);border-radius:7px;
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:12px;font-weight:600;
+  letter-spacing:.05em;padding:6px 8px;color:var(--paper);
+  appearance:none;-webkit-appearance:none;
+}
+.days{display:flex;gap:5px;padding-bottom:9px;overflow-x:auto;scrollbar-width:none}
+.days::-webkit-scrollbar{display:none}
+.day{
+  flex:1 0 auto;min-width:58px;padding:9px 6px 8px;border-radius:8px;
+  background:var(--slab);border:1px solid transparent;
+  font-family:"IBM Plex Sans Condensed",sans-serif;
+  text-align:center;transition:background .15s,border-color .15s;
+}
+.day b{display:block;font-size:14px;font-weight:700;letter-spacing:.08em}
+.day span{display:block;font-size:9.5px;letter-spacing:.09em;color:var(--steel-dim);text-transform:uppercase;margin-top:1px}
+.day.on{background:var(--slab-2);border-color:var(--steel-dim)}
+.day.on b{color:var(--paper)}
+.day.on span{color:var(--steel)}
+.day.done b::after{content:"·";color:var(--go);margin-left:4px}
+
+/* ---------- Fortschritt ---------- */
+.meter{display:flex;align-items:center;gap:10px;padding:0 12px 9px;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--steel-dim)}
+#focus{flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:56%}
+#cnt{flex:0 0 auto;font-variant-numeric:tabular-nums}
+.bar{flex:1;height:3px;background:var(--line);border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--go);width:0;transition:width .35s cubic-bezier(.4,0,.2,1)}
+
+/* ---------- Übungskarte ---------- */
+main{padding:12px 12px 128px;max-width:640px;margin:0 auto}
+.card{
+  background:var(--slab);border:1px solid var(--line);border-radius:var(--r);
+  margin-bottom:11px;overflow:hidden;
+}
+.card.flag-bulk{border-left:3px solid var(--go-deep)}
+.card.flag-wk5{border-left:3px solid var(--amber)}
+.chead{padding:11px 12px 10px;display:flex;gap:10px;align-items:flex-start}
+.num{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;
+  color:var(--steel-dim);padding-top:3px;min-width:20px;
+}
+.cname{
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:600;
+  font-size:16.5px;line-height:1.22;letter-spacing:.005em;flex:1;
+}
+.cgrip{
+  font-size:12.5px;color:var(--steel);line-height:1.4;margin-top:5px;
+}
+.cmeta{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--steel);
+  margin-top:4px;letter-spacing:.01em;
+}
+.tag{
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:9.5px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border-radius:4px;
+  align-self:flex-start;margin-top:2px;
+}
+.tag.bulk{background:rgba(123,182,97,.14);color:var(--go)}
+.tag.wk5{background:rgba(217,164,65,.14);color:var(--amber)}
+
+/* ---------- Satzzeile ---------- */
+.sets{padding:0 12px 10px}
+.set{
+  display:grid;grid-template-columns:26px 1fr 1fr 1fr;gap:7px;align-items:center;
+  padding:7px 0 7px 8px;border-top:1px solid var(--line);position:relative;
+}
+.set::before{
+  content:"";position:absolute;left:0;top:7px;bottom:7px;width:2px;
+  border-radius:2px;background:transparent;transition:background .25s;
+}
+.set.go::before{background:var(--go)}
+.set.under::before{background:var(--under)}
+.slab-label{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--steel-dim);
+}
+.f{position:relative}
+.f input{
+  width:100%;background:var(--slab-2);border:1px solid var(--line);
+  border-radius:7px;padding:11px 6px 11px;text-align:center;
+  font-family:"IBM Plex Mono",monospace;font-size:17px;font-weight:500;
+  color:var(--paper);
+}
+.f input::placeholder{color:var(--steel-dim);font-weight:400}
+.f input:focus{outline:2px solid var(--steel);outline-offset:1px;border-color:transparent}
+.set.go .f.reps input{border-color:var(--go);color:var(--go)}
+.set.under .f.reps input{border-color:var(--under);color:var(--under)}
+.units{
+  display:grid;grid-template-columns:26px 1fr 1fr 1fr;gap:7px;
+  padding:6px 0 2px 8px;
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:9.5px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--steel-dim);text-align:center;
+}
+.units span:first-child{text-align:left}
+
+/* ---------- Geisterzeile: die Signatur ---------- */
+.ghost{
+  grid-column:2 / -1;display:flex;align-items:center;gap:6px;
+  font-family:"IBM Plex Mono",monospace;font-size:11px;
+  color:var(--steel-dim);padding:1px 0 3px 2px;letter-spacing:.02em;
+}
+.ghost b{font-weight:500;color:var(--steel)}
+.ghost .arrow{color:var(--steel-dim)}
+.ghost.beat b{color:var(--go)}
+
+/* ---------- Urteil ---------- */
+.verdict{
+  margin:2px 12px 11px;padding:9px 11px;border-radius:8px;
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:13px;font-weight:600;
+  letter-spacing:.02em;display:flex;gap:8px;align-items:baseline;
+}
+.verdict.up{background:rgba(123,182,97,.12);color:var(--go)}
+.verdict.hold{background:var(--slab-2);color:var(--steel)}
+.verdict.down{background:rgba(203,97,70,.12);color:var(--under)}
+.verdict em{font-style:normal;font-family:"IBM Plex Mono",monospace;font-size:11px;opacity:.8}
+
+/* ---------- Cue ---------- */
+.cue-t{
+  width:100%;text-align:left;padding:9px 12px 11px;border-top:1px solid var(--line);
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--steel-dim);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.cue-b{padding:0 12px 12px;font-size:13.5px;color:var(--steel);line-height:1.5;display:none}
+.cue-b.open{display:block}
+.cue-b .rest{
+  display:block;margin-top:8px;font-family:"IBM Plex Mono",monospace;
+  font-size:11px;color:var(--steel-dim);
+}
+
+/* ---------- Pausenuhr ---------- */
+.timer{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(14px + env(safe-area-inset-bottom));z-index:50;
+  display:flex;align-items:center;gap:0;
+  background:var(--slab-2);border:1px solid var(--line);
+  border-radius:999px;box-shadow:0 8px 26px rgba(0,0,0,.5);
+  overflow:hidden;
+}
+.timer button{
+  padding:12px 15px;font-family:"IBM Plex Sans Condensed",sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--steel);
+}
+.timer .clock{
+  font-family:"IBM Plex Mono",monospace;font-size:19px;font-weight:600;
+  padding:10px 16px;min-width:88px;text-align:center;
+  border-left:1px solid var(--line);border-right:1px solid var(--line);
+  font-variant-numeric:tabular-nums;
+}
+.timer.run .clock{color:var(--go)}
+.timer.done .clock{color:var(--amber)}
+
+/* ---------- Werkzeugleiste / Export ---------- */
+.tools{display:flex;gap:8px;margin:18px 0 6px}
+.tool{
+  flex:1;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--slab);
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:12px;font-weight:600;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--steel);
+}
+.tool.arm{border-color:var(--under);color:var(--under);background:rgba(203,97,70,.10)}
+.tool[hidden]{display:none}
+.note{font-size:12px;color:var(--steel-dim);line-height:1.55;margin-top:12px}
+.sheet{
+  position:fixed;inset:0;z-index:80;background:rgba(10,12,16,.82);
+  display:none;align-items:flex-end;
+}
+.sheet.open{display:flex}
+.sheet-in{
+  background:var(--slab);border-top-left-radius:14px;border-top-right-radius:14px;
+  width:100%;max-height:82vh;padding:16px 14px calc(16px + env(safe-area-inset-bottom));
+  overflow:auto;border-top:1px solid var(--line);
+}
+.sheet h3{
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--steel-dim);margin:0 0 10px;
+}
+textarea{
+  width:100%;height:190px;background:var(--ink);color:var(--paper);
+  border:1px solid var(--line);border-radius:8px;padding:10px;
+  font-family:"IBM Plex Mono",monospace;font-size:11px;line-height:1.5;
+}
+.empty{
+  text-align:center;padding:44px 20px;color:var(--steel-dim);
+  font-family:"IBM Plex Sans Condensed",sans-serif;
+}
+.warn{
+  margin:0 12px 10px;padding:9px 11px;border-radius:8px;font-size:12.5px;
+  background:rgba(217,164,65,.12);color:var(--amber);display:none;
+}
+.warn.on{display:block}
+.swapped{
+  display:inline-block;margin-left:7px;padding:1px 6px;border-radius:4px;vertical-align:2px;
+  background:rgba(217,164,65,.16);color:var(--amber);
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+}
+.stall{
+  display:block;margin-top:6px;padding-top:6px;border-top:1px solid rgba(217,164,65,.3);
+  font-family:"IBM Plex Sans",sans-serif;font-size:11.5px;font-weight:400;
+  color:var(--amber);line-height:1.45;letter-spacing:0;
+}
+.ghost.mism{color:var(--amber);opacity:.85}
+.ghost.mism b{color:var(--amber)}
+.alts{margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
+.alt-h{
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--steel-dim);margin-bottom:7px;
+}
+.alt{
+  display:block;width:100%;text-align:left;margin-bottom:5px;padding:10px 11px;
+  background:var(--slab-2);border:1px solid var(--line);border-radius:7px;
+  font-size:13.5px;color:var(--steel);
+}
+.alt i{font-style:normal;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel-dim);margin-left:5px}
+.alt.on{border-color:var(--steel);background:var(--line);color:var(--paper)}
+.alt-r{font-size:11.5px;color:var(--steel-dim);line-height:1.5;margin:9px 0 0}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+:focus-visible{outline:2px solid var(--paper);outline-offset:2px}
+/* ---------- V8.2: Ort, Modus, Regeln ---------- */
+.top-row{flex-wrap:wrap}
+.pickers{flex-wrap:wrap;justify-content:flex-end}
+.tag.home{background:rgba(140,151,166,.16);color:var(--steel)}
+.tag.red{background:rgba(217,164,65,.14);color:var(--amber)}
+.tag.deload{background:rgba(123,182,97,.14);color:var(--go)}
+.cue-b .wu{display:block;margin-top:8px;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--steel)}
+.home-note{margin-top:12px;padding-top:11px;border-top:1px solid var(--line);font-size:12px;color:var(--steel-dim);line-height:1.5}
+#info{display:none}
+#info.on{display:block}
+#info h4{
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--steel-dim);margin:16px 0 6px;
+}
+#info h4:first-child{margin-top:0}
+#info ul{margin:0;padding-left:18px}
+#info li{font-size:13px;color:var(--steel);line-height:1.55;margin-bottom:5px}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <span class="brand">Trainingslog V8.2</span>
+    <div class="pickers">
+      <select class="pick" id="week" aria-label="Woche"></select>
+      <select class="pick" id="loc" aria-label="Ort">
+        <option value="gym">Gym</option>
+        <option value="home">Zuhause</option>
+      </select>
+      <select class="pick" id="phase" aria-label="Modus"></select>
+    </div>
+  </div>
+  <nav class="days" id="days"></nav>
+</header>
+
+<div class="meter"><span id="focus"></span><span class="bar"><i id="fill"></i></span><span id="cnt">0/0</span></div>
+<div class="warn" id="warn">Speicher nicht verfügbar – Eingaben gelten nur für diese Sitzung.</div>
+
+<main id="main"></main>
+
+<div class="timer" id="timer">
+  <button id="t-reset">Reset</button>
+  <span class="clock" id="t-clock">–:––</span>
+  <button id="t-toggle">Start</button>
+</div>
+
+<div class="sheet" id="sheet">
+  <div class="sheet-in">
+    <h3 id="sheet-h">Export für Excel</h3>
+    <p class="note" id="sheet-p" style="margin-top:0">Tabgetrennt. Kopieren, im Satzlog in die Spalten Last / Wdh. / RIR einfügen.</p>
+    <div id="info">
+      <h4>Cut-Regeln</h4>
+      <ul>
+        <li>Ziel im Cut: Kraft halten, nicht steigern. Leitübungen sind die schweren Grundübungen: Smith-Schrägbank, T-Bar Row, Hack Squat, RDL und Smith Split Squat.</li>
+        <li>„Cut-Check“ erscheint, wenn eine Leitübung zwei Einheiten hintereinander mehr als 5 % unter ihrem Bestwert davor liegt (geschätztes Maximum aus Satz 1). Dann zuerst Schlaf, Essen und Pausen prüfen. Bleibt es so: Modus „Reduziert“. Jede Isolationsübung bekommt einen Satz weniger, Last und RIR bleiben.</li>
+        <li>Alle 6–8 Wochen oder bei deutlicher Erschöpfung eine Woche Modus „Deload“: etwa halbe Satzzahl, gleiche Last, RIR 3. Deload-Wochen zählen nicht für den Cut-Check.</li>
+        <li>Abnahme 0,5–1 % Körpergewicht pro Woche, gemessen am Wochendurchschnitt. Eiweiß 2,3–3,1 g pro kg fettfreie Masse. 10.000–12.000 Schritte, lockeres Cardio, kein HIIT an Beintagen.</li>
+        <li>Isolationsübungen: letzter Satz 0–1 RIR, wenn die Erholung stimmt. Grundübungen bleiben bei 1–2, der RDL bei 2.</li>
+      </ul>
+      <h4>Aufwärmen</h4>
+      <ul>
+        <li>3 Sätze: 40–50 % × 8–10 · 65–70 % × 4–5 · 80–85 % × 1–3</li>
+        <li>2 Sätze: 50–60 % × 6–8 · 75–80 % × 3–4</li>
+        <li>1 Satz: 50–60 % × 6–8</li>
+        <li>0–1: nur wenn du nicht schon warm bist, dann 1 Satz.</li>
+        <li>Prozent vom geplanten Arbeitsgewicht. Zwischen leichten Stufen 45–90 s, vor dem ersten Arbeitssatz 2–3 min. Aufwärmsätze nicht loggen.</li>
+      </ul>
+      <h4>Gym und Zuhause</h4>
+      <ul>
+        <li>Oben „Gym“ oder „Zuhause“ wählen. Zuhause laufen die Übungen an der KSK-Station unter eigenem Namen („KSK · …“).</li>
+        <li>Die KSK-Multipresse startet bei 0 kg, die KSK-Züge laufen 1:1. Die App vergleicht deshalb nur mit Einheiten am selben Ort. Jede Übung immer am selben Gerät.</li>
+        <li>Vorgabe: Montag, Dienstag und Samstag im Gym, Donnerstag und Freitag zuhause.</li>
+      </ul>
+      <h4>Gesundheit</h4>
+      <ul>
+        <li>Mit Testosteron und Peptiden: Blutbild vor dem Start, nach 6–8 Wochen, danach alle 3–4 Monate (Hämatokrit, Blutfette, Östradiol, Leber, Niere). Blutdruck wöchentlich messen. Dosierung nur mit ärztlicher Begleitung.</li>
+      </ul>
+    </div>
+    <textarea id="csv" readonly></textarea>
+    <div class="tools">
+      <button class="tool" id="sel">Kopieren</button>
+      <button class="tool" id="restore" hidden>Wiederherstellen</button>
+      <button class="tool" id="close">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   Trainingslog V8.2 – Plan V8.1 „Brust zuerst“ mit Coach-Anpassungen:
+   Do Kelso Shrug → Kabel-Pullover (Lat-Breite), Mo Pec Deck → Low-to-High
+   Cable Fly (obere Brust), Sa stehendes → sitzendes Wadenheben (Soleus).
+   Weiterhin 86 Arbeitssätze pro Woche.
+   t: 'schwer' | 'maschine' | 'iso' · s: Arbeitssätze · wu: Aufwärmsätze
+   loc: Standardort des Tages · h/hg: Variante an der KSK-Station zuhause
+   (ohne h gilt „KSK · “ + Name, denn Zuggewichte sind nicht vergleichbar).
+   ===================================================================== */
+const ISO = "1–2 · letzter 0–1";
+const DAYS = [
+ {k:"MO", n:"Montag", t:"Upper A", f:"Obere Brust · Rückendicke · Schulter", loc:"gym", ex:[
+  {n:"Smith-Schrägbank 20–30°", g:"Bank 20–30° · pronierter Griff, gut schulterbreit · Stange zur oberen Brust",
+   h:"KSK · Smith-Schrägbank 20–30°", hg:"KSK-Stange startet bei 0 kg · Bank 20–30° · Sicherheitsanschläge einstellen",
+   t:"schwer", s:3, lo:6, hi:10, rir:"1–2", rest:180, wu:"3",
+   cue:"Bank und Sicherheitsanschläge einstellen. Kontrolliert zur oberen Brust, nicht zum Hals absenken; schmerzfreie Tiefe."},
+  {n:"Chest-Supported T-Bar Row", g:"Enger neutraler V-Griff · Brust bleibt am Pad",
+   h:"KSK · Sitzendes Kabelrudern, V-Griff", hg:"Tiefer Zug, Füße am Rahmen abstützen · Oberkörper ruhig, Griff zu den unteren Rippen",
+   t:"schwer", s:3, lo:6, hi:10, rir:"1–2", rest:180, wu:"2",
+   cue:"Brust am Pad, Ellbogen eher körpernah. Griff Richtung untere Rippen. Kein Hüftschwung."},
+  {n:"Neutraler Latzug", g:"Paralleler Doppel-D-Griff, etwa schulterbreit",
+   h:"KSK · Kniender Latzug, neutral", hg:"Hoher Zug, Doppel-D-Griff oder zwei Einzelgriffe · kniend, minimale Rücklage",
+   t:"maschine", s:2, lo:8, hi:12, rir:"1–2", rest:180, wu:"1",
+   cue:"Arme oben schmerzfrei strecken; Schulterblätter natürlich bewegen lassen. Ellbogen nach unten, ohne Schwung."},
+  {n:"Low-to-High Cable Fly", g:"Zwei D-Griffe am tiefsten Zug · neutral, Daumen oben",
+   t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
+   cue:"V8.2 neu statt Pec Deck: von tief außen Richtung Schlüsselbein führen, Fokus obere Brust. Schulter bleibt zentriert; gedehnte Position kontrollieren."},
+  {n:"1-Arm Kabel-Seitheben", g:"D-Griff am tiefsten Zug · Kabel läuft vor dem Körper", side:true,
+   t:"iso", s:4, lo:12, hi:20, rir:ISO, rest:105, wu:"1",
+   cue:"Arm leicht vor der Körperseite heben; natürliche Schulterblattrotation, kein Hüftschwung. Kommt erst nach der Brustarbeit."},
+  {n:"Reverse Pec Deck", g:"Griffe auf Schulterhöhe · neutraler Griff, Daumen oben",
+   h:"KSK · Kabel-Reverse-Fly über Kreuz", hg:"Beide hohen Züge auf Schulterhöhe, Kabel kreuzen · KSK-Zug 1:1",
+   t:"iso", s:2, lo:12, hi:20, rir:ISO, rest:105, wu:"0–1",
+   cue:"Oberarme kontrolliert nach außen/hinten führen. Schulterblätter dürfen mitbewegen; den Trapez nicht künstlich ausschalten."},
+  {n:"Überkopf-Kabeltrizeps", g:"Seil am hohen Zug · Rücken zum Turm, Ellbogen neben dem Kopf",
+   t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
+   cue:"Verträgliche Überkopfposition. Ellbogen kontrolliert beugen und strecken, ohne ins Hohlkreuz auszuweichen."},
+  {n:"Bayesian Cable Curl", g:"D-Griff am tiefsten Zug · Rücken zum Turm, Arm bleibt hinter dem Rumpf", side:true,
+   t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
+   cue:"Oberarm nur angenehm weit hinter den Körper. Keine maximale Schulterstreckung erzwingen; ohne Schwung."}]},
+
+ {k:"DI", n:"Dienstag", t:"Lower A", f:"Quadrizeps · Beinbeuger · Waden", loc:"gym", ex:[
+  {n:"Hack Squat", g:"Füße mittig, schulterbreit · Zehen leicht nach außen",
+   h:"KSK · Smith Squat, Füße leicht vorne", hg:"KSK-Stange startet bei 0 kg · Fersen fest, Knie wandern nach vorne",
+   t:"schwer", s:3, lo:6, hi:10, rir:"1–2", rest:210, wu:"3",
+   cue:"Sicherungsanschläge einstellen. Über den ganzen Fuß drücken. Tiefe nur bei kontrolliertem Becken; nicht abfedern."},
+  {n:"Beinpresse, Füße mittel/tief", g:"Füße mittig bis tief, schulterbreit",
+   h:"KSK · Smith Squat, Fersen erhöht", hg:"Fersen auf einer Erhöhung, enger Stand · quadbetont",
+   t:"maschine", s:2, lo:10, hi:15, rir:"1–2", rest:180, wu:"1",
+   cue:"Fußhöhe passend wählen, nicht maximal tief. Fersen belastet, Becken an der Lehne; kein Beckenabrollen für mehr Tiefe."},
+  {n:"Sitzender Beinbeuger", g:"Pad tief über den Oberschenkeln · Lehne aufrecht, Hüfte ~90°",
+   h:"KSK · Einbeiniger Kabel-Beinbeuger stehend", hg:"Manschette am Knöchel, tiefer Zug · Hüfte fixiert, je Bein",
+   t:"iso", s:3, lo:8, hi:12, rir:ISO, rest:120, wu:"2",
+   cue:"Becken und Oberschenkel fixieren. Knie kontrolliert weit strecken und beugen; Sitzposition dokumentieren."},
+  {n:"Beinstrecker", g:"Drehachse auf Kniehöhe · Pad direkt über dem Sprunggelenk",
+   h:"KSK · Einbeiniger Kabel-Beinstrecker sitzend", hg:"Bank vor dem tiefen Zug, Manschette am Knöchel · je Bein",
+   t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
+   cue:"Zurückgelehnte Lehne nur bei stabiler Becken- und Knieposition. Oben kurz anspannen, langsam ablassen."},
+  {n:"Stehendes Wadenheben", g:"Fußballen auf der Kante · Knie fast gestreckt",
+   h:"KSK · Smith Wadenheben stehend", hg:"Fußballen auf einer Erhöhung · Knie fast gestreckt",
+   t:"iso", s:3, lo:8, hi:15, rir:ISO, rest:120, wu:"2",
+   cue:"Knie weitgehend gestreckt, nicht gewaltsam durchdrücken. Ferse kontrolliert absenken, unten 1–2 s ohne Federn."},
+  {n:"Kabel-Crunch", g:"Seil am hohen Zug · kniend, Seil neben dem Kopf",
+   t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:105, wu:"0–1",
+   cue:"Rippen kontrolliert Richtung Becken einrollen. Nicht nur aus der Hüfte nach vorn kippen."}]},
+
+ {k:"DO", n:"Donnerstag", t:"Pull", f:"Lats · Rückendicke · Armbeuger", loc:"home", ex:[
+  {n:"1-Arm Latzug zur Hüfte", g:"D-Griff am hohen Zug · neutral, Ellbogen zur Körperseite", side:true,
+   t:"maschine", s:3, lo:8, hi:12, rir:"1–2", rest:150, wu:"2",
+   cue:"Oben schmerzfreie Armstreckung. Ellbogen nach unten zur Körperseite; Griff nicht zwanghaft zur Hosentasche ziehen."},
+  {n:"Brustgestützte High Row", g:"Weiter pronierter Griff · Brust am Pad, Ellbogen 45–60°",
+   h:"KSK · Einarmiges Kabelrudern hoch", hg:"Mittlerer bis hoher Zug, kniend · Ellbogen 45–60°, Oberkörper still, je Seite",
+   t:"maschine", s:3, lo:8, hi:12, rir:"1–2", rest:180, wu:"2",
+   cue:"Brust am Pad. Ellbogen etwa 45–60°. Schulterblätter kontrolliert bewegen; nicht mit dem Rumpf helfen."},
+  {n:"Kabel-Pullover", g:"Gerade Stange oder Seil am hohen Zug · Arme fast gestreckt",
+   t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
+   cue:"V8.2 neu statt Kelso Shrug, für die Lat-Breite. Oben die Lats dehnen, Stange im Bogen zu den Oberschenkeln führen; Rippen unten, nicht mit dem Trizeps drücken."},
+  {n:"Cable Preacher Curl", g:"SZ- oder gerade Stange am tiefen Zug · Oberarme fest am Pad",
+   h:"KSK · Kabel-Curl an der Schrägbanklehne", hg:"Oberarme auf der Banklehne als Preacher-Ersatz · tiefer Zug, KSK 1:1",
+   t:"iso", s:3, lo:8, hi:12, rir:ISO, rest:120, wu:"1",
+   cue:"Oberarme am Pad lassen. Ellbogen weit, aber schmerzfrei strecken; nicht ruckartig aus der unteren Position starten."},
+  {n:"Rope Hammer Curl", g:"Seil am tiefen Zug · neutraler Griff, Daumen oben",
+   t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"0–1",
+   cue:"Neutraler Griff, Oberarme ruhig. Kontrollierter Bewegungsumfang; kein Hüftschwung."}]},
+
+ {k:"FR", n:"Freitag", t:"Push", f:"Brust zuerst · seitliche Schulter · Trizeps", loc:"home", ex:[
+  {n:"Schrägbrust-Maschine 20–30°", g:"Lehne 20–30° · Griffe auf Höhe der oberen Brust · Sitzhöhe notieren",
+   h:"KSK · Smith-Schrägbank 20–30°", hg:"KSK-Stange startet bei 0 kg · Bank 20–30° · Sicherheitsanschläge einstellen",
+   t:"maschine", s:3, lo:8, hi:12, rir:"1–2", rest:180, wu:"3",
+   cue:"Sitz und Griffe festhalten. Kontrollierte, schmerzfreie Tiefe. Kein erzwungener Kontakt am Schlüsselbein."},
+  {n:"Konvergierende Brustpresse", g:"Neutraler oder leicht pronierter Griff · Griffe auf Brusthöhe",
+   h:"KSK · Smith-Flachbank", hg:"KSK-Stange startet bei 0 kg · Stange zur unteren Brust, Schulterblätter fixiert",
+   t:"maschine", s:2, lo:8, hi:12, rir:"1–2", rest:180, wu:"1",
+   cue:"Stabile Auflage und kontrollierte Tiefe. Weder stark verkürzen noch hart in den Anschlag drücken."},
+  {n:"Pec Deck", g:"Griffe auf Brusthöhe · Ellbogen leicht gebeugt und fixiert",
+   h:"KSK · Kabel-Fly auf Brusthöhe", hg:"D-Griffe, Züge auf Schulterhöhe · Ellbogen leicht gebeugt, KSK 1:1",
+   t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"0–1",
+   cue:"Dehnposition kontrollieren, nicht erzwingen. Erst danach beginnt das direkte Schultertraining."},
+  {n:"Seithebemaschine", g:"Pads an den Oberarmen · nicht mit den Händen ziehen",
+   h:"KSK · 1-Arm Kabel-Seitheben", hg:"D-Griff am tiefsten Zug, Kabel vor dem Körper · je Seite, KSK 1:1",
+   t:"iso", s:5, lo:12, hi:20, rir:ISO, rest:120, wu:"1",
+   cue:"5 Arbeitssätze. Sitz und Padkontakt notieren; natürliche Schulterblattrotation, kein Schwung."},
+  {n:"Überkopf-Kabeltrizeps", g:"Seil am hohen Zug · Rücken zum Turm, Ellbogen neben dem Kopf",
+   t:"iso", s:3, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
+   cue:"Überkopfposition nur schmerzfrei. Ellbogen kontrolliert beugen und strecken; keine erzwungene Dehnung."},
+  {n:"Rope Pushdown", g:"Seil am hohen Zug · unten auseinanderziehen",
+   t:"iso", s:2, lo:12, hi:20, rir:ISO, rest:120, wu:"0–1",
+   cue:"Oberarme ruhig am Rumpf. Ellbogen schmerzfrei strecken; das Seil nicht um jeden Preis auseinanderziehen."},
+  {n:"Ab Wheel", g:"Beidhändig, kniend · Hüfte bleibt gestreckt",
+   h:"Ab Wheel", hg:"Beidhändig, kniend · Hüfte bleibt gestreckt",
+   t:"iso", s:2, lo:8, hi:15, rir:"1–2", rest:120, wu:"1", wut:"3–5 leichte, kürzere Wdh. aus dem Kniestand",
+   cue:"Rippen und Becken kontrollieren. Nur so weit rollen, wie die Rückenposition stabil bleibt; Technikverlust beendet den Satz."}]},
+
+ {k:"SA", n:"Samstag", t:"Lower B", f:"Hamstrings · Gluteus · Quads · hintere Schulter", loc:"gym", ex:[
+  {n:"Romanian Deadlift", g:"Langhantel, pronierter Griff knapp schulterbreit · Stange bleibt am Bein",
+   h:"KSK · Smith RDL", hg:"KSK-Stange startet bei 0 kg · Stange am Bein entlang, Hüfte nach hinten",
+   t:"schwer", s:3, lo:6, hi:10, rir:"2", rest:240, wu:"3",
+   cue:"Hüfte zurück, Hantel körpernah. Vor Verlust der Rücken-/Beckenposition stoppen; keinen maximalen Stretch erzwingen. Etwa 2 RIR."},
+  {n:"Smith Split Squat", g:"Stange auf dem oberen Rücken · Standlänge markieren", side:true,
+   hg:"KSK-Stange startet bei 0 kg · Standlänge markieren",
+   t:"schwer", s:3, lo:8, hi:12, rir:"1–2", rest:180, wu:"2",
+   cue:"Standlänge markieren, vorderen Fuß stabil halten. Sicherheitsanschläge nutzen. Satzmenge gilt je Bein."},
+  {n:"Sitzender Beinbeuger", g:"Pad tief über den Oberschenkeln · Lehne aufrecht, Hüfte ~90°",
+   h:"KSK · Einbeiniger Kabel-Beinbeuger stehend", hg:"Manschette am Knöchel, tiefer Zug · Hüfte fixiert, je Bein",
+   t:"iso", s:3, lo:8, hi:12, rir:ISO, rest:120, wu:"1",
+   cue:"Sitz- und Hüftposition wie Dienstag. Becken fixieren, Knie kontrolliert weit strecken und beugen."},
+  {n:"Beinstrecker", g:"Gleiche Einstellung wie Dienstag · Pad über dem Sprunggelenk",
+   h:"KSK · Einbeiniger Kabel-Beinstrecker sitzend", hg:"Bank vor dem tiefen Zug, Manschette am Knöchel · je Bein",
+   t:"iso", s:2, lo:12, hi:20, rir:ISO, rest:120, wu:"1",
+   cue:"Zurückgelehnte Position nur bei sicherer Knieachse und stabilem Becken. Einstellung dokumentieren."},
+  {n:"Reverse Pec Deck", g:"Griffe auf Schulterhöhe · neutraler Griff, Daumen oben",
+   h:"KSK · Kabel-Reverse-Fly über Kreuz", hg:"Beide hohen Züge auf Schulterhöhe, Kabel kreuzen · KSK-Zug 1:1",
+   t:"iso", s:3, lo:12, hi:20, rir:ISO, rest:105, wu:"1",
+   cue:"1 leichter Vorbereitungssatz, weil kein Rückentraining davor steht. Oberarme kontrolliert nach außen/hinten, ohne Schwung."},
+  {n:"Hip Adduction", g:"Pads innen an den Knien · Rumpf aufrecht",
+   h:"KSK · Kabel-Adduktion stehend", hg:"Manschette am Knöchel, tiefer Zug · je Bein",
+   t:"iso", s:1, lo:10, hi:15, rir:"1–2", rest:105, wu:"1",
+   cue:"Becken am Sitz. Kontrollierte, schmerzfreie Dehnung; nicht abfedern."},
+  {n:"Hip Abduction", g:"Pads außen an den Knien · Rumpf aufrecht",
+   h:"KSK · Kabel-Abduktion stehend", hg:"Manschette am Knöchel, tiefer Zug · je Bein",
+   t:"iso", s:1, lo:12, hi:20, rir:"1–2", rest:105, wu:"1",
+   cue:"Becken stabil, Bewegung aus der Hüfte. Nicht durch Rumpfschwung verlängern."},
+  {n:"Sitzendes Wadenheben", g:"Pad auf den unteren Oberschenkeln · Fußballen auf der Kante, Knie 90°",
+   h:"KSK · Smith Wadenheben sitzend", hg:"Stange mit Polster auf den Knien, Fußballen erhöht · Knie 90°",
+   t:"iso", s:3, lo:10, hi:15, rir:ISO, rest:120, wu:"2",
+   cue:"V8.2 neu statt stehend: trifft den Schollenmuskel (Soleus). 2 s Dehnung unten, volle Streckung oben, nicht federn."}]}
+];
+
+/* Alternativen im Gym: gleiches Bewegungsmuster, gleicher Satz- und Wiederholungsbereich. */
+const ALT = {
+ "Smith-Schrägbank 20–30°":      ["Schrägbrust-Maschine 20–30°", "Kurzhantel-Schrägbank 20–30°"],
+ "Chest-Supported T-Bar Row":    ["Brustgestützte Rudermaschine, neutraler Griff", "Kurzhantel-Rudern auf der Schrägbank"],
+ "Neutraler Latzug":             ["Plate-Loaded Pulldown, neutral", "Assistierte Klimmzüge, neutral"],
+ "Low-to-High Cable Fly":        ["Pec Deck, Sitz höher gestellt", "Kurzhantel-Fly auf der Schrägbank"],
+ "1-Arm Kabel-Seitheben":        ["Seithebemaschine", "Kurzhantel-Seitheben, angelehnt"],
+ "Reverse Pec Deck":             ["Kabel-Reverse-Fly über Kreuz", "Face Pull am hohen Zug, Seil"],
+ "Überkopf-Kabeltrizeps":        ["Einarmige Überkopf-Extension am Kabel", "French-Press-Maschine"],
+ "Bayesian Cable Curl":          ["Kurzhantel-Curl auf der Schrägbank", "Kabel-Curl, Arm hinter dem Körper"],
+ "Hack Squat":                   ["Pendulum Squat", "Smith Squat, Füße leicht vorne"],
+ "Beinpresse, Füße mittel/tief": ["Belt Squat", "Hack Squat, Füße höher, mehr Wdh."],
+ "Sitzender Beinbeuger":         ["Liegender Beinbeuger", "Einbeiniger Kabel-Beinbeuger"],
+ "Beinstrecker":                 ["Einbeiniger Beinstrecker", "Reverse Nordic Curl"],
+ "Stehendes Wadenheben":         ["Wadenheben an der Beinpresse", "Smith Wadenheben auf Erhöhung"],
+ "Kabel-Crunch":                 ["Crunch-Maschine", "Reverse Crunch auf der Schrägbank"],
+ "1-Arm Latzug zur Hüfte":       ["Einarmiger Latzug kniend", "Kabel-Pullover, gerade Stange"],
+ "Brustgestützte High Row":      ["Weite brustgestützte Rudermaschine", "Kurzhantel-Rudern, Ellbogen 45–60°"],
+ "Kabel-Pullover":               ["Pullover-Maschine", "Kurzhantel-Pullover auf der Flachbank"],
+ "Cable Preacher Curl":          ["Preacher-Curl-Maschine", "SZ-Preacher-Curl"],
+ "Rope Hammer Curl":             ["Kurzhantel-Hammer-Curl", "Reverse Curl am Kabel"],
+ "Schrägbrust-Maschine 20–30°":  ["Smith-Schrägbank 20–30°", "Kurzhantel-Schrägbank 20–30°"],
+ "Konvergierende Brustpresse":   ["Flachbank-Brustpresse (Maschine)", "Kurzhantel-Bankdrücken, leicht schräg"],
+ "Pec Deck":                     ["Kabel-Fly auf Brusthöhe", "Converging Fly Machine"],
+ "Seithebemaschine":             ["1-Arm Kabel-Seitheben", "Kurzhantel-Seitheben, angelehnt"],
+ "Rope Pushdown":                ["Pushdown mit gerader Stange", "Trizeps-Pushdown-Maschine"],
+ "Ab Wheel":                     ["Kabel-Crunch stehend, Seil", "Hängendes Knieheben"],
+ "Romanian Deadlift":            ["Smith RDL", "45°-Hyperextension, hamstringbetont"],
+ "Smith Split Squat":            ["Einbeinige Beinpresse", "Reverse Lunge an der Smith"],
+ "Hip Adduction":                ["Kabel-Adduktion", "Copenhagen Plank"],
+ "Hip Abduction":                ["Kabel-Abduktion", "Stehende Kabel-Abduktion"],
+ "Sitzendes Wadenheben":         ["Wadenheben an der Beinpresse, Knie gebeugt", "Smith Wadenheben sitzend"]
+};
+const SWAP_OK = "Wechseln nur bei: Schmerz trotz sauberer Technik und reduzierter Last · Gerät nicht reproduzierbar einstellbar oder besetzt · Zielmuskel wird über mehrere Einheiten klar durch Gelenk oder anderen Muskel limitiert. Nicht wegen einem schlechten Training, fehlendem Muskelkater oder schwächerem Pump.";
+
+const WU = {
+  "3":"40–50 % × 8–10 · 65–70 % × 4–5 · 80–85 % × 1–3",
+  "2":"50–60 % × 6–8 · 75–80 % × 3–4",
+  "1":"50–60 % × 6–8",
+  "0–1":"nur wenn du nicht schon warm bist: 50–60 % × 6–8"
+};
+const MODES = {std:"Standard", red:"Reduziert", deload:"Deload"};
+const WEEKS = 16;
+const PLAN = "V8.2";
+const fmtRest = s => s < 120 ? `${s} s` : `${(s/60).toFixed(s%60 ? 1 : 0).replace(".", ",")} min`;
+const KEY = "traininglog_v82";
+let store = {plan:PLAN, meta:{week:1, day:0}, sets:{}, var:{}, loc:{}, mode:{}};
+let memoryOnly = false;
+
+/* ---------- Speicher ----------
+   Läuft in zwei Umgebungen: innerhalb von Claude über window.storage,
+   selbst gehostet über den Browser-Speicher. Eigener Schlüssel: die Daten
+   von V6 und V8 bleiben unberührt. */
+let backend = "none";
+
+/* Ohne Frist bleibt die App stehen, wenn die Speicherbruecke nie antwortet
+   (z. B. im oeffentlich geteilten Artifact). Daher jeder Aufruf mit Timeout. */
+const guard = (p, ms = 1500) => Promise.race([
+  Promise.resolve(p),
+  new Promise((_, rej) => setTimeout(() => rej(new Error("storage timeout")), ms))
+]);
+
+function normalize(){
+  if(!store.sets) store.sets = {};
+  if(!store.var)  store.var  = {};
+  if(!store.loc)  store.loc  = {};
+  if(!store.mode) store.mode = {};
+  if(!store.meta) store.meta = {week:1, day:0};
+  store.plan = PLAN;
+}
+
+async function load(){
+  if(typeof window.storage !== "undefined" && window.storage){
+    try{
+      const r = await guard(window.storage.get(KEY));
+      backend = "claude";
+      if(r && r.value) store = JSON.parse(r.value);
+    }catch(e){
+      try{ await guard(window.storage.set(KEY, JSON.stringify(store))); backend = "claude"; }
+      catch(e2){ /* weiter zum Browser-Speicher */ }
+    }
+  }
+  if(backend === "none"){
+    try{
+      localStorage.setItem(KEY + "_probe", "1");
+      localStorage.removeItem(KEY + "_probe");
+      backend = "local";
+      const raw = localStorage.getItem(KEY);
+      if(raw) store = JSON.parse(raw);
+    }catch(e){
+      memoryOnly = true;
+      document.getElementById("warn").classList.add("on");
+    }
+  }
+  normalize();
+}
+
+let saveT = null;
+function save(){
+  if(memoryOnly) return;
+  clearTimeout(saveT);
+  saveT = setTimeout(async ()=>{
+    const json = JSON.stringify(store);
+    try{
+      if(backend === "claude") await guard(window.storage.set(KEY, json), 3000);
+      else localStorage.setItem(KEY, json);
+    }catch(e){
+      try{ localStorage.setItem(KEY, json); backend = "local"; }
+      catch(e2){
+        memoryOnly = true;
+        document.getElementById("warn").classList.add("on");
+      }
+    }
+  }, 420);
+}
+
+const id = (w,d,e,s)=>`w${w}|d${d}|e${e}|s${s}`;
+const get = (w,d,e,s)=> store.sets[id(w,d,e,s)] || null;
+
+/* ---------- Modus pro Woche: Standard, Reduziert, Deload ---------- */
+const modeOf = w => (store.mode && store.mode[w]) || "std";
+function setsIn(ex, m){
+  if(m === "red" && ex.t === "iso") return Math.max(1, ex.s - 1);
+  if(m === "deload") return Math.ceil(ex.s / 2);
+  return ex.s;
+}
+const setsFor = ex => setsIn(ex, modeOf(store.meta.week));
+const totalSets = m => DAYS.reduce((a, D)=> a + D.ex.reduce((b, ex)=> b + setsIn(ex, m), 0), 0);
+
+/* ---------- Ort pro Woche/Tag und gewählte Variante ---------- */
+const lid = (w,d)=>`w${w}|d${d}`;
+const locOf = (w,d)=> (store.loc && store.loc[lid(w,d)]) || DAYS[d].loc;
+const vid = (w,d,e)=>`w${w}|d${d}|e${e}`;
+const variant = (w,d,e)=> (store.var && store.var[vid(w,d,e)]) || null;
+
+/* Zuhause gilt immer die KSK-Variante, Alternativen gibt es nur im Gym. */
+function nameOf(w,d,e){
+  const ex = DAYS[d].ex[e];
+  if(locOf(w,d) === "home") return ex.h || `KSK · ${ex.n}`;
+  return variant(w,d,e) || ex.n;
+}
+function gripOf(w,d,e){
+  const ex = DAYS[d].ex[e];
+  if(locOf(w,d) === "home") return ex.hg || (ex.g ? `${ex.g} · KSK-Zug 1:1` : "");
+  return variant(w,d,e) ? "" : (ex.g || "");
+}
+
+/* letzte Woche mit Daten für denselben Satz an derselben Übung (gleicher Name);
+   außerhalb eines Deloads zählen Deload-Wochen nicht als Vorwert */
+function ghost(w,d,e,s){
+  const name = nameOf(w,d,e);
+  const skipDeload = modeOf(w) !== "deload";
+  for(let k=w-1;k>=1;k--){
+    if(nameOf(k,d,e) !== name || (skipDeload && modeOf(k) === "deload")) continue;
+    const v = get(k,d,e,s);
+    if(v && v.r) return {w:k, ...v};
+  }
+  return null;
+}
+
+/* Einheiten derselben Übung mit Satz 1, neueste zuerst; Deload-Wochen zählen nicht. */
+function sessions(d, e){
+  const w = store.meta.week, name = nameOf(w,d,e), out = [];
+  for(let k=w;k>=1;k--){
+    if(modeOf(k) === "deload" || nameOf(k,d,e) !== name) continue;
+    const v = get(k,d,e,1);
+    if(v && v.r) out.push({w:k, l: v.l === "" || v.l == null ? null : +v.l, r:+v.r});
+  }
+  return out;
+}
+
+/* ---------- Stillstand: 3 Einheiten gleiche Last und gleiche Wdh. ---------- */
+function stalled(d, e){
+  const s = sessions(d, e).slice(0, 3);
+  if(s.length < 3) return null;
+  const [a,b,c] = s;
+  if(a.l === b.l && b.l === c.l && a.r === b.r && b.r === c.r)
+    return `${a.l ?? "–"} kg × ${a.r} in Wo. ${c.w}, ${b.w} und ${a.w}`;
+  return null;
+}
+
+/* ---------- Cut-Check: Leitübung zwei Einheiten > 5 % unter dem Bestwert davor ---------- */
+const e1rm = x => x.l * (1 + x.r / 30);
+function cutDrop(d, e){
+  const s = sessions(d, e).filter(x => x.l > 0);
+  if(s.length < 3) return null;
+  const [a, b, ...rest] = s;
+  const base = Math.max(...rest.slice(0, 4).map(e1rm));
+  if(e1rm(a) < base * 0.95 && e1rm(b) < base * 0.95)
+    return `Wo. ${b.w} und ${a.w} mehr als 5 % unter dem Bestwert davor`;
+  return null;
+}
+
+/* ---------- Urteil pro Übung ---------- */
+function verdict(ex, d, ei, n){
+  const w = store.meta.week;
+  const vals = [];
+  for(let s=1;s<=n;s++){
+    const v = get(w,d,ei,s);
+    if(!v || !v.r) return {k:"hold", txt:"Noch nicht vollständig geloggt", sub:""};
+    vals.push(v);
+  }
+  if(modeOf(w) === "deload") return {k:"hold", txt:"Deload – Last halten", sub:"RIR 3, nicht steigern"};
+  const below = vals.filter(v=>v.r < ex.lo).length;
+  if(below) return {k:"down", txt:"Last eine Stufe zurück", sub:`${below} Satz/Sätze unter ${ex.lo} Wdh.`};
+
+  const iso = ex.t === "iso";
+  const ok = iso ? vals.every(v=>v.r >= ex.hi)
+                 : (vals[0].r >= ex.hi && vals.every(v=>v.r >= ex.lo));
+  if(ok){
+    const step = (ex.t === "schwer") ? "+1,25–2,5 kg"
+               : (ex.t === "maschine") ? "+1 Stufe" : "+1–2 kg";
+    return {k:"up", txt:"Nächstes Mal Last erhöhen", sub:step};
+  }
+  return {k:"hold", txt:"Im Bereich – Last halten",
+          sub: iso ? `alle Sätze auf ${ex.hi}` : `Satz 1 auf ${ex.hi}`};
+}
+
+/* ---------- Aufbau ---------- */
+function render(){
+  const {week, day} = store.meta;
+  const D = DAYS[day];
+  const mode = modeOf(week);
+  const home = locOf(week, day) === "home";
+  const main = document.getElementById("main");
+  main.innerHTML = "";
+
+  let due = 0, done = 0;
+
+  D.ex.forEach((ex, ei)=>{
+    const n = setsFor(ex);
+    if(n === 0) return;
+    due += n;
+
+    const name = nameOf(week, day, ei);
+    const grip = gripOf(week, day, ei);
+    const swapped = !home && variant(week, day, ei);
+    const rir = mode === "deload" ? "3" : ex.rir;
+    const tags = (home && name !== ex.n ? '<span class="tag home">KSK</span>' : '')
+      + (mode === "red" && n < ex.s ? '<span class="tag red">−1 Satz</span>' : '')
+      + (mode === "deload" ? '<span class="tag deload">Deload</span>' : '');
+
+    const card = document.createElement("section");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="chead">
+        <span class="num">${String(ei+1).padStart(2,"0")}</span>
+        <div style="flex:1">
+          <div class="cname">${name}${swapped ? '<span class="swapped">Alternative</span>' : ''}</div>
+          ${grip ? `<div class="cgrip">${grip}</div>` : ''}
+          <div class="cmeta">${ex.lo}–${ex.hi} Wdh${ex.side ? " je Seite" : ""} · RIR ${rir} · Pause ${fmtRest(ex.rest)} · Aufw. ${ex.wu}</div>
+        </div>${tags}
+      </div>
+      <div class="units"><span></span><span>Last kg</span><span>Wdh.</span><span>RIR</span></div>
+      <div class="sets"></div>
+      <div class="verdict"></div>
+      <button class="cue-t" aria-expanded="false">Cue, Aufwärmen &amp; Alternativen <span>+</span></button>
+      <div class="cue-b">${ex.cue}<span class="wu">Aufwärmen (${ex.wu}): ${ex.wut || WU[ex.wu]}</span><span class="rest">Pause ${fmtRest(ex.rest)} · Uhr unten starten</span>
+        <div class="alts"></div>
+      </div>`;
+
+    const box = card.querySelector(".sets");
+    for(let s=1;s<=n;s++){
+      const cur = get(week, day, ei, s) || {};
+      if(cur.r) done++;
+      const g = ghost(week, day, ei, s);
+
+      const row = document.createElement("div");
+      row.className = "set";
+      row.innerHTML = `
+        <span class="slab-label">S${s}</span>
+        <span class="f load"><input inputmode="decimal" placeholder="–" value="${cur.l ?? ""}"></span>
+        <span class="f reps"><input inputmode="numeric" placeholder="–" value="${cur.r ?? ""}"></span>
+        <span class="f rir"><input inputmode="numeric" placeholder="–" value="${cur.rir ?? ""}"></span>
+        ${g ? `<span class="ghost"><span class="arrow">↳</span> Wo.${g.w}: <b>${g.l ?? "–"} × ${g.r}</b>${g.rir!=null&&g.rir!==""?` @${g.rir}`:""}</span>` : ""}`;
+
+      const [li, ri, ii] = row.querySelectorAll("input");
+      const mark = ()=>{
+        const r = parseFloat(ri.value);
+        row.classList.toggle("go", !isNaN(r) && r >= ex.hi);
+        row.classList.toggle("under", !isNaN(r) && r < ex.lo && ri.value !== "");
+        const gh = row.querySelector(".ghost");
+        if(gh && g) gh.classList.toggle("beat", !isNaN(r) && g.r && r > g.r);
+      };
+      const commit = ()=>{
+        const l = li.value.replace(",", ".");
+        const rec = {l: l === "" ? "" : parseFloat(l),
+                     r: ri.value === "" ? "" : parseInt(ri.value, 10),
+                     rir: ii.value === "" ? "" : parseInt(ii.value, 10)};
+        if(rec.l === "" && rec.r === "" && rec.rir === "") delete store.sets[id(week,day,ei,s)];
+        else store.sets[id(week,day,ei,s)] = rec;
+        save(); mark(); paintVerdict(); meter();
+      };
+      [li, ri, ii].forEach(inp=>{
+        inp.addEventListener("input", ()=>{ mark(); });
+        inp.addEventListener("change", commit);
+        inp.addEventListener("blur", commit);
+      });
+      ri.addEventListener("change", ()=>{ if(ri.value) startTimer(ex.rest); });
+      mark();
+      box.appendChild(row);
+    }
+
+    const vEl = card.querySelector(".verdict");
+    const paintVerdict = ()=>{
+      const v = verdict(ex, day, ei, n);
+      vEl.className = "verdict " + v.k;
+      let html = `${v.txt}${v.sub ? ` <em>${v.sub}</em>` : ""}`;
+      const st = stalled(day, ei);
+      if(st) html += `<span class="stall">Stillstand · ${st} · zuerst Schlaf, Kalorien und Technik prüfen, Volumen zuletzt</span>`;
+      const drop = ex.t === "schwer" ? cutDrop(day, ei) : null;
+      if(drop) html += `<span class="stall">Cut-Check · ${drop} · erst Schlaf, Essen und Pausen prüfen; bleibt es so, Modus „Reduziert“</span>`;
+      vEl.innerHTML = html;
+    };
+    paintVerdict();
+
+    /* Alternativen nur im Gym; zuhause läuft die KSK-Variante */
+    const altBox = card.querySelector(".alts");
+    if(home){
+      altBox.className = "home-note";
+      altBox.textContent = "Zuhause an der KSK-Station. Werte werden nur mit KSK-Einheiten verglichen: Multipresse ab 0 kg, Kabelzüge 1:1.";
+    } else {
+      const list = ALT[ex.n] || [];
+      const cur = variant(week, day, ei);
+      altBox.innerHTML = `<div class="alt-h">Alternative wählen</div>` +
+        [ex.n, ...list].map(nm =>
+          `<button class="alt${(cur||ex.n) === nm ? " on" : ""}" data-n="${nm}">${nm}${nm === ex.n ? " <i>Standard</i>" : ""}</button>`
+        ).join("") +
+        `<p class="alt-r">${SWAP_OK}</p>`;
+      altBox.querySelectorAll(".alt").forEach(btn=>{
+        btn.onclick = ()=>{
+          const nm = btn.dataset.n;
+          if(nm === ex.n) delete store.var[vid(week, day, ei)];
+          else store.var[vid(week, day, ei)] = nm;
+          save(); render();
+        };
+      });
+    }
+
+    const t = card.querySelector(".cue-t"), b = card.querySelector(".cue-b");
+    t.addEventListener("click", ()=>{
+      const open = b.classList.toggle("open");
+      t.setAttribute("aria-expanded", open);
+      t.querySelector("span").textContent = open ? "−" : "+";
+    });
+
+    main.appendChild(card);
+  });
+
+  if(!due) main.innerHTML = `<p class="empty">Heute steht nichts an.</p>`;
+
+  const tools = document.createElement("div");
+  tools.className = "tools";
+  tools.innerHTML = `<button class="tool" id="exp">Export</button><button class="tool" id="bak">Sicherung</button><button class="tool" id="rules">Regeln</button>`;
+  main.appendChild(tools);
+  const tools2 = document.createElement("div");
+  tools2.className = "tools";
+  tools2.style.marginTop = "8px";
+  tools2.innerHTML = `<button class="tool" id="clr">Tag leeren</button>`;
+  main.appendChild(tools2);
+  const note = document.createElement("p");
+  note.className = "note";
+  note.textContent = "Grün = oberes Ende des Zielbereichs erreicht. Rot = unter dem Bereich, Last eine Stufe zurück. Die graue Zeile unter jedem Satz zeigt, was du beim letzten Mal an derselben Übung geschafft hast.";
+  main.appendChild(note);
+  const stat = document.createElement("p");
+  stat.className = "note";
+  stat.textContent = memoryOnly ? ""
+    : backend === "claude" ? "Speicher: Claude – Eingaben bleiben über Sitzungen erhalten."
+    : "Speicher: dieses Gerät. Nach jeder Woche eine Sicherung ziehen – iOS räumt Website-Daten irgendwann auf.";
+  if(stat.textContent) main.appendChild(stat);
+
+  document.getElementById("exp").onclick = exportTSV;
+  document.getElementById("bak").onclick = backupJSON;
+  document.getElementById("rules").onclick = showRules;
+  const clrBtn = document.getElementById("clr");
+  let armed = false, armT = null;
+  const disarm = ()=>{ armed = false; clearTimeout(armT); clrBtn.textContent = "Tag leeren"; clrBtn.classList.remove("arm"); };
+  clrBtn.onclick = ()=>{
+    if(!armed){
+      armed = true;
+      clrBtn.textContent = `${D.n} Wo. ${week} leeren?`;
+      clrBtn.classList.add("arm");
+      armT = setTimeout(disarm, 4000);
+      return;
+    }
+    disarm();
+    Object.keys(store.sets).forEach(k=>{ if(k.startsWith(`w${week}|d${day}|`)) delete store.sets[k]; });
+    Object.keys(store.var).forEach(k=>{ if(k.startsWith(`w${week}|d${day}|`)) delete store.var[k]; });
+    save(); render();
+  };
+
+  document.getElementById("focus").textContent = `${D.f} · ${home ? "Zuhause" : "Gym"}`;
+  document.getElementById("cnt").textContent = `${done}/${due}`;
+  document.getElementById("fill").style.width = due ? (done/due*100)+"%" : "0%";
+  paintDays();
+}
+
+function meter(){
+  const {week, day} = store.meta;
+  let due = 0, done = 0;
+  DAYS[day].ex.forEach((ex, ei)=>{
+    const n = setsFor(ex); due += n;
+    for(let s=1;s<=n;s++){ const v = get(week,day,ei,s); if(v && v.r) done++; }
+  });
+  document.getElementById("cnt").textContent = `${done}/${due}`;
+  document.getElementById("fill").style.width = due ? (done/due*100)+"%" : "0%";
+  paintDays();
+}
+
+function paintDays(){
+  [...document.querySelectorAll(".day")].forEach((el, i)=>{
+    el.classList.toggle("on", i === store.meta.day);
+    const has = Object.keys(store.sets).some(k=>k.startsWith(`w${store.meta.week}|d${i}|`));
+    el.classList.toggle("done", has);
+  });
+}
+
+/* ---------- Pausenuhr ---------- */
+let tEnd = 0, tLeft = 0, tInt = null;
+const tim = document.getElementById("timer"),
+      clk = document.getElementById("t-clock"),
+      tog = document.getElementById("t-toggle");
+function fmt(s){ s = Math.max(0, Math.round(s)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); }
+function tick(){
+  const left = (tEnd - Date.now())/1000;
+  clk.textContent = fmt(left);
+  if(left <= 0){
+    clearInterval(tInt); tInt = null;
+    tim.classList.remove("run"); tim.classList.add("done");
+    tog.textContent = "Start";
+    if(navigator.vibrate) navigator.vibrate([180,90,180]);
+  }
+}
+function startTimer(sec){
+  tLeft = sec; tEnd = Date.now() + sec*1000;
+  clearInterval(tInt); tInt = setInterval(tick, 250);
+  tim.classList.add("run"); tim.classList.remove("done");
+  tog.textContent = "Stopp"; tick();
+}
+tog.onclick = ()=>{
+  if(tInt){ clearInterval(tInt); tInt = null; tim.classList.remove("run"); tog.textContent = "Start"; }
+  else startTimer(tLeft || 120);
+};
+document.getElementById("t-reset").onclick = ()=>{
+  clearInterval(tInt); tInt = null; tim.className = "timer";
+  clk.textContent = "–:––"; tog.textContent = "Start"; tLeft = 0;
+};
+
+/* ---------- Export, Sicherung, Regeln ---------- */
+const $csv = ()=> document.getElementById("csv");
+
+function openSheet(title, text, {info = false, restore = false} = {}){
+  document.getElementById("sheet-h").textContent = title;
+  const p = document.getElementById("sheet-p");
+  p.textContent = text;
+  p.hidden = !text;
+  document.getElementById("info").classList.toggle("on", info);
+  $csv().hidden = info;
+  document.getElementById("sel").hidden = info;
+  document.getElementById("restore").hidden = !restore;
+  document.getElementById("sheet").classList.add("open");
+}
+
+function exportTSV(){
+  const rows = [["Woche","Modus","Tag","Ort","Übung","Satz","Last (kg)","Wdh.","RIR"]];
+  for(let w=1; w<=WEEKS; w++)
+    DAYS.forEach((D, d)=> D.ex.forEach((ex, ei)=>{
+      for(let s=1; s<=ex.s; s++){
+        const v = get(w,d,ei,s);
+        if(v && (v.l !== "" || v.r !== ""))
+          rows.push([w, MODES[modeOf(w)], D.n, locOf(w,d) === "home" ? "Zuhause" : "Gym", nameOf(w,d,ei), s, v.l, v.r, v.rir]);
+      }
+    }));
+  const t = $csv();
+  t.value = rows.map(r=>r.join("\t")).join("\n");
+  t.readOnly = true;
+  openSheet("Export für Excel", "Tabgetrennt. Kopieren, im Satzlog in die Spalten Last / Wdh. / RIR einfügen.");
+}
+
+/* Sicherung: kompletter Stand als Text, wieder einlesbar. */
+function backupJSON(){
+  const t = $csv();
+  t.value = JSON.stringify(store);
+  t.readOnly = false;
+  openSheet("Sicherung", "Der komplette Stand als Text – kopieren und in Notizen oder Dateien ablegen. Zum Zurückholen eine alte V8.2-Sicherung hier einfügen und Wiederherstellen tippen.", {restore:true});
+}
+
+function showRules(){
+  openSheet("Regeln · V8.2", "", {info:true});
+}
+
+(function(){
+  const rb = document.getElementById("restore");
+  let armed = false, armT = null;
+  const flash = msg =>{ rb.textContent = msg; setTimeout(()=>{ rb.textContent = "Wiederherstellen"; }, 2200); };
+  const disarm = ()=>{ armed = false; clearTimeout(armT); rb.classList.remove("arm"); rb.textContent = "Wiederherstellen"; };
+  rb.onclick = ()=>{
+    let data;
+    try{ data = JSON.parse($csv().value); }
+    catch(e){ disarm(); flash("Text nicht lesbar"); return; }
+    if(!data || typeof data !== "object" || !data.sets || !data.meta){ disarm(); flash("Keine gültige Sicherung"); return; }
+    if(data.plan !== PLAN){ disarm(); flash("Andere Version – nicht übernommen"); return; }
+    if(!armed){
+      armed = true; rb.classList.add("arm");
+      rb.textContent = "Stand ersetzen?";
+      armT = setTimeout(disarm, 4000);
+      return;
+    }
+    disarm();
+    store = data;
+    normalize();
+    save();
+    document.getElementById("sheet").classList.remove("open");
+    syncPickers();
+    render();
+  };
+})();
+document.getElementById("sel").onclick = async ()=>{
+  const t = document.getElementById("csv"), btn = document.getElementById("sel");
+  t.focus(); t.select(); t.setSelectionRange(0, 99999);
+  let ok = false;
+  try{ await navigator.clipboard.writeText(t.value); ok = true; }
+  catch(e){ try{ ok = document.execCommand("copy"); }catch(e2){ ok = false; } }
+  btn.textContent = ok ? "Kopiert" : "Markiert – jetzt kopieren";
+  setTimeout(()=>{ btn.textContent = "Kopieren"; }, 1800);
+};
+document.getElementById("close").onclick = ()=> document.getElementById("sheet").classList.remove("open");
+
+/* ---------- Start ---------- */
+function syncPickers(){
+  const {week, day} = store.meta;
+  document.getElementById("week").value = week;
+  document.getElementById("phase").value = modeOf(week);
+  document.getElementById("loc").value = locOf(week, day);
+}
+
+(async function init(){
+  const wsel = document.getElementById("week");
+  for(let i=1;i<=WEEKS;i++) wsel.add(new Option(`Wo. ${i}`, i));
+  wsel.onchange = ()=>{ store.meta.week = +wsel.value; save(); syncPickers(); render(); };
+
+  const psel = document.getElementById("phase");
+  Object.entries(MODES).forEach(([k, label])=> psel.add(new Option(`${label} · ${totalSets(k)}`, k)));
+  psel.onchange = ()=>{
+    if(psel.value === "std") delete store.mode[store.meta.week];
+    else store.mode[store.meta.week] = psel.value;
+    save(); render();
+  };
+
+  const lsel = document.getElementById("loc");
+  lsel.onchange = ()=>{ store.loc[lid(store.meta.week, store.meta.day)] = lsel.value; save(); render(); };
+
+  const nav = document.getElementById("days");
+  DAYS.forEach((D, i)=>{
+    const b = document.createElement("button");
+    b.className = "day";
+    b.innerHTML = `<b>${D.k}</b><span>${D.t}</span>`;
+    b.onclick = ()=>{ store.meta.day = i; save(); syncPickers(); render(); window.scrollTo({top:0, behavior:"smooth"}); };
+    nav.appendChild(b);
+  });
+
+  /* Erst zeichnen, dann laden: die Oberflaeche steht sofort,
+     auch wenn der Speicher hakt. */
+  syncPickers(); render();
+
+  try{ await load(); }
+  catch(e){
+    memoryOnly = true;
+    document.getElementById("warn").classList.add("on");
+  }
+
+  syncPickers(); render();
+
+  if("serviceWorker" in navigator && location.protocol === "https:"){
+    navigator.serviceWorker.register("./sw.js").catch(()=>{});
+  }
+})();
+</script>
+</body>
+</html>
