@@ -7,11 +7,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Log V8.2">
+<meta name="apple-mobile-web-app-title" content="Log V9">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="../icon-180.png">
 <link rel="icon" href="../icon-192.png">
-<title>Trainingslog V8.2</title>
+<title>Trainingslog V9</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -276,7 +276,7 @@ textarea{
 .alt-r{font-size:11.5px;color:var(--steel-dim);line-height:1.5;margin:9px 0 0}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 :focus-visible{outline:2px solid var(--paper);outline-offset:2px}
-/* ---------- V8.2: Ort, Modus, Regeln ---------- */
+/* ---------- V9: Ort, Modus, Regeln ---------- */
 .top-row{flex-wrap:wrap}
 .pickers{flex-wrap:wrap;justify-content:flex-end}
 .tag.home{background:rgba(140,151,166,.16);color:var(--steel)}
@@ -299,7 +299,7 @@ textarea{
 
 <header class="top">
   <div class="top-row">
-    <span class="brand">Trainingslog V8.2</span>
+    <span class="brand">Trainingslog V9</span>
     <div class="pickers">
       <select class="pick" id="week" aria-label="Woche"></select>
       <select class="pick" id="loc" aria-label="Ort">
@@ -331,10 +331,12 @@ textarea{
       <h4>Cut-Regeln</h4>
       <ul>
         <li>Ziel im Cut: Kraft halten, nicht steigern. Leitübungen sind die schweren Grundübungen: Smith-Schrägbank, T-Bar Row, Hack Squat, RDL und Smith Split Squat.</li>
-        <li>„Cut-Check“ erscheint, wenn eine Leitübung zwei Einheiten hintereinander mehr als 5 % unter ihrem Bestwert davor liegt (geschätztes Maximum aus Satz 1). Dann zuerst Schlaf, Essen und Pausen prüfen. Bleibt es so: Modus „Reduziert“. Jede Isolationsübung bekommt einen Satz weniger, Last und RIR bleiben.</li>
-        <li>Alle 6–8 Wochen oder bei deutlicher Erschöpfung eine Woche Modus „Deload“: etwa halbe Satzzahl, gleiche Last, RIR 3. Deload-Wochen zählen nicht für den Cut-Check.</li>
-        <li>Abnahme 0,5–1 % Körpergewicht pro Woche, gemessen am Wochendurchschnitt. Eiweiß 2,3–3,1 g pro kg fettfreie Masse. 10.000–12.000 Schritte, lockeres Cardio, kein HIIT an Beintagen.</li>
-        <li>Isolationsübungen: letzter Satz 0–1 RIR, wenn die Erholung stimmt. Grundübungen bleiben bei 1–2, der RDL bei 2.</li>
+        <li>Im Defizit Last und Umfang halten: Es gibt keinen Beleg dafür, dass weniger Sätze im Cut Muskeln schützen.</li>
+        <li>„Cut-Check“ erscheint, wenn eine Leitübung zwei Einheiten hintereinander mehr als 5 % unter ihrem Bestwert davor liegt (geschätztes Maximum aus Satz 1). Dann zuerst Schlaf, Essen und Pausen prüfen. Erst wenn es so bleibt: Modus „Reduziert“ (jede Isolationsübung einen Satz weniger, Last und RIR bleiben). Das ist ein praktisches Werkzeug, keine belegte Methode.</li>
+        <li>Deload: Ob geplante Deloads nötig sind, ist nicht belegt; eine Woche Pause kostete in einer Studie kein Wachstum (Coleman 2024). Einsetzen beim Übergang vom Cut in den Aufbau oder bei deutlicher Erschöpfung: etwa halbe Satzzahl, gleiche Last, RIR 3. Deload-Wochen zählen nicht für den Cut-Check.</li>
+        <li>Abnahme etwa 0,5–1 % Körpergewicht pro Woche im Wochendurchschnitt; mit 0,7 % pro Woche blieb mehr Muskelmasse erhalten als mit schnellerem Abnehmen (Garthe 2011). Eiweiß 2,3–3,1 g pro kg fettfreie Masse.</li>
+        <li>Cardio: Gehen (10.000–12.000 Schritte) oder Rad. Laufen und HIIT sparsam und nicht vor Beintagen, sonst stört es mehr.</li>
+        <li>Isolationsübungen: letzter Satz 0–1 RIR, wenn die Erholung stimmt. Grund- und Druckübungen bleiben bei 1–2, der RDL bei 2.</li>
       </ul>
       <h4>Aufwärmen</h4>
       <ul>
@@ -353,6 +355,8 @@ textarea{
       <h4>Gesundheit</h4>
       <ul>
         <li>Mit Testosteron und Peptiden: Blutbild vor dem Start, nach 6–8 Wochen, danach alle 3–4 Monate (Hämatokrit, Blutfette, Östradiol, Leber, Niere). Blutdruck wöchentlich messen. Dosierung nur mit ärztlicher Begleitung.</li>
+        <li>Testosteron erhöht das Risiko für Sehnenrisse im Oberkörper (Brust, Bizeps). Deshalb kontrolliert absenken, unten nicht abfedern, keine Maximalversuche und die Last in kleinen Schritten steigern.</li>
+        <li>Falls ein GLP-1-Mittel dabei ist: Ein großer Teil des Gewichtsverlusts kann sonst Muskel sein. Eiweißziel und schweres Training haben dann Vorrang.</li>
       </ul>
     </div>
     <textarea id="csv" readonly></textarea>
@@ -366,43 +370,44 @@ textarea{
 
 <script>
 /* =====================================================================
-   Trainingslog V8.2 – Plan V8.1 „Brust zuerst“ mit Coach-Anpassungen:
-   Do Kelso Shrug → Kabel-Pullover (Lat-Breite), Mo Pec Deck → Low-to-High
-   Cable Fly (obere Brust), Sa stehendes → sitzendes Wadenheben (Soleus),
-   Reverse Pec Deck wieder am Donnerstag statt Samstag (Wunsch).
-   Weiterhin 86 Arbeitssätze pro Woche.
+   Trainingslog V9 – Cut-Block. Basis V8.1/V8.2, überarbeitet nach Skills
+   (RP/Israetel, Schoenfeld) und Studien-Check. Priorität obere Brust + Lats:
+   Mo Smith-Schrägbank 4, Mo Latzug 3, Fr Schrägbrust 4, Do neu Lat-Rudern 2;
+   frei gemacht: Mo Seitheben 4→3, Do Preacher 3→2. Sa wieder stehendes
+   Wadenheben (Kinoshita 2023), Beinstrecker zurückgelehnt (Larsen 2025).
+   89 Arbeitssätze pro Woche.
    t: 'schwer' | 'maschine' | 'iso' · s: Arbeitssätze · wu: Aufwärmsätze
    loc: Standardort des Tages · h/hg: Variante an der KSK-Station zuhause
    (ohne h gilt „KSK · “ + Name, denn Zuggewichte sind nicht vergleichbar).
    ===================================================================== */
 const ISO = "1–2 · letzter 0–1";
 const DAYS = [
- {k:"MO", n:"Montag", t:"Upper A", f:"Obere Brust · Rückendicke · Schulter", loc:"gym", ex:[
+ {k:"MO", n:"Montag", t:"Upper A", f:"Obere Brust · Lats · Rückendicke", loc:"gym", ex:[
   {n:"Smith-Schrägbank 20–30°", g:"Bank 20–30° · pronierter Griff, gut schulterbreit · Stange zur oberen Brust",
    h:"KSK · Smith-Schrägbank 20–30°", hg:"KSK-Stange startet bei 0 kg · Bank 20–30° · Sicherheitsanschläge einstellen",
-   t:"schwer", s:3, lo:6, hi:10, rir:"1–2", rest:180, wu:"3",
-   cue:"Bank und Sicherheitsanschläge einstellen. Kontrolliert zur oberen Brust, nicht zum Hals absenken; schmerzfreie Tiefe."},
+   t:"schwer", s:4, lo:6, hi:10, rir:"1–2", rest:180, wu:"3",
+   cue:"V9: 4 statt 3 Sätze (Priorität obere Brust). Kontrolliert 2–3 s absenken, unten nicht abfedern, keine Maximalversuche: Unter Testosteron reißen Sehnen im Oberkörper häufiger. Zur oberen Brust, nicht zum Hals."},
+  {n:"Neutraler Latzug", g:"Paralleler Doppel-D-Griff, etwa schulterbreit",
+   h:"KSK · Kniender Latzug, neutral", hg:"Hoher Zug, Doppel-D-Griff oder zwei Einzelgriffe · kniend, minimale Rücklage",
+   t:"maschine", s:3, lo:8, hi:12, rir:"1–2", rest:180, wu:"1",
+   cue:"V9: 3 statt 2 Sätze und direkt nach der Brust (Priorität Lats). Oben volle Streckung, Ellbogen nach unten zur Hüfte, ohne Schwung."},
   {n:"Chest-Supported T-Bar Row", g:"Enger neutraler V-Griff · Brust bleibt am Pad",
    h:"KSK · Sitzendes Kabelrudern, V-Griff", hg:"Tiefer Zug, Füße am Rahmen abstützen · Oberkörper ruhig, Griff zu den unteren Rippen",
    t:"schwer", s:3, lo:6, hi:10, rir:"1–2", rest:180, wu:"2",
    cue:"Brust am Pad, Ellbogen eher körpernah. Griff Richtung untere Rippen. Kein Hüftschwung."},
-  {n:"Neutraler Latzug", g:"Paralleler Doppel-D-Griff, etwa schulterbreit",
-   h:"KSK · Kniender Latzug, neutral", hg:"Hoher Zug, Doppel-D-Griff oder zwei Einzelgriffe · kniend, minimale Rücklage",
-   t:"maschine", s:2, lo:8, hi:12, rir:"1–2", rest:180, wu:"1",
-   cue:"Arme oben schmerzfrei strecken; Schulterblätter natürlich bewegen lassen. Ellbogen nach unten, ohne Schwung."},
   {n:"Low-to-High Cable Fly", g:"Zwei D-Griffe am tiefsten Zug · neutral, Daumen oben",
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
-   cue:"V8.2 neu statt Pec Deck: von tief außen Richtung Schlüsselbein führen, Fokus obere Brust. Schulter bleibt zentriert; gedehnte Position kontrollieren."},
+   cue:"Von tief außen Richtung Schlüsselbein führen. Gedehnte Position kontrollieren, Schulter bleibt zentriert."},
   {n:"1-Arm Kabel-Seitheben", g:"D-Griff am tiefsten Zug · Kabel läuft vor dem Körper", side:true,
-   t:"iso", s:4, lo:12, hi:20, rir:ISO, rest:105, wu:"1",
-   cue:"Arm leicht vor der Körperseite heben; natürliche Schulterblattrotation, kein Hüftschwung. Kommt erst nach der Brustarbeit."},
+   t:"iso", s:3, lo:12, hi:20, rir:ISO, rest:105, wu:"1",
+   cue:"V9: 3 statt 4 Sätze (Schulter ist keine Priorität, frei für Brust und Lats). Arm leicht vor der Körperseite heben, kein Hüftschwung."},
   {n:"Reverse Pec Deck", g:"Griffe auf Schulterhöhe · neutraler Griff, Daumen oben",
    h:"KSK · Kabel-Reverse-Fly über Kreuz", hg:"Beide hohen Züge auf Schulterhöhe, Kabel kreuzen · KSK-Zug 1:1",
    t:"iso", s:2, lo:12, hi:20, rir:ISO, rest:105, wu:"0–1",
    cue:"Oberarme kontrolliert nach außen/hinten führen. Schulterblätter dürfen mitbewegen; den Trapez nicht künstlich ausschalten."},
   {n:"Überkopf-Kabeltrizeps", g:"Seil am hohen Zug · Rücken zum Turm, Ellbogen neben dem Kopf",
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
-   cue:"Verträgliche Überkopfposition. Ellbogen kontrolliert beugen und strecken, ohne ins Hohlkreuz auszuweichen."},
+   cue:"Überkopf wächst der Trizeps stärker als beim Pushdown (Maeo 2023). Ellbogen kontrolliert beugen und strecken, ohne ins Hohlkreuz auszuweichen."},
   {n:"Bayesian Cable Curl", g:"D-Griff am tiefsten Zug · Rücken zum Turm, Arm bleibt hinter dem Rumpf", side:true,
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
    cue:"Oberarm nur angenehm weit hinter den Körper. Keine maximale Schulterstreckung erzwingen; ohne Schwung."}]},
@@ -419,15 +424,15 @@ const DAYS = [
   {n:"Sitzender Beinbeuger", g:"Pad tief über den Oberschenkeln · Lehne aufrecht, Hüfte ~90°",
    h:"KSK · Einbeiniger Kabel-Beinbeuger stehend", hg:"Manschette am Knöchel, tiefer Zug · Hüfte fixiert, je Bein",
    t:"iso", s:3, lo:8, hi:12, rir:ISO, rest:120, wu:"2",
-   cue:"Becken und Oberschenkel fixieren. Knie kontrolliert weit strecken und beugen; Sitzposition dokumentieren."},
-  {n:"Beinstrecker", g:"Drehachse auf Kniehöhe · Pad direkt über dem Sprunggelenk",
-   h:"KSK · Einbeiniger Kabel-Beinstrecker sitzend", hg:"Bank vor dem tiefen Zug, Manschette am Knöchel · je Bein",
+   cue:"Sitzend wächst der hintere Oberschenkel stärker als liegend (Maeo 2021). Becken und Oberschenkel fixieren, Knie kontrolliert weit strecken und beugen."},
+  {n:"Beinstrecker, Lehne zurück", g:"Lehne zurückgestellt, Hüfte ~40° · Drehachse auf Kniehöhe, Pad über dem Sprunggelenk",
+   h:"KSK · Einbeiniger Kabel-Beinstrecker, zurückgelehnt", hg:"Bank vor dem tiefen Zug, Oberkörper zurückgelehnt · Manschette am Knöchel, je Bein",
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
-   cue:"Zurückgelehnte Lehne nur bei stabiler Becken- und Knieposition. Oben kurz anspannen, langsam ablassen."},
+   cue:"V9: Lehne bewusst zurück. Mit gestreckterer Hüfte wächst der Rectus femoris deutlich stärker (Larsen 2025). Becken bleibt am Sitz, oben kurz anspannen, langsam ablassen."},
   {n:"Stehendes Wadenheben", g:"Fußballen auf der Kante · Knie fast gestreckt",
    h:"KSK · Smith Wadenheben stehend", hg:"Fußballen auf einer Erhöhung · Knie fast gestreckt",
    t:"iso", s:3, lo:8, hi:15, rir:ISO, rest:120, wu:"2",
-   cue:"Knie weitgehend gestreckt, nicht gewaltsam durchdrücken. Ferse kontrolliert absenken, unten 1–2 s ohne Federn."},
+   cue:"Unten 1–2 s in der Dehnung halten, nicht federn. Knie weitgehend gestreckt, nicht durchdrücken."},
   {n:"Kabel-Crunch", g:"Seil am hohen Zug · kniend, Seil neben dem Kopf",
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:105, wu:"0–1",
    cue:"Rippen kontrolliert Richtung Becken einrollen. Nicht nur aus der Hüfte nach vorn kippen."}]},
@@ -435,31 +440,34 @@ const DAYS = [
  {k:"DO", n:"Donnerstag", t:"Pull", f:"Lats · Rückendicke · hintere Schulter · Armbeuger", loc:"home", ex:[
   {n:"1-Arm Latzug zur Hüfte", g:"D-Griff am hohen Zug · neutral, Ellbogen zur Körperseite", side:true,
    t:"maschine", s:3, lo:8, hi:12, rir:"1–2", rest:150, wu:"2",
-   cue:"Oben schmerzfreie Armstreckung. Ellbogen nach unten zur Körperseite; Griff nicht zwanghaft zur Hosentasche ziehen."},
+   cue:"Oben schmerzfreie Armstreckung, Lats voll dehnen. Ellbogen nach unten zur Körperseite."},
   {n:"Brustgestützte High Row", g:"Weiter pronierter Griff · Brust am Pad, Ellbogen 45–60°",
    h:"KSK · Seated Cable Row, Ellbogen außen", hg:"Weite gerade Stange am tiefen Zug, pronierter Griff · sitzend, Füße am Rahmen abstützen, Zug zur oberen Brust",
    t:"maschine", s:3, lo:8, hi:12, rir:"1–2", rest:180, wu:"2",
-   cue:"Ellbogen etwa 45–60°. Schulterblätter kontrolliert bewegen; nicht mit dem Rumpf helfen. Zuhause als Seated Cable Row: vorne die Schulterblätter kontrolliert nach vorn dehnen lassen, Oberkörper bleibt aufrecht und ruhig."},
-  {n:"Kabel-Pullover", g:"Gerade Stange oder Seil am hohen Zug · Arme fast gestreckt",
-   t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
-   cue:"V8.2 neu statt Kelso Shrug, für die Lat-Breite. Oben die Lats dehnen, Stange im Bogen zu den Oberschenkeln führen; Rippen unten, nicht mit dem Trizeps drücken."},
+   cue:"Ellbogen etwa 45–60°, nicht mit dem Rumpf helfen. Zuhause als Seated Cable Row: vorne die Schulterblätter kontrolliert nach vorn dehnen, Oberkörper aufrecht und ruhig."},
+  {n:"1-Arm Lat-Rudern zur Hüfte", g:"D-Griff am tiefen bis mittleren Zug · Oberkörper leicht vorgeneigt, Ellbogen nah am Körper", side:true,
+   t:"maschine", s:2, lo:10, hi:15, rir:"1–2", rest:120, wu:"0–1",
+   cue:"V9 neu (Priorität Lats). Ellbogen in einem Bogen zur Hüfte ziehen, vorne Schulter kontrolliert nach vorn dehnen lassen. Nicht zur Brust ziehen, sonst arbeitet der obere Rücken."},
+  {n:"Kabel-Pullover (Straight-Arm Pulldown)", g:"Gerade Stange oder Seil am hohen Zug · Arme fast gestreckt",
+   t:"iso", s:2, lo:12, hi:15, rir:ISO, rest:120, wu:"0–1",
+   cue:"Stehend am Kabel, nicht der Kurzhantel-Pullover auf der Bank (der trifft eher die Brust). Oben Lats dehnen, Stange im Bogen zu den Oberschenkeln, Rippen unten. Belege für die Lats sind dünn: nur Ergänzung."},
   {n:"Reverse Pec Deck", g:"Griffe auf Schulterhöhe · neutraler Griff, Daumen oben",
    h:"KSK · Kabel-Reverse-Fly über Kreuz", hg:"Beide hohen Züge auf Schulterhöhe, Kabel kreuzen · KSK-Zug 1:1",
    t:"iso", s:3, lo:12, hi:20, rir:"1–2", rest:105, wu:"0–1",
-   cue:"Wieder am Donnerstag nach dem Rückentraining, deshalb meist ohne Aufwärmsatz. Nur bis 1–2 RIR, kein Ausbrennen: Freitag ist Brusttag. Oberarme kontrolliert nach außen/hinten, ohne Schwung."},
+   cue:"Nach dem Rückentraining meist ohne Aufwärmsatz. Nur bis 1–2 RIR, kein Ausbrennen: Freitag ist Brusttag. Oberarme kontrolliert nach außen/hinten, ohne Schwung."},
   {n:"Cable Preacher Curl", g:"SZ- oder gerade Stange am tiefen Zug · Oberarme fest am Pad",
    h:"KSK · Kabel-Curl an der Schrägbanklehne", hg:"Oberarme auf der Banklehne als Preacher-Ersatz · tiefer Zug, KSK 1:1",
-   t:"iso", s:3, lo:8, hi:12, rir:ISO, rest:120, wu:"1",
-   cue:"Oberarme am Pad lassen. Ellbogen weit, aber schmerzfrei strecken; nicht ruckartig aus der unteren Position starten."},
+   t:"iso", s:2, lo:8, hi:12, rir:ISO, rest:120, wu:"1",
+   cue:"V9: 2 statt 3 Sätze (Arme keine Priorität). Oberarme am Pad, Ellbogen weit, aber schmerzfrei strecken; nicht ruckartig aus der unteren Position."},
   {n:"Rope Hammer Curl", g:"Seil am tiefen Zug · neutraler Griff, Daumen oben",
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"0–1",
    cue:"Neutraler Griff, Oberarme ruhig. Kontrollierter Bewegungsumfang; kein Hüftschwung."}]},
 
- {k:"FR", n:"Freitag", t:"Push", f:"Brust zuerst · seitliche Schulter · Trizeps", loc:"home", ex:[
+ {k:"FR", n:"Freitag", t:"Push", f:"Obere Brust zuerst · seitliche Schulter · Trizeps", loc:"home", ex:[
   {n:"Schrägbrust-Maschine 20–30°", g:"Lehne 20–30° · Griffe auf Höhe der oberen Brust · Sitzhöhe notieren",
    h:"KSK · Smith-Schrägbank 20–30°", hg:"KSK-Stange startet bei 0 kg · Bank 20–30° · Sicherheitsanschläge einstellen",
-   t:"maschine", s:3, lo:8, hi:12, rir:"1–2", rest:180, wu:"3",
-   cue:"Sitz und Griffe festhalten. Kontrollierte, schmerzfreie Tiefe. Kein erzwungener Kontakt am Schlüsselbein."},
+   t:"maschine", s:4, lo:8, hi:12, rir:"1–2", rest:180, wu:"3",
+   cue:"V9: 4 statt 3 Sätze (Priorität obere Brust). Kontrolliert absenken, kein erzwungener Kontakt am Schlüsselbein, keine Maximalversuche."},
   {n:"Konvergierende Brustpresse", g:"Neutraler oder leicht pronierter Griff · Griffe auf Brusthöhe",
    h:"KSK · Smith-Flachbank", hg:"KSK-Stange startet bei 0 kg · Stange zur unteren Brust, Schulterblätter fixiert",
    t:"maschine", s:2, lo:8, hi:12, rir:"1–2", rest:180, wu:"1",
@@ -467,11 +475,11 @@ const DAYS = [
   {n:"Pec Deck", g:"Griffe auf Brusthöhe · Ellbogen leicht gebeugt und fixiert",
    h:"KSK · Kabel-Fly auf Brusthöhe", hg:"D-Griffe, Züge auf Schulterhöhe · Ellbogen leicht gebeugt, KSK 1:1",
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"0–1",
-   cue:"Dehnposition kontrollieren, nicht erzwingen. Erst danach beginnt das direkte Schultertraining."},
+   cue:"Dehnposition kontrollieren, nicht erzwingen. Trainiert die ganze Brust, nicht gezielt einen Bereich."},
   {n:"Seithebemaschine", g:"Pads an den Oberarmen · nicht mit den Händen ziehen",
    h:"KSK · 1-Arm Kabel-Seitheben", hg:"D-Griff am tiefsten Zug, Kabel vor dem Körper · je Seite, KSK 1:1",
    t:"iso", s:5, lo:12, hi:20, rir:ISO, rest:120, wu:"1",
-   cue:"5 Arbeitssätze. Sitz und Padkontakt notieren; natürliche Schulterblattrotation, kein Schwung."},
+   cue:"Kabel, Kurzhantel und Maschine wirken gleich gut (Larsen 2025): nimm, was sauber geht. Kein Schwung."},
   {n:"Überkopf-Kabeltrizeps", g:"Seil am hohen Zug · Rücken zum Turm, Ellbogen neben dem Kopf",
    t:"iso", s:3, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
    cue:"Überkopfposition nur schmerzfrei. Ellbogen kontrolliert beugen und strecken; keine erzwungene Dehnung."},
@@ -483,7 +491,7 @@ const DAYS = [
    t:"iso", s:2, lo:8, hi:15, rir:"1–2", rest:120, wu:"1", wut:"3–5 leichte, kürzere Wdh. aus dem Kniestand",
    cue:"Rippen und Becken kontrollieren. Nur so weit rollen, wie die Rückenposition stabil bleibt; Technikverlust beendet den Satz."}]},
 
- {k:"SA", n:"Samstag", t:"Lower B", f:"Hamstrings · Gluteus · Quads", loc:"gym", ex:[
+ {k:"SA", n:"Samstag", t:"Lower B", f:"Hamstrings · Gluteus · Quads · Waden", loc:"gym", ex:[
   {n:"Romanian Deadlift", g:"Langhantel, pronierter Griff knapp schulterbreit · Stange bleibt am Bein",
    h:"KSK · Smith RDL", hg:"KSK-Stange startet bei 0 kg · Stange am Bein entlang, Hüfte nach hinten",
    t:"schwer", s:3, lo:6, hi:10, rir:"2", rest:240, wu:"3",
@@ -496,10 +504,10 @@ const DAYS = [
    h:"KSK · Einbeiniger Kabel-Beinbeuger stehend", hg:"Manschette am Knöchel, tiefer Zug · Hüfte fixiert, je Bein",
    t:"iso", s:3, lo:8, hi:12, rir:ISO, rest:120, wu:"1",
    cue:"Sitz- und Hüftposition wie Dienstag. Becken fixieren, Knie kontrolliert weit strecken und beugen."},
-  {n:"Beinstrecker", g:"Gleiche Einstellung wie Dienstag · Pad über dem Sprunggelenk",
-   h:"KSK · Einbeiniger Kabel-Beinstrecker sitzend", hg:"Bank vor dem tiefen Zug, Manschette am Knöchel · je Bein",
+  {n:"Beinstrecker, Lehne zurück", g:"Gleiche Einstellung wie Dienstag · Hüfte ~40°, Pad über dem Sprunggelenk",
+   h:"KSK · Einbeiniger Kabel-Beinstrecker, zurückgelehnt", hg:"Bank vor dem tiefen Zug, Oberkörper zurückgelehnt · Manschette am Knöchel, je Bein",
    t:"iso", s:2, lo:12, hi:20, rir:ISO, rest:120, wu:"1",
-   cue:"Zurückgelehnte Position nur bei sicherer Knieachse und stabilem Becken. Einstellung dokumentieren."},
+   cue:"Gleiche Einstellung wie Dienstag. Zurückgelehnt trifft es den Rectus femoris besser (Larsen 2025)."},
   {n:"Hip Adduction", g:"Pads innen an den Knien · Rumpf aufrecht",
    h:"KSK · Kabel-Adduktion stehend", hg:"Manschette am Knöchel, tiefer Zug · je Bein",
    t:"iso", s:1, lo:10, hi:15, rir:"1–2", rest:105, wu:"1",
@@ -508,10 +516,10 @@ const DAYS = [
    h:"KSK · Kabel-Abduktion stehend", hg:"Manschette am Knöchel, tiefer Zug · je Bein",
    t:"iso", s:1, lo:12, hi:20, rir:"1–2", rest:105, wu:"1",
    cue:"Becken stabil, Bewegung aus der Hüfte. Nicht durch Rumpfschwung verlängern."},
-  {n:"Sitzendes Wadenheben", g:"Pad auf den unteren Oberschenkeln · Fußballen auf der Kante, Knie 90°",
-   h:"KSK · Smith Wadenheben sitzend", hg:"Stange mit Polster auf den Knien, Fußballen erhöht · Knie 90°",
+  {n:"Stehendes Wadenheben", g:"Fußballen auf der Kante · Knie fast gestreckt",
+   h:"KSK · Smith Wadenheben stehend", hg:"Fußballen auf einer Erhöhung · Knie fast gestreckt",
    t:"iso", s:3, lo:10, hi:15, rir:ISO, rest:120, wu:"2",
-   cue:"V8.2 neu statt stehend: trifft den Schollenmuskel (Soleus). 2 s Dehnung unten, volle Streckung oben, nicht federn."}]}
+   cue:"V9: wieder stehend statt sitzend. Stehend wuchs der Wadenmuskel (Gastrocnemius) um 9–12 %, sitzend nur um 1–2 %, der Soleus bei beiden gleich (Kinoshita 2023). Unten 1–2 s halten."}]}
 ];
 
 /* Alternativen im Gym: gleiches Bewegungsmuster, gleicher Satz- und Wiederholungsbereich. */
@@ -527,12 +535,13 @@ const ALT = {
  "Hack Squat":                   ["Pendulum Squat", "Smith Squat, Füße leicht vorne"],
  "Beinpresse, Füße mittel/tief": ["Belt Squat", "Hack Squat, Füße höher, mehr Wdh."],
  "Sitzender Beinbeuger":         ["Liegender Beinbeuger", "Einbeiniger Kabel-Beinbeuger"],
- "Beinstrecker":                 ["Einbeiniger Beinstrecker", "Reverse Nordic Curl"],
+ "Beinstrecker, Lehne zurück":   ["Einbeiniger Beinstrecker, zurückgelehnt", "Reverse Nordic Curl"],
  "Stehendes Wadenheben":         ["Wadenheben an der Beinpresse", "Smith Wadenheben auf Erhöhung"],
  "Kabel-Crunch":                 ["Crunch-Maschine", "Reverse Crunch auf der Schrägbank"],
- "1-Arm Latzug zur Hüfte":       ["Einarmiger Latzug kniend", "Kabel-Pullover, gerade Stange"],
+ "1-Arm Latzug zur Hüfte":       ["Einarmiger Latzug kniend", "Neutraler Latzug, Doppel-D-Griff"],
+ "1-Arm Lat-Rudern zur Hüfte":   ["Einarmiges Kurzhantel-Rudern zur Hüfte", "Einarmige Rudermaschine, Ellbogen nah"],
  "Brustgestützte High Row":      ["Seated Cable Row, Ellbogen außen", "Weite brustgestützte Rudermaschine"],
- "Kabel-Pullover":               ["Pullover-Maschine", "Kurzhantel-Pullover auf der Flachbank"],
+ "Kabel-Pullover (Straight-Arm Pulldown)": ["Straight-Arm Pulldown mit Seil", "Pullover-Maschine"],
  "Cable Preacher Curl":          ["Preacher-Curl-Maschine", "SZ-Preacher-Curl"],
  "Rope Hammer Curl":             ["Kurzhantel-Hammer-Curl", "Reverse Curl am Kabel"],
  "Schrägbrust-Maschine 20–30°":  ["Smith-Schrägbank 20–30°", "Kurzhantel-Schrägbank 20–30°"],
@@ -544,8 +553,7 @@ const ALT = {
  "Romanian Deadlift":            ["Smith RDL", "45°-Hyperextension, hamstringbetont"],
  "Smith Split Squat":            ["Einbeinige Beinpresse", "Reverse Lunge an der Smith"],
  "Hip Adduction":                ["Kabel-Adduktion", "Copenhagen Plank"],
- "Hip Abduction":                ["Kabel-Abduktion", "Stehende Kabel-Abduktion"],
- "Sitzendes Wadenheben":         ["Wadenheben an der Beinpresse, Knie gebeugt", "Smith Wadenheben sitzend"]
+ "Hip Abduction":                ["Kabel-Abduktion", "Stehende Kabel-Abduktion"]
 };
 const SWAP_OK = "Wechseln nur bei: Schmerz trotz sauberer Technik und reduzierter Last · Gerät nicht reproduzierbar einstellbar oder besetzt · Zielmuskel wird über mehrere Einheiten klar durch Gelenk oder anderen Muskel limitiert. Nicht wegen einem schlechten Training, fehlendem Muskelkater oder schwächerem Pump.";
 
@@ -557,9 +565,9 @@ const WU = {
 };
 const MODES = {std:"Standard", red:"Reduziert", deload:"Deload"};
 const WEEKS = 16;
-const PLAN = "V8.2";
+const PLAN = "V9";
 const fmtRest = s => s < 120 ? `${s} s` : `${(s/60).toFixed(s%60 ? 1 : 0).replace(".", ",")} min`;
-const KEY = "traininglog_v82";
+const KEY = "traininglog_v9";
 let store = {plan:PLAN, meta:{week:1, day:0}, sets:{}, var:{}, loc:{}, mode:{}};
 let memoryOnly = false;
 
@@ -998,11 +1006,11 @@ function backupJSON(){
   const t = $csv();
   t.value = JSON.stringify(store);
   t.readOnly = false;
-  openSheet("Sicherung", "Der komplette Stand als Text – kopieren und in Notizen oder Dateien ablegen. Zum Zurückholen eine alte V8.2-Sicherung hier einfügen und Wiederherstellen tippen.", {restore:true});
+  openSheet("Sicherung", "Der komplette Stand als Text – kopieren und in Notizen oder Dateien ablegen. Zum Zurückholen eine alte V9-Sicherung hier einfügen und Wiederherstellen tippen.", {restore:true});
 }
 
 function showRules(){
-  openSheet("Regeln · V8.2", "", {info:true});
+  openSheet("Regeln · V9", "", {info:true});
 }
 
 (function(){

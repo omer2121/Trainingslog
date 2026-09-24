@@ -1,6 +1,6 @@
-/* Trainingslog V8.2 - Offline-Cache.
+/* Trainingslog V9 - Offline-Cache.
    Bei einer neuen Version die Zahl in CACHE erhoehen. */
-const CACHE = "log-v8-2-1";
+const CACHE = "log-v9-1";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest",
                 "../icon-180.png", "../icon-192.png", "../icon-512.png"];
 
@@ -11,7 +11,7 @@ self.addEventListener("install", e =>{
 /* Nur eigene alte Caches aufraeumen, der Cache der V6-App bleibt. */
 self.addEventListener("activate", e =>{
   e.waitUntil(caches.keys()
-    .then(ks => Promise.all(ks.filter(k => k.startsWith("log-v8-2-") && k !== CACHE).map(k => caches.delete(k))))
+    .then(ks => Promise.all(ks.filter(k => k.startsWith("log-v9-") && k !== CACHE).map(k => caches.delete(k))))
     .then(()=> self.clients.claim()));
 });
 
