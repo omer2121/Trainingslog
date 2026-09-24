@@ -368,7 +368,8 @@ textarea{
 /* =====================================================================
    Trainingslog V8.2 – Plan V8.1 „Brust zuerst“ mit Coach-Anpassungen:
    Do Kelso Shrug → Kabel-Pullover (Lat-Breite), Mo Pec Deck → Low-to-High
-   Cable Fly (obere Brust), Sa stehendes → sitzendes Wadenheben (Soleus).
+   Cable Fly (obere Brust), Sa stehendes → sitzendes Wadenheben (Soleus),
+   Reverse Pec Deck wieder am Donnerstag statt Samstag (Wunsch).
    Weiterhin 86 Arbeitssätze pro Woche.
    t: 'schwer' | 'maschine' | 'iso' · s: Arbeitssätze · wu: Aufwärmsätze
    loc: Standardort des Tages · h/hg: Variante an der KSK-Station zuhause
@@ -431,7 +432,7 @@ const DAYS = [
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:105, wu:"0–1",
    cue:"Rippen kontrolliert Richtung Becken einrollen. Nicht nur aus der Hüfte nach vorn kippen."}]},
 
- {k:"DO", n:"Donnerstag", t:"Pull", f:"Lats · Rückendicke · Armbeuger", loc:"home", ex:[
+ {k:"DO", n:"Donnerstag", t:"Pull", f:"Lats · Rückendicke · hintere Schulter · Armbeuger", loc:"home", ex:[
   {n:"1-Arm Latzug zur Hüfte", g:"D-Griff am hohen Zug · neutral, Ellbogen zur Körperseite", side:true,
    t:"maschine", s:3, lo:8, hi:12, rir:"1–2", rest:150, wu:"2",
    cue:"Oben schmerzfreie Armstreckung. Ellbogen nach unten zur Körperseite; Griff nicht zwanghaft zur Hosentasche ziehen."},
@@ -442,6 +443,10 @@ const DAYS = [
   {n:"Kabel-Pullover", g:"Gerade Stange oder Seil am hohen Zug · Arme fast gestreckt",
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
    cue:"V8.2 neu statt Kelso Shrug, für die Lat-Breite. Oben die Lats dehnen, Stange im Bogen zu den Oberschenkeln führen; Rippen unten, nicht mit dem Trizeps drücken."},
+  {n:"Reverse Pec Deck", g:"Griffe auf Schulterhöhe · neutraler Griff, Daumen oben",
+   h:"KSK · Kabel-Reverse-Fly über Kreuz", hg:"Beide hohen Züge auf Schulterhöhe, Kabel kreuzen · KSK-Zug 1:1",
+   t:"iso", s:3, lo:12, hi:20, rir:"1–2", rest:105, wu:"0–1",
+   cue:"Wieder am Donnerstag nach dem Rückentraining, deshalb meist ohne Aufwärmsatz. Nur bis 1–2 RIR, kein Ausbrennen: Freitag ist Brusttag. Oberarme kontrolliert nach außen/hinten, ohne Schwung."},
   {n:"Cable Preacher Curl", g:"SZ- oder gerade Stange am tiefen Zug · Oberarme fest am Pad",
    h:"KSK · Kabel-Curl an der Schrägbanklehne", hg:"Oberarme auf der Banklehne als Preacher-Ersatz · tiefer Zug, KSK 1:1",
    t:"iso", s:3, lo:8, hi:12, rir:ISO, rest:120, wu:"1",
@@ -478,7 +483,7 @@ const DAYS = [
    t:"iso", s:2, lo:8, hi:15, rir:"1–2", rest:120, wu:"1", wut:"3–5 leichte, kürzere Wdh. aus dem Kniestand",
    cue:"Rippen und Becken kontrollieren. Nur so weit rollen, wie die Rückenposition stabil bleibt; Technikverlust beendet den Satz."}]},
 
- {k:"SA", n:"Samstag", t:"Lower B", f:"Hamstrings · Gluteus · Quads · hintere Schulter", loc:"gym", ex:[
+ {k:"SA", n:"Samstag", t:"Lower B", f:"Hamstrings · Gluteus · Quads", loc:"gym", ex:[
   {n:"Romanian Deadlift", g:"Langhantel, pronierter Griff knapp schulterbreit · Stange bleibt am Bein",
    h:"KSK · Smith RDL", hg:"KSK-Stange startet bei 0 kg · Stange am Bein entlang, Hüfte nach hinten",
    t:"schwer", s:3, lo:6, hi:10, rir:"2", rest:240, wu:"3",
@@ -495,10 +500,6 @@ const DAYS = [
    h:"KSK · Einbeiniger Kabel-Beinstrecker sitzend", hg:"Bank vor dem tiefen Zug, Manschette am Knöchel · je Bein",
    t:"iso", s:2, lo:12, hi:20, rir:ISO, rest:120, wu:"1",
    cue:"Zurückgelehnte Position nur bei sicherer Knieachse und stabilem Becken. Einstellung dokumentieren."},
-  {n:"Reverse Pec Deck", g:"Griffe auf Schulterhöhe · neutraler Griff, Daumen oben",
-   h:"KSK · Kabel-Reverse-Fly über Kreuz", hg:"Beide hohen Züge auf Schulterhöhe, Kabel kreuzen · KSK-Zug 1:1",
-   t:"iso", s:3, lo:12, hi:20, rir:ISO, rest:105, wu:"1",
-   cue:"1 leichter Vorbereitungssatz, weil kein Rückentraining davor steht. Oberarme kontrolliert nach außen/hinten, ohne Schwung."},
   {n:"Hip Adduction", g:"Pads innen an den Knien · Rumpf aufrecht",
    h:"KSK · Kabel-Adduktion stehend", hg:"Manschette am Knöchel, tiefer Zug · je Bein",
    t:"iso", s:1, lo:10, hi:15, rir:"1–2", rest:105, wu:"1",
