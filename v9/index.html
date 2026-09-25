@@ -291,6 +291,36 @@ textarea{
   letter-spacing:.11em;text-transform:uppercase;color:var(--steel-dim);margin:16px 0 6px;
 }
 #info h4:first-child{margin-top:0}
+/* Kopf kompakt: keine Markenzeile, Picker in einer Zeile */
+.brand{display:none}
+.top-row{margin-bottom:8px}
+.pickers{margin-left:0;width:100%;justify-content:flex-start;flex-wrap:nowrap}
+.pickers .pick{flex:1 1 0;min-width:0}
+#focus{white-space:normal;max-width:60%}
+/* Stoppuhr klein rechts unten */
+.timer{left:auto;right:12px;transform:none}
+.timer button{padding:10px 11px;font-size:11px}
+.timer .clock{font-size:16px;padding:8px 10px;min-width:70px}
+.verdict.none{display:none}
+/* Wöchentlicher Check-in */
+.ci{display:block;width:calc(100% - 24px);max-width:616px;margin:0 auto 4px;text-align:left;padding:8px 11px;
+  border:1px solid var(--line);border-radius:8px;background:var(--slab);
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--steel)}
+.ci b{color:var(--paper);font-weight:500}
+.ci.ok{border-color:var(--go-deep)}
+.ci.fast{border-color:var(--under);color:var(--under)}
+.ci.fast b{color:var(--under)}
+.ci.slow{border-color:var(--amber)}
+.ci.missing{border-style:dashed;color:var(--steel-dim)}
+#checkin{display:none}
+#checkin.on{display:block}
+.ci-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ci-grid label{display:flex;flex-direction:column;gap:4px;font-family:"IBM Plex Sans Condensed",sans-serif;
+  font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--steel-dim)}
+.ci-grid input,.ci-grid select{background:var(--slab-2);border:1px solid var(--line);border-radius:7px;padding:10px 8px;
+  font-family:"IBM Plex Mono",monospace;font-size:15px;color:var(--paper);text-transform:none;letter-spacing:0;width:100%}
+.ci-grid .wide{grid-column:1 / -1}
+.ci-rate{margin:10px 0 0;font-size:12.5px;color:var(--steel);line-height:1.5}
 #info ul{margin:0;padding-left:18px}
 #info li{font-size:13px;color:var(--steel);line-height:1.55;margin-bottom:5px}
 </style>
@@ -313,6 +343,7 @@ textarea{
 </header>
 
 <div class="meter"><span id="focus"></span><span class="bar"><i id="fill"></i></span><span id="cnt">0/0</span></div>
+<button class="ci missing" id="ci" type="button"></button>
 <div class="warn" id="warn">Speicher nicht verfügbar – Eingaben gelten nur für diese Sitzung.</div>
 
 <main id="main"></main>
@@ -354,10 +385,25 @@ textarea{
       </ul>
       <h4>Gesundheit</h4>
       <ul>
-        <li>Mit Testosteron und Peptiden: Blutbild vor dem Start, nach 6–8 Wochen, danach alle 3–4 Monate (Hämatokrit, Blutfette, Östradiol, Leber, Niere). Blutdruck wöchentlich messen. Dosierung nur mit ärztlicher Begleitung.</li>
+        <li>Blutwerte vor dem Start, nach 6–8 Wochen, danach alle 3–4 Monate: Hämatokrit, Blutfette mit ApoB, Östradiol, Leber, Niere, HbA1c und Nüchternzucker, IGF-1. Blutdruck und Ruhepuls wöchentlich im Check-in. Dosierung nur mit ärztlicher Begleitung, die den ganzen Stack kennt.</li>
         <li>Testosteron erhöht das Risiko für Sehnenrisse im Oberkörper (Brust, Bizeps). Deshalb kontrolliert absenken, unten nicht abfedern, keine Maximalversuche und die Last in kleinen Schritten steigern.</li>
-        <li>Falls ein GLP-1-Mittel dabei ist: Ein großer Teil des Gewichtsverlusts kann sonst Muskel sein. Eiweißziel und schweres Training haben dann Vorrang.</li>
+        <li>Tirzepatid: Der Appetit sinkt, die Abnahme wird schnell zu schnell. In Studien war rund ein Viertel des Gewichtsverlusts fettfreie Masse. Liegt das Tempo im Check-in über 1 % pro Woche: zuerst Kalorien und Eiweiß erhöhen, nicht den Trainingsumfang senken.</li>
+        <li>CJC-1295 und Ipamorelin: vor allem mehr Wasser, keine belegte Kraftwirkung. Das verfälscht Waage und Körperfettmessung, deshalb Taille und Kraft mitbewerten. Ipamorelin steigert den Appetit, Tirzepatid senkt ihn. Blutzucker kontrollieren.</li>
+        <li>KLOW (BPC-157, TB-500, GHK-Cu, KPV): keine Studien am Menschen zur Sehnenheilung, nicht zugelassen. Kein Grund, durch Schmerzen zu trainieren.</li>
       </ul>
+    </div>
+    <div id="checkin">
+      <div class="ci-grid">
+        <label>Gewicht Ø kg<input id="ci-bw" inputmode="decimal" placeholder="–"></label>
+        <label>Taille cm<input id="ci-waist" inputmode="decimal" placeholder="–"></label>
+        <label>Ruhepuls<input id="ci-rhr" inputmode="numeric" placeholder="–"></label>
+        <label>Blutdruck<input id="ci-bp" inputmode="text" placeholder="sys/dia"></label>
+        <label>Schlaf Ø h<input id="ci-sleep" inputmode="decimal" placeholder="–"></label>
+        <label>Appetit<select id="ci-app"><option value="">–</option><option>niedrig</option><option>normal</option><option>hoch</option></select></label>
+        <label>Übelkeit<select id="ci-nau"><option value="">–</option><option>keine</option><option>leicht</option><option>stark</option></select></label>
+        <label class="wide">Notiz<input id="ci-note" placeholder="Energie, Verdauung, Schmerzen …"></label>
+      </div>
+      <p class="ci-rate" id="ci-rate"></p>
     </div>
     <textarea id="csv" readonly></textarea>
     <div class="tools">
@@ -386,11 +432,11 @@ const DAYS = [
   {n:"Smith-Schrägbank 20–30°", g:"Bank 20–30° · pronierter Griff, gut schulterbreit · Stange zur oberen Brust",
    h:"KSK · Smith-Schrägbank 20–30°", hg:"KSK-Stange startet bei 0 kg · Bank 20–30° · Sicherheitsanschläge einstellen",
    t:"schwer", s:4, lo:6, hi:10, rir:"1–2", rest:180, wu:"3",
-   cue:"V9: 4 statt 3 Sätze (Priorität obere Brust). Kontrolliert 2–3 s absenken, unten nicht abfedern, keine Maximalversuche: Unter Testosteron reißen Sehnen im Oberkörper häufiger. Zur oberen Brust, nicht zum Hals."},
+   cue:"Kontrolliert 2–3 s absenken, unten nicht abfedern, keine Maximalversuche. Zur oberen Brust, nicht zum Hals."},
   {n:"Neutraler Latzug", g:"Paralleler Doppel-D-Griff, etwa schulterbreit",
    h:"KSK · Kniender Latzug, neutral", hg:"Hoher Zug, Doppel-D-Griff oder zwei Einzelgriffe · kniend, minimale Rücklage",
    t:"maschine", s:3, lo:8, hi:12, rir:"1–2", rest:180, wu:"1",
-   cue:"V9: 3 statt 2 Sätze und direkt nach der Brust (Priorität Lats). Oben volle Streckung, Ellbogen nach unten zur Hüfte, ohne Schwung."},
+   cue:"Oben volle Streckung, Ellbogen nach unten zur Hüfte, ohne Schwung."},
   {n:"Chest-Supported T-Bar Row", g:"Enger neutraler V-Griff · Brust bleibt am Pad",
    h:"KSK · Sitzendes Kabelrudern, V-Griff", hg:"Tiefer Zug, Füße am Rahmen abstützen · Oberkörper ruhig, Griff zu den unteren Rippen",
    t:"schwer", s:3, lo:6, hi:10, rir:"1–2", rest:180, wu:"2",
@@ -400,14 +446,14 @@ const DAYS = [
    cue:"Von tief außen Richtung Schlüsselbein führen. Gedehnte Position kontrollieren, Schulter bleibt zentriert."},
   {n:"1-Arm Kabel-Seitheben", g:"D-Griff am tiefsten Zug · Kabel läuft vor dem Körper", side:true,
    t:"iso", s:3, lo:12, hi:20, rir:ISO, rest:105, wu:"1",
-   cue:"V9: 3 statt 4 Sätze (Schulter ist keine Priorität, frei für Brust und Lats). Arm leicht vor der Körperseite heben, kein Hüftschwung."},
+   cue:"Arm leicht vor der Körperseite heben, kein Hüftschwung."},
   {n:"Reverse Pec Deck", g:"Griffe auf Schulterhöhe · neutraler Griff, Daumen oben",
    h:"KSK · Kabel-Reverse-Fly über Kreuz", hg:"Beide hohen Züge auf Schulterhöhe, Kabel kreuzen · KSK-Zug 1:1",
    t:"iso", s:2, lo:12, hi:20, rir:ISO, rest:105, wu:"0–1",
    cue:"Oberarme kontrolliert nach außen/hinten führen. Schulterblätter dürfen mitbewegen; den Trapez nicht künstlich ausschalten."},
   {n:"Überkopf-Kabeltrizeps", g:"Seil am hohen Zug · Rücken zum Turm, Ellbogen neben dem Kopf",
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
-   cue:"Überkopf wächst der Trizeps stärker als beim Pushdown (Maeo 2023). Ellbogen kontrolliert beugen und strecken, ohne ins Hohlkreuz auszuweichen."},
+   cue:"Ellbogen kontrolliert beugen und strecken, ohne ins Hohlkreuz auszuweichen."},
   {n:"Bayesian Cable Curl", g:"D-Griff am tiefsten Zug · Rücken zum Turm, Arm bleibt hinter dem Rumpf", side:true,
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
    cue:"Oberarm nur angenehm weit hinter den Körper. Keine maximale Schulterstreckung erzwingen; ohne Schwung."}]},
@@ -424,11 +470,11 @@ const DAYS = [
   {n:"Sitzender Beinbeuger", g:"Pad tief über den Oberschenkeln · Lehne aufrecht, Hüfte ~90°",
    h:"KSK · Einbeiniger Kabel-Beinbeuger stehend", hg:"Manschette am Knöchel, tiefer Zug · Hüfte fixiert, je Bein",
    t:"iso", s:3, lo:8, hi:12, rir:ISO, rest:120, wu:"2",
-   cue:"Sitzend wächst der hintere Oberschenkel stärker als liegend (Maeo 2021). Becken und Oberschenkel fixieren, Knie kontrolliert weit strecken und beugen."},
+   cue:"Becken und Oberschenkel fixieren, Knie kontrolliert weit strecken und beugen."},
   {n:"Beinstrecker, Lehne zurück", g:"Lehne zurückgestellt, Hüfte ~40° · Drehachse auf Kniehöhe, Pad über dem Sprunggelenk",
    h:"KSK · Einbeiniger Kabel-Beinstrecker, zurückgelehnt", hg:"Bank vor dem tiefen Zug, Oberkörper zurückgelehnt · Manschette am Knöchel, je Bein",
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
-   cue:"V9: Lehne bewusst zurück. Mit gestreckterer Hüfte wächst der Rectus femoris deutlich stärker (Larsen 2025). Becken bleibt am Sitz, oben kurz anspannen, langsam ablassen."},
+   cue:"Lehne bewusst zurück. Becken bleibt am Sitz, oben kurz anspannen, langsam ablassen."},
   {n:"Stehendes Wadenheben", g:"Fußballen auf der Kante · Knie fast gestreckt",
    h:"KSK · Smith Wadenheben stehend", hg:"Fußballen auf einer Erhöhung · Knie fast gestreckt",
    t:"iso", s:3, lo:8, hi:15, rir:ISO, rest:120, wu:"2",
@@ -447,10 +493,10 @@ const DAYS = [
    cue:"Ellbogen etwa 45–60°, nicht mit dem Rumpf helfen. Zuhause als Seated Cable Row: vorne die Schulterblätter kontrolliert nach vorn dehnen, Oberkörper aufrecht und ruhig."},
   {n:"1-Arm Lat-Rudern zur Hüfte", g:"D-Griff am tiefen bis mittleren Zug · Oberkörper leicht vorgeneigt, Ellbogen nah am Körper", side:true,
    t:"maschine", s:2, lo:10, hi:15, rir:"1–2", rest:120, wu:"0–1",
-   cue:"V9 neu (Priorität Lats). Ellbogen in einem Bogen zur Hüfte ziehen, vorne Schulter kontrolliert nach vorn dehnen lassen. Nicht zur Brust ziehen, sonst arbeitet der obere Rücken."},
+   cue:"Ellbogen in einem Bogen zur Hüfte ziehen, vorne Schulter kontrolliert nach vorn dehnen lassen. Nicht zur Brust ziehen, sonst arbeitet der obere Rücken."},
   {n:"Kabel-Pullover (Straight-Arm Pulldown)", g:"Gerade Stange oder Seil am hohen Zug · Arme fast gestreckt",
    t:"iso", s:2, lo:12, hi:15, rir:ISO, rest:120, wu:"0–1",
-   cue:"Stehend am Kabel, nicht der Kurzhantel-Pullover auf der Bank (der trifft eher die Brust). Oben Lats dehnen, Stange im Bogen zu den Oberschenkeln, Rippen unten. Belege für die Lats sind dünn: nur Ergänzung."},
+   cue:"Stehend am Kabel. Oben Lats dehnen, Stange im Bogen zu den Oberschenkeln, Rippen unten, nicht mit dem Trizeps drücken."},
   {n:"Reverse Pec Deck", g:"Griffe auf Schulterhöhe · neutraler Griff, Daumen oben",
    h:"KSK · Kabel-Reverse-Fly über Kreuz", hg:"Beide hohen Züge auf Schulterhöhe, Kabel kreuzen · KSK-Zug 1:1",
    t:"iso", s:3, lo:12, hi:20, rir:"1–2", rest:105, wu:"0–1",
@@ -458,7 +504,7 @@ const DAYS = [
   {n:"Cable Preacher Curl", g:"SZ- oder gerade Stange am tiefen Zug · Oberarme fest am Pad",
    h:"KSK · Kabel-Curl an der Schrägbanklehne", hg:"Oberarme auf der Banklehne als Preacher-Ersatz · tiefer Zug, KSK 1:1",
    t:"iso", s:2, lo:8, hi:12, rir:ISO, rest:120, wu:"1",
-   cue:"V9: 2 statt 3 Sätze (Arme keine Priorität). Oberarme am Pad, Ellbogen weit, aber schmerzfrei strecken; nicht ruckartig aus der unteren Position."},
+   cue:"Oberarme am Pad, Ellbogen weit, aber schmerzfrei strecken; nicht ruckartig aus der unteren Position."},
   {n:"Rope Hammer Curl", g:"Seil am tiefen Zug · neutraler Griff, Daumen oben",
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"0–1",
    cue:"Neutraler Griff, Oberarme ruhig. Kontrollierter Bewegungsumfang; kein Hüftschwung."}]},
@@ -467,7 +513,7 @@ const DAYS = [
   {n:"Schrägbrust-Maschine 20–30°", g:"Lehne 20–30° · Griffe auf Höhe der oberen Brust · Sitzhöhe notieren",
    h:"KSK · Smith-Schrägbank 20–30°", hg:"KSK-Stange startet bei 0 kg · Bank 20–30° · Sicherheitsanschläge einstellen",
    t:"maschine", s:4, lo:8, hi:12, rir:"1–2", rest:180, wu:"3",
-   cue:"V9: 4 statt 3 Sätze (Priorität obere Brust). Kontrolliert absenken, kein erzwungener Kontakt am Schlüsselbein, keine Maximalversuche."},
+   cue:"Kontrolliert absenken, kein erzwungener Kontakt am Schlüsselbein, keine Maximalversuche."},
   {n:"Konvergierende Brustpresse", g:"Neutraler oder leicht pronierter Griff · Griffe auf Brusthöhe",
    h:"KSK · Smith-Flachbank", hg:"KSK-Stange startet bei 0 kg · Stange zur unteren Brust, Schulterblätter fixiert",
    t:"maschine", s:2, lo:8, hi:12, rir:"1–2", rest:180, wu:"1",
@@ -475,11 +521,11 @@ const DAYS = [
   {n:"Pec Deck", g:"Griffe auf Brusthöhe · Ellbogen leicht gebeugt und fixiert",
    h:"KSK · Kabel-Fly auf Brusthöhe", hg:"D-Griffe, Züge auf Schulterhöhe · Ellbogen leicht gebeugt, KSK 1:1",
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"0–1",
-   cue:"Dehnposition kontrollieren, nicht erzwingen. Trainiert die ganze Brust, nicht gezielt einen Bereich."},
+   cue:"Dehnposition kontrollieren, nicht erzwingen."},
   {n:"Seithebemaschine", g:"Pads an den Oberarmen · nicht mit den Händen ziehen",
    h:"KSK · 1-Arm Kabel-Seitheben", hg:"D-Griff am tiefsten Zug, Kabel vor dem Körper · je Seite, KSK 1:1",
    t:"iso", s:5, lo:12, hi:20, rir:ISO, rest:120, wu:"1",
-   cue:"Kabel, Kurzhantel und Maschine wirken gleich gut (Larsen 2025): nimm, was sauber geht. Kein Schwung."},
+   cue:"Sitz und Padkontakt notieren; natürliche Schulterblattrotation, kein Schwung."},
   {n:"Überkopf-Kabeltrizeps", g:"Seil am hohen Zug · Rücken zum Turm, Ellbogen neben dem Kopf",
    t:"iso", s:3, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
    cue:"Überkopfposition nur schmerzfrei. Ellbogen kontrolliert beugen und strecken; keine erzwungene Dehnung."},
@@ -507,7 +553,7 @@ const DAYS = [
   {n:"Beinstrecker, Lehne zurück", g:"Gleiche Einstellung wie Dienstag · Hüfte ~40°, Pad über dem Sprunggelenk",
    h:"KSK · Einbeiniger Kabel-Beinstrecker, zurückgelehnt", hg:"Bank vor dem tiefen Zug, Oberkörper zurückgelehnt · Manschette am Knöchel, je Bein",
    t:"iso", s:2, lo:12, hi:20, rir:ISO, rest:120, wu:"1",
-   cue:"Gleiche Einstellung wie Dienstag. Zurückgelehnt trifft es den Rectus femoris besser (Larsen 2025)."},
+   cue:"Gleiche Einstellung wie Dienstag, Lehne zurück. Oben kurz anspannen, langsam ablassen."},
   {n:"Hip Adduction", g:"Pads innen an den Knien · Rumpf aufrecht",
    h:"KSK · Kabel-Adduktion stehend", hg:"Manschette am Knöchel, tiefer Zug · je Bein",
    t:"iso", s:1, lo:10, hi:15, rir:"1–2", rest:105, wu:"1",
@@ -519,7 +565,7 @@ const DAYS = [
   {n:"Stehendes Wadenheben", g:"Fußballen auf der Kante · Knie fast gestreckt",
    h:"KSK · Smith Wadenheben stehend", hg:"Fußballen auf einer Erhöhung · Knie fast gestreckt",
    t:"iso", s:3, lo:10, hi:15, rir:ISO, rest:120, wu:"2",
-   cue:"V9: wieder stehend statt sitzend. Stehend wuchs der Wadenmuskel (Gastrocnemius) um 9–12 %, sitzend nur um 1–2 %, der Soleus bei beiden gleich (Kinoshita 2023). Unten 1–2 s halten."}]}
+   cue:"Unten 1–2 s in der Dehnung halten, nicht federn. Knie weitgehend gestreckt."}]}
 ];
 
 /* Alternativen im Gym: gleiches Bewegungsmuster, gleicher Satz- und Wiederholungsbereich. */
@@ -568,7 +614,7 @@ const WEEKS = 16;
 const PLAN = "V9";
 const fmtRest = s => s < 120 ? `${s} s` : `${(s/60).toFixed(s%60 ? 1 : 0).replace(".", ",")} min`;
 const KEY = "traininglog_v9";
-let store = {plan:PLAN, meta:{week:1, day:0}, sets:{}, var:{}, loc:{}, mode:{}};
+let store = {plan:PLAN, meta:{week:1, day:0}, sets:{}, var:{}, loc:{}, mode:{}, checkin:{}};
 let memoryOnly = false;
 
 /* ---------- Speicher ----------
@@ -589,6 +635,7 @@ function normalize(){
   if(!store.var)  store.var  = {};
   if(!store.loc)  store.loc  = {};
   if(!store.mode) store.mode = {};
+  if(!store.checkin) store.checkin = {};
   if(!store.meta) store.meta = {week:1, day:0};
   store.plan = PLAN;
 }
@@ -715,6 +762,29 @@ function cutDrop(d, e){
   return null;
 }
 
+/* ---------- Wöchentlicher Check-in: Abnahmetempo ---------- */
+const ciOf = w => (store.checkin && store.checkin[w]) || null;
+const numOf = v => (v === "" || v == null || isNaN(+v) ? null : +v);
+const de = x => String(x).replace(".", ",");
+/* Veränderung pro Woche gegenüber dem letzten Check-in mit Gewicht; positiv = Abnahme */
+function lossRate(w){
+  const cur = ciOf(w);
+  if(!cur || numOf(cur.bw) == null) return null;
+  for(let k=w-1;k>=1;k--){
+    const prev = ciOf(k);
+    if(prev && numOf(prev.bw) != null)
+      return {pct: (numOf(prev.bw) - numOf(cur.bw)) / numOf(prev.bw) * 100 / (w - k), from:k};
+  }
+  return null;
+}
+const fmtRate = x => `${x >= 0 ? "−" : "+"}${de(Math.abs(x).toFixed(1))} %/Wo`;
+function rateHint(w){
+  const r = lossRate(w);
+  if(!r) return "kein Gewichtsverlauf im Check-in: zuerst Abnahmetempo prüfen";
+  if(r.pct > 1) return `Abnahme ${fmtRate(r.pct)} ist zu schnell: zuerst Kalorien und Eiweiß erhöhen, Umfang halten`;
+  return "Tempo ok: Schlaf, Pausen und Essen prüfen; bleibt es so, Modus „Reduziert“";
+}
+
 /* ---------- Urteil pro Übung ---------- */
 function verdict(ex, d, ei, n){
   const w = store.meta.week;
@@ -770,7 +840,7 @@ function render(){
       <div class="chead">
         <span class="num">${String(ei+1).padStart(2,"0")}</span>
         <div style="flex:1">
-          <div class="cname">${name}${swapped ? '<span class="swapped">Alternative</span>' : ''}</div>
+          <div class="cname">${home ? name.replace(/^KSK · /, "") : name}${swapped ? '<span class="swapped">Alternative</span>' : ''}</div>
           ${grip ? `<div class="cgrip">${grip}</div>` : ''}
           <div class="cmeta">${ex.lo}–${ex.hi} Wdh${ex.side ? " je Seite" : ""} · RIR ${rir} · Pause ${fmtRest(ex.rest)} · Aufw. ${ex.wu}</div>
         </div>${tags}
@@ -827,14 +897,17 @@ function render(){
 
     const vEl = card.querySelector(".verdict");
     const paintVerdict = ()=>{
+      const logged = Array.from({length:n}, (_, i)=> get(week, day, ei, i+1)).some(v => v && v.r);
+      const st = stalled(day, ei);
+      const drop = ex.t === "schwer" ? cutDrop(day, ei) : null;
+      let notes = "";
+      if(st) notes += `<span class="stall">Stillstand · ${st} · zuerst Schlaf, Kalorien und Technik prüfen, Volumen zuletzt</span>`;
+      if(drop) notes += `<span class="stall">Cut-Check · ${drop} · ${rateHint(week)}</span>`;
+      if(!logged && !notes){ vEl.className = "verdict none"; vEl.innerHTML = ""; return; }
+      if(!logged){ vEl.className = "verdict hold"; vEl.innerHTML = notes.replace('class="stall"', 'class="stall" style="margin-top:0;padding-top:0;border-top:0"'); return; }
       const v = verdict(ex, day, ei, n);
       vEl.className = "verdict " + v.k;
-      let html = `${v.txt}${v.sub ? ` <em>${v.sub}</em>` : ""}`;
-      const st = stalled(day, ei);
-      if(st) html += `<span class="stall">Stillstand · ${st} · zuerst Schlaf, Kalorien und Technik prüfen, Volumen zuletzt</span>`;
-      const drop = ex.t === "schwer" ? cutDrop(day, ei) : null;
-      if(drop) html += `<span class="stall">Cut-Check · ${drop} · erst Schlaf, Essen und Pausen prüfen; bleibt es so, Modus „Reduziert“</span>`;
-      vEl.innerHTML = html;
+      vEl.innerHTML = `${v.txt}${v.sub ? ` <em>${v.sub}</em>` : ""}` + notes;
     };
     paintVerdict();
 
@@ -917,6 +990,7 @@ function render(){
   document.getElementById("cnt").textContent = `${done}/${due}`;
   document.getElementById("fill").style.width = due ? (done/due*100)+"%" : "0%";
   paintDays();
+  paintCi();
 }
 
 function meter(){
@@ -970,17 +1044,70 @@ document.getElementById("t-reset").onclick = ()=>{
   clk.textContent = "–:––"; tog.textContent = "Start"; tLeft = 0;
 };
 
+/* ---------- Check-in-Leiste und -Blatt ---------- */
+const CI_FIELDS = {bw:"ci-bw", waist:"ci-waist", rhr:"ci-rhr", bp:"ci-bp", sleep:"ci-sleep", app:"ci-app", nau:"ci-nau", note:"ci-note"};
+const CI_NUM = new Set(["bw", "waist", "rhr", "sleep"]);
+
+function paintCi(){
+  const w = store.meta.week, el = document.getElementById("ci"), c = ciOf(w), r = lossRate(w);
+  el.className = "ci";
+  if(!c || numOf(c.bw) == null){
+    el.classList.add("missing");
+    el.textContent = `Check-in Wo. ${w}: Gewicht, Taille, Ruhepuls eintragen`;
+    return;
+  }
+  let html = `Wo. ${w}: <b>${de(c.bw)} kg</b>`;
+  if(numOf(c.waist) != null) html += ` · Taille ${de(c.waist)} cm`;
+  if(r){
+    html += ` · <b>${fmtRate(r.pct)}</b>`;
+    if(r.pct > 1){ el.classList.add("fast"); html += " · zu schnell"; }
+    else if(r.pct < 0.3){ el.classList.add("slow"); html += " · langsam"; }
+    else el.classList.add("ok");
+  }
+  el.innerHTML = html;
+}
+
+function paintCiRate(){
+  const w = store.meta.week, r = lossRate(w), el = document.getElementById("ci-rate");
+  if(!r){ el.textContent = "Noch kein Vergleich. Trag nächste Woche wieder ein, dann zeigt die App das Abnahmetempo."; return; }
+  const txt = `Veränderung seit Wo. ${r.from}: ${fmtRate(r.pct)}. Ziel im Cut: 0,5–1 % pro Woche.`;
+  el.textContent = r.pct > 1 ? `${txt} Zu schnell: zuerst Kalorien und Eiweiß erhöhen, den Trainingsumfang halten.`
+    : r.pct < 0.3 ? `${txt} Langsam: Taille und Kraft prüfen; Wasser durch die GH-Peptide kann die Waage verfälschen.`
+    : `${txt} Im Zielbereich.`;
+}
+
+function showCheckin(){
+  const w = store.meta.week, c = ciOf(w) || {};
+  Object.entries(CI_FIELDS).forEach(([k, elId])=>{ document.getElementById(elId).value = c[k] == null ? "" : CI_NUM.has(k) ? de(c[k]) : c[k]; });
+  paintCiRate();
+  openSheet(`Check-in · Woche ${w}`, "Einmal pro Woche. Gewicht als Durchschnitt mehrerer Morgenmessungen, Blutdruck und Ruhepuls in Ruhe.", {checkin:true});
+}
+
+function commitCheckin(){
+  const w = store.meta.week, rec = {};
+  Object.entries(CI_FIELDS).forEach(([k, elId])=>{
+    const raw = document.getElementById(elId).value.trim();
+    if(raw === "") return;
+    const v = CI_NUM.has(k) ? parseFloat(raw.replace(",", ".")) : raw;
+    if(!(CI_NUM.has(k) && isNaN(v))) rec[k] = v;
+  });
+  if(Object.keys(rec).length) store.checkin[w] = rec;
+  else delete store.checkin[w];
+  save(); paintCiRate(); render();
+}
+
 /* ---------- Export, Sicherung, Regeln ---------- */
 const $csv = ()=> document.getElementById("csv");
 
-function openSheet(title, text, {info = false, restore = false} = {}){
+function openSheet(title, text, {info = false, restore = false, checkin = false} = {}){
   document.getElementById("sheet-h").textContent = title;
   const p = document.getElementById("sheet-p");
   p.textContent = text;
   p.hidden = !text;
   document.getElementById("info").classList.toggle("on", info);
-  $csv().hidden = info;
-  document.getElementById("sel").hidden = info;
+  document.getElementById("checkin").classList.toggle("on", checkin);
+  $csv().hidden = info || checkin;
+  document.getElementById("sel").hidden = info || checkin;
   document.getElementById("restore").hidden = !restore;
   document.getElementById("sheet").classList.add("open");
 }
@@ -995,6 +1122,11 @@ function exportTSV(){
           rows.push([w, MODES[modeOf(w)], D.n, locOf(w,d) === "home" ? "Zuhause" : "Gym", nameOf(w,d,ei), s, v.l, v.r, v.rir]);
       }
     }));
+  const ci = Object.keys(store.checkin || {}).map(Number).sort((a, b)=> a - b);
+  if(ci.length){
+    rows.push([], ["Woche","Check-in","Gewicht Ø kg","Taille cm","Ruhepuls","Blutdruck","Schlaf Ø h","Appetit","Übelkeit","Notiz"]);
+    ci.forEach(w =>{ const c = store.checkin[w]; rows.push([w, "", c.bw ?? "", c.waist ?? "", c.rhr ?? "", c.bp ?? "", c.sleep ?? "", c.app ?? "", c.nau ?? "", c.note ?? ""]); });
+  }
   const t = $csv();
   t.value = rows.map(r=>r.join("\t")).join("\n");
   t.readOnly = true;
@@ -1073,6 +1205,9 @@ function syncPickers(){
 
   const lsel = document.getElementById("loc");
   lsel.onchange = ()=>{ store.loc[lid(store.meta.week, store.meta.day)] = lsel.value; save(); render(); };
+
+  document.getElementById("ci").onclick = showCheckin;
+  Object.values(CI_FIELDS).forEach(elId => document.getElementById(elId).addEventListener("change", commitCheckin));
 
   const nav = document.getElementById("days");
   DAYS.forEach((D, i)=>{
