@@ -1,6 +1,6 @@
 # Cognitive supplements & "nootropics" for healthy adults and athletes: evidence base (status 2026-09-27)
 
-*Method/source note (read first):* This session used about 41 WebSearch queries. All 8 WebFetch attempts were blocked by the egress proxy. Blocked sites included journal sites, PubMed/PMC, EFSA, BfR and Examine, and also merieuxnutrisciences.com, nutraceuticalsgroup.com, lgl.bayern.de, hamburg.de, pharmazeutische-zeitung.de, akdae.de and nutraingredients.com. **Every finding below therefore rests on WebSearch result summaries or snippets [S]. No full text was read.** Other flags:
+*Method/source note (read first):* This session used about 41 WebSearch queries. All 7 WebFetch attempts were blocked by the egress proxy. Blocked sites included journal sites, PubMed/PMC, EFSA, BfR and Examine, and also merieuxnutrisciences.com, nutraceuticalsgroup.com, lgl.bayern.de, hamburg.de, pharmazeutische-zeitung.de, akdae.de and nutraingredients.com. **Every finding below therefore rests on WebSearch result summaries or snippets [S]. No full text was read.** Other flags:
 - **[PK]**: a specific number taken from my existing knowledge of the published abstract and not re-checked in this session. Verify before publishing.
 - **[WEAK]**: the source is commercial, a blog or a vendor.
 - **[IND]**: the source is hosted or sponsored by the manufacturer.
@@ -143,7 +143,7 @@ Meta-analyses from 2023 and 2024 show small memory benefits (SMD about 0.3). Res
   - Sources: [MDPI Nutrients 2026](https://www.mdpi.com/2072-6643/18/8/1192); [PubMed 42075005](https://pubmed.ncbi.nlm.nih.gov/42075005/); [NutraIngredients Apr 2026](https://www.nutraingredients.com/Article/2026/04/21/single-dose-creatine-may-support-cognition-in-sleep-deprivation-study/) [S; blinding and design details not retrieved]
 
 **Older adults and clinical populations**
-- Older adults (68–85 years) given 20 g/day for 7 days improved on memory measures versus placebo: forward number recall, forward and backward spatial recall, and long-term memory. This was cited in a search summary about [Prokopidis 2023](https://academic.oup.com/nutritionreviews/article/81/4/416/6671817) [S; the primary study is OLD]
+- Older adults (68–85 years) given 20 g/day for 7 days improved on memory measures versus placebo: forward number recall, forward and backward spatial recall, and long-term memory. This was cited in a search summary alongside [Prokopidis 2023](https://academic.oup.com/nutritionreviews/article/81/4/416/6671817) [S; attribution uncertain; the primary study is OLD]
 - CABA pilot trial (Smith et al., Alzheimer's & Dementia: TRCI, 2025):
   - Single-arm, no placebo group: 20 g/day creatine monohydrate for 8 weeks in 20 patients with Alzheimer's disease. 19 reached at least 80% compliance.
   - Blood creatine rose, and total brain creatine increased by 11%.
@@ -190,7 +190,7 @@ None of these has robust, replicated effects in healthy young adults.
 #### Omega-3 (DHA/EPA)
 - Scientific Reports 2025 (systematic review with dose-response meta-analysis, 58 studies): each additional 2000 mg/day of omega-3 was linked to better attention and perceptual speed; evidence quality varied — [Sci Rep 2025](https://www.nature.com/articles/s41598-025-16129-8) [S; population mix and effect sizes not retrieved]
 - Stonehouse et al. 2013 (AJCN; randomized controlled trial): 176 healthy adults aged 18–45 with low DHA intake took 1.16 g DHA/day for 6 months. Memory and reaction time improved — [PubMed 23515006](https://pubmed.ncbi.nlm.nih.gov/23515006/) [S; OLD]
-- A 12-week trial of DHA-rich or EPA-rich fish oil in healthy 18–35-year-olds found no effect on cognition or mood. People with low habitual DHA intake, older adults with age-related decline and people with mild cognitive impairment seem to benefit most — [Stonehouse 2014 review, PMC4113767](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4113767/) [S; OLD]
+- A 12-week trial of DHA-rich or EPA-rich fish oil in healthy 18–35-year-olds found no effect on cognition or mood. People with low habitual DHA intake, older adults with age-related decline and people with mild cognitive impairment seem to benefit most — [Stonehouse 2014 review (author PK), PMC4113767](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4113767/) [S; OLD]
 - A search summary also stated that EPA-rich oil, but not DHA alone, improved global cognition in healthy young adults. The source of this claim is unclear [S; unverified]
 - Safety: atrial fibrillation (AF)
   - Gencer et al. 2021 (Circulation; meta-analysis of 7 cardiovascular-outcome trials): more than 1 g/day of marine omega-3 was linked to a 49% higher AF risk — [Circulation 2021](https://www.ahajournals.org/doi/10.1161/CIRCULATIONAHA.121.055654); [HCPLive](https://www.hcplive.com/view/meta-analysis-raises-questions-around-risk-of-atrial-fibrillation-associated-with-omega-3-supplements) [S]
