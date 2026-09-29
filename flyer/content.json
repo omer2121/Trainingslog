@@ -1,0 +1,26 @@
+{
+  "label": "Personal Training & Coaching",
+  "headline": "STÄRKER",
+  "highlight": "IN 12 WOCHEN.",
+  "subline": "Individueller Plan. Ehrliche Ernährung. Messbarer Fortschritt.",
+  "benefits": [
+    {
+      "title": "Trainingsplan für dein Ziel",
+      "text": "Muskelaufbau, Fettabbau oder beides – passend zu deinem Alltag."
+    },
+    {
+      "title": "Ernährung, die funktioniert",
+      "text": "Klare Protein-Ziele, einfache Rezepte und nur Supplements mit Studienlage."
+    },
+    {
+      "title": "Wöchentlicher Check-in",
+      "text": "Fortschritt messen, Plan anpassen, dranbleiben."
+    }
+  ],
+  "badgeTop": "1. Probetraining",
+  "badgeMain": "GRATIS",
+  "cta": "Scannen & Termin sichern",
+  "socialCta": "Link in Bio – Termin sichern",
+  "url": "https://example.com",
+  "contact": ["@dein.coaching", "hallo@example.com", "Musterstraße 1 · 12345 Musterstadt"]
+}
