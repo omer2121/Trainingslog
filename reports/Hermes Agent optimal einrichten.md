@@ -219,7 +219,7 @@ US-Dollar pro 1 Mio. Tokens, aus `agent/usage_pricing.py`. Das ist ein Snapshot,
 | claude-haiku-4-5 | 1,00 | 5,00 | 0,10 | 1,25 |
 | gemini-3.8-flash | 0,75 | 3,75 | 0,075 | – |
 
-- \* Sonnet 5: Einführungspreis bis 31.08.2026. Laut Code-Kommentar gilt danach 3/15, also rechne mit 3/15.
+- \* Sonnet 5: Hermes' Code-Kommentar erwartete nach dem Einführungspreis ab 01.09.2026 3/15. Anthropics eigene Preisliste (Stand 25.09.2026) nennt aber weiterhin 2/10. Prüfe die Preisseite. Der Nachfolger Sonnet 5.5 kostet laut Anthropic ebenfalls 2/10; ob Hermes ihn über den Anthropic-Provider schon voll unterstützt, ist ⚠️ ungeprüft.
 - GPT-6.1 Sol: Prompts über 272K Tokens kosten pro ganzem Request 4/15.
 - Cache-Schreiben mit 1 h Haltezeit kostet das Doppelte des Inputs (Opus 5.5: 8 $), mit 5 min das 1,25-Fache.
 
