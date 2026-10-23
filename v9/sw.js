@@ -1,6 +1,6 @@
 /* Trainingslog V9 - Offline-Cache.
    Bei einer neuen Version die Zahl in CACHE erhoehen. */
-const CACHE = "log-v9-6";
+const CACHE = "log-v9-7";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest",
                 "../icon-180.png", "../icon-192.png", "../icon-512.png"];
 
