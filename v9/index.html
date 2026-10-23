@@ -11,7 +11,7 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="../icon-180.png">
 <link rel="icon" href="../icon-192.png">
-<title>Trainingslog V9</title>
+<title>Trainingslog V9.3</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -336,7 +336,7 @@ textarea{
 
 <header class="top">
   <div class="top-row">
-    <span class="brand">Trainingslog V9</span>
+    <span class="brand">Trainingslog V9.3</span>
     <div class="pickers">
       <select class="pick" id="week" aria-label="Woche"></select>
       <select class="pick" id="loc" aria-label="Ort">
@@ -366,9 +366,19 @@ textarea{
     <h3 id="sheet-h">Export für Excel</h3>
     <p class="note" id="sheet-p" style="margin-top:0">Tabgetrennt. Kopieren, im Satzlog in die Spalten Last / Wdh. / RIR einfügen.</p>
     <div id="info">
+      <h4>Schwachstellen · V9.3</h4>
+      <ul>
+        <li>Fotos vom 23.10.: Seitliche und hintere Schulter sind deine Stärke. Obere Brust und Lat-Breite (vor allem unten am Rücken) hängen hinterher. Beine waren nicht zu sehen und bleiben unverändert.</li>
+        <li>V9.1: 4 Sätze weg von den Schultern, hin zu Brust und Lats: Mo Latzug 3→4, Low-to-High Fly 2→3, Seitheben 3→2, Reverse Pec Deck 2→1 · Do Lat-Rudern 2→3, Reverse Pec Deck 3→2 · Fr Schrägbrust 4→5, Seithebemaschine 5→4. Schultern laufen auf Erhaltung: seitlich 6, hinten 3 plus Anteile aus dem Rudern.</li>
+        <li>V9.2, Arm-Priorität: Do Preacher Curl 2→3, Fr Rope Pushdown 2→3, neu Di Überkopf-Trizeps 3 Sätze und Sa Kurzhantel-Curl auf der Schrägbank 2 Sätze. Bizeps 9 direkte Sätze, Trizeps 11. Zusammen 96 statt 89 Sätze.</li>
+        <li>Warum trotz Defizit mehr Sätze: Ohne AAS wächst im Defizit kaum Muskel, mehr Sätze bringen dort keinen belegten Vorteil (Roth 2023). Unter Testosteron stieg die fettfreie Masse in einem 55-%-Defizit um 2,5 kg gegenüber Placebo (Pasiakos 2019, 4 Wochen, Messung inkl. Wasser). Dass Testosteron-Nutzer mehr Umfang vertragen, ist nicht belegt; die Armsätze liegen deshalb im normalen Bereich, nicht darüber.</li>
+        <li>Fällt der Cut-Check an: Modus „Reduziert“ nimmt bei jeder Isolationsübung einen Satz weg, also auch die neuen Armsätze zuerst.</li>
+        <li>V9.3, Übungen nach den Fotos: Do Latzug im Untergriff statt High Row (oberer Rücken ist stark, Lats nicht) und Fr Schrägbank-Kabelfly 30° statt Pec Deck (untere Brust gut, obere flach). Alte Einträge behalten ihren Namen; der Vergleich startet bei der neuen Übung frisch.</li>
+        <li>Kein Shrug-Training: Ein eher flacher oberer Trapez lässt die Schultern breiter wirken.</li>
+      </ul>
       <h4>Cut-Regeln</h4>
       <ul>
-        <li>Ziel im Cut: Kraft halten, nicht steigern. Leitübungen sind die schweren Grundübungen: Smith-Schrägbank, T-Bar Row, Hack Squat, RDL und Smith Split Squat.</li>
+        <li>Ziel im Cut: Kraft mindestens halten. Steigerungen sind im Defizit möglich (Murphy &amp; Koehler 2022); Sätze bleiben gleich, gesteigert wird über Last und Wiederholungen. Leitübungen sind die schweren Grundübungen: Smith-Schrägbank, T-Bar Row, Hack Squat, RDL und Smith Split Squat.</li>
         <li>Im Defizit Last und Umfang halten: Es gibt keinen Beleg dafür, dass weniger Sätze im Cut Muskeln schützen.</li>
         <li>„Cut-Check“ erscheint, wenn eine Leitübung zwei Einheiten hintereinander mehr als 5 % unter ihrem Bestwert davor liegt (geschätztes Maximum aus Satz 1). Dann zuerst Schlaf, Essen und Pausen prüfen. Erst wenn es so bleibt: Modus „Reduziert“ (jede Isolationsübung einen Satz weniger, Last und RIR bleiben). Das ist ein praktisches Werkzeug, keine belegte Methode.</li>
         <li>Deload: Ob geplante Deloads nötig sind, ist nicht belegt; eine Woche Pause kostete in einer Studie kein Wachstum (Coleman 2024). Einsetzen beim Übergang vom Cut in den Aufbau oder bei deutlicher Erschöpfung: etwa halbe Satzzahl, gleiche Last, RIR 3. Deload-Wochen zählen nicht für den Cut-Check.</li>
@@ -408,6 +418,7 @@ textarea{
       <div class="ci-grid">
         <label>Gewicht Ø kg<input id="ci-bw" inputmode="decimal" placeholder="–"></label>
         <label>Taille cm<input id="ci-waist" inputmode="decimal" placeholder="–"></label>
+        <label>Oberarm cm<input id="ci-arm" inputmode="decimal" placeholder="–"></label>
         <label>Ruhepuls<input id="ci-rhr" inputmode="numeric" placeholder="–"></label>
         <label>Blutdruck<input id="ci-bp" inputmode="text" placeholder="sys/dia"></label>
         <label>Schlaf Ø h<input id="ci-sleep" inputmode="decimal" placeholder="–"></label>
@@ -433,7 +444,20 @@ textarea{
    Mo Smith-Schrägbank 4, Mo Latzug 3, Fr Schrägbrust 4, Do neu Lat-Rudern 2;
    frei gemacht: Mo Seitheben 4→3, Do Preacher 3→2. Sa wieder stehendes
    Wadenheben (Kinoshita 2023), Beinstrecker zurückgelehnt (Larsen 2025).
-   89 Arbeitssätze pro Woche.
+   V9.1 (23.10.2026, Fotoanalyse + claude-gym-coach): Schultern sind die
+   Stärke, obere Brust und Lats die Schwachstellen. 4 Sätze von den Schultern
+   zu Brust und Lats, Gesamtumfang gleich (im Defizit keine Sätze dazu):
+   Mo Latzug 3→4, Low-to-High Fly 2→3, Seitheben 3→2, Reverse Pec Deck 2→1;
+   Do Lat-Rudern 2→3, Reverse Pec Deck 3→2; Fr Schrägbrust 4→5,
+   Seithebemaschine 5→4. Reihenfolge bleibt, daher passen alle Logdaten.
+   V9.2 (23.10.2026): Arme als Priorität im Cut. Unter AAS ist Muskelaufbau im
+   Defizit belegt (Pasiakos 2019), daher hier bewusst mehr Sätze trotz Defizit:
+   Do Preacher 2→3, Fr Rope Pushdown 2→3, neu Di Überkopf-Trizeps 3 und
+   Sa Kurzhantel-Curl auf der Schrägbank 2 (hinten angehängt: Indizes bleiben).
+   V9.3 (23.10.2026): Übungen nach den Fotos. Do Latzug im Untergriff statt
+   High Row, Fr Schrägbank-Kabelfly 30° statt Pec Deck. Getauschte Plätze
+   tragen die alte Übung in „was“; store.since legt die erste neue Woche fest.
+   96 Arbeitssätze pro Woche.
    t: 'schwer' | 'maschine' | 'iso' · s: Arbeitssätze · wu: Aufwärmsätze
    loc: Standardort des Tages · h/hg: Variante an der KSK-Station zuhause
    (ohne h gilt „KSK · “ + Name, denn Zuggewichte sind nicht vergleichbar).
@@ -447,21 +471,21 @@ const DAYS = [
    cue:"Kontrolliert 2–3 s absenken, unten nicht abfedern, keine Maximalversuche. Zur oberen Brust, nicht zum Hals."},
   {n:"Neutraler Latzug", g:"Paralleler Doppel-D-Griff, etwa schulterbreit",
    h:"KSK · Kniender Latzug, neutral", hg:"Hoher Zug, Doppel-D-Griff oder zwei Einzelgriffe · kniend, minimale Rücklage",
-   t:"maschine", s:3, lo:8, hi:12, rir:"1–2", rest:180, wu:"1",
+   t:"maschine", s:4, lo:8, hi:12, rir:"1–2", rest:180, wu:"1",
    cue:"Oben volle Streckung, Ellbogen nach unten zur Hüfte, ohne Schwung."},
   {n:"Chest-Supported T-Bar Row", g:"Enger neutraler V-Griff · Brust bleibt am Pad",
    h:"KSK · Sitzendes Kabelrudern, V-Griff", hg:"Tiefer Zug, Füße am Rahmen abstützen · Oberkörper ruhig, Griff zu den unteren Rippen",
    t:"schwer", s:3, lo:6, hi:10, rir:"1–2", rest:180, wu:"2",
    cue:"Brust am Pad, Ellbogen eher körpernah. Griff Richtung untere Rippen. Kein Hüftschwung."},
   {n:"Low-to-High Cable Fly", g:"Zwei D-Griffe am tiefsten Zug · neutral, Daumen oben",
-   t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
+   t:"iso", s:3, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
    cue:"Von tief außen Richtung Schlüsselbein führen. Gedehnte Position kontrollieren, Schulter bleibt zentriert."},
   {n:"1-Arm Kabel-Seitheben", g:"D-Griff am tiefsten Zug · Kabel läuft vor dem Körper", side:true,
-   t:"iso", s:3, lo:12, hi:20, rir:ISO, rest:105, wu:"1",
+   t:"iso", s:2, lo:12, hi:20, rir:ISO, rest:105, wu:"1",
    cue:"Arm leicht vor der Körperseite heben, kein Hüftschwung."},
   {n:"Reverse Pec Deck", g:"Griffe auf Schulterhöhe · neutraler Griff, Daumen oben",
    h:"KSK · Kabel-Reverse-Fly über Kreuz", hg:"Beide hohen Züge auf Schulterhöhe, Kabel kreuzen · KSK-Zug 1:1",
-   t:"iso", s:2, lo:12, hi:20, rir:ISO, rest:105, wu:"0–1",
+   t:"iso", s:1, lo:12, hi:20, rir:ISO, rest:105, wu:"0–1",
    cue:"Oberarme kontrolliert nach außen/hinten führen. Schulterblätter dürfen mitbewegen; den Trapez nicht künstlich ausschalten."},
   {n:"Überkopf-Kabeltrizeps", g:"Seil am hohen Zug · Rücken zum Turm, Ellbogen neben dem Kopf",
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
@@ -470,7 +494,7 @@ const DAYS = [
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
    cue:"Oberarm nur angenehm weit hinter den Körper. Keine maximale Schulterstreckung erzwingen; ohne Schwung."}]},
 
- {k:"DI", n:"Dienstag", t:"Lower A", f:"Quadrizeps · Beinbeuger · Waden", loc:"gym", ex:[
+ {k:"DI", n:"Dienstag", t:"Lower A", f:"Quadrizeps · Beinbeuger · Waden · Trizeps", loc:"gym", ex:[
   {n:"Hack Squat", g:"Füße mittig, schulterbreit · Zehen leicht nach außen",
    h:"KSK · Smith Squat, Füße leicht vorne", hg:"KSK-Stange startet bei 0 kg · Fersen fest, Knie wandern nach vorne",
    t:"schwer", s:3, lo:6, hi:10, rir:"1–2", rest:210, wu:"3",
@@ -493,29 +517,34 @@ const DAYS = [
    cue:"Unten 1–2 s in der Dehnung halten, nicht federn. Knie weitgehend gestreckt, nicht durchdrücken."},
   {n:"Kabel-Crunch", g:"Seil am hohen Zug · kniend, Seil neben dem Kopf",
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:105, wu:"0–1",
-   cue:"Rippen kontrolliert Richtung Becken einrollen. Nicht nur aus der Hüfte nach vorn kippen."}]},
+   cue:"Rippen kontrolliert Richtung Becken einrollen. Nicht nur aus der Hüfte nach vorn kippen."},
+  {n:"Überkopf-Kabeltrizeps", g:"Seil am hohen Zug · Rücken zum Turm, Ellbogen neben dem Kopf",
+   t:"iso", s:3, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
+   cue:"Arm-Priorität: dritter Trizeps-Termin der Woche, genau zwischen Mo und Fr. Überkopf trifft vor allem den langen Kopf. Dehnung nur schmerzfrei, nicht federn."}]},
 
- {k:"DO", n:"Donnerstag", t:"Pull", f:"Lats · Rückendicke · hintere Schulter · Armbeuger", loc:"home", ex:[
+ {k:"DO", n:"Donnerstag", t:"Pull", f:"Lats · hintere Schulter · Armbeuger", loc:"home", ex:[
   {n:"1-Arm Latzug zur Hüfte", g:"D-Griff am hohen Zug · neutral, Ellbogen zur Körperseite", side:true,
    t:"maschine", s:3, lo:8, hi:12, rir:"1–2", rest:150, wu:"2",
    cue:"Oben schmerzfreie Armstreckung, Lats voll dehnen. Ellbogen nach unten zur Körperseite."},
-  {n:"Brustgestützte High Row", g:"Weiter pronierter Griff · Brust am Pad, Ellbogen 45–60°",
-   h:"KSK · Seated Cable Row, Ellbogen außen", hg:"Weite gerade Stange am tiefen Zug, pronierter Griff · sitzend, Füße am Rahmen abstützen, Zug zur oberen Brust",
-   t:"maschine", s:3, lo:8, hi:12, rir:"1–2", rest:180, wu:"2",
-   cue:"Ellbogen etwa 45–60°, nicht mit dem Rumpf helfen. Zuhause als Seated Cable Row: vorne die Schulterblätter kontrolliert nach vorn dehnen, Oberkörper aufrecht und ruhig."},
+  {n:"Latzug im Untergriff", g:"Gerade Stange, Untergriff etwa schulterbreit · Oberschenkelpolster fest",
+   h:"KSK · Kniender Latzug, Untergriff", hg:"Gerade Stange am hohen Zug, Untergriff schulterbreit · kniend, minimale Rücklage",
+   was:{n:"Brustgestützte High Row", g:"Weiter pronierter Griff · Brust am Pad, Ellbogen 45–60°",
+        h:"KSK · Seated Cable Row, Ellbogen außen", hg:"Weite gerade Stange am tiefen Zug, pronierter Griff · sitzend, Füße am Rahmen abstützen, Zug zur oberen Brust"},
+   t:"maschine", s:3, lo:8, hi:12, rir:"1–2", rest:180, wu:"1",
+   cue:"V9.3 statt High Row: Der obere Rücken ist auf den Fotos eine Stärke, die Lats nicht. Oben volle Streckung, dann Ellbogen eng am Körper nach unten zur Hüfte. Der Bizeps arbeitet mit, das passt zur Arm-Priorität. Ohne Schwung."},
   {n:"1-Arm Lat-Rudern zur Hüfte", g:"D-Griff am tiefen bis mittleren Zug · Oberkörper leicht vorgeneigt, Ellbogen nah am Körper", side:true,
-   t:"maschine", s:2, lo:10, hi:15, rir:"1–2", rest:120, wu:"0–1",
+   t:"maschine", s:3, lo:10, hi:15, rir:"1–2", rest:120, wu:"0–1",
    cue:"Ellbogen in einem Bogen zur Hüfte ziehen, vorne Schulter kontrolliert nach vorn dehnen lassen. Nicht zur Brust ziehen, sonst arbeitet der obere Rücken."},
   {n:"Kabel-Pullover (Straight-Arm Pulldown)", g:"Gerade Stange oder Seil am hohen Zug · Arme fast gestreckt",
    t:"iso", s:2, lo:12, hi:15, rir:ISO, rest:120, wu:"0–1",
    cue:"Stehend am Kabel. Oben Lats dehnen, Stange im Bogen zu den Oberschenkeln, Rippen unten, nicht mit dem Trizeps drücken."},
   {n:"Reverse Pec Deck", g:"Griffe auf Schulterhöhe · neutraler Griff, Daumen oben",
    h:"KSK · Kabel-Reverse-Fly über Kreuz", hg:"Beide hohen Züge auf Schulterhöhe, Kabel kreuzen · KSK-Zug 1:1",
-   t:"iso", s:3, lo:12, hi:20, rir:"1–2", rest:105, wu:"0–1",
+   t:"iso", s:2, lo:12, hi:20, rir:"1–2", rest:105, wu:"0–1",
    cue:"Nach dem Rückentraining meist ohne Aufwärmsatz. Nur bis 1–2 RIR, kein Ausbrennen: Freitag ist Brusttag. Oberarme kontrolliert nach außen/hinten, ohne Schwung."},
   {n:"Cable Preacher Curl", g:"SZ- oder gerade Stange am tiefen Zug · Oberarme fest am Pad",
    h:"KSK · Kabel-Curl an der Schrägbanklehne", hg:"Oberarme auf der Banklehne als Preacher-Ersatz · tiefer Zug, KSK 1:1",
-   t:"iso", s:2, lo:8, hi:12, rir:ISO, rest:120, wu:"1",
+   t:"iso", s:3, lo:8, hi:12, rir:ISO, rest:120, wu:"1",
    cue:"Oberarme am Pad, Ellbogen weit, aber schmerzfrei strecken; nicht ruckartig aus der unteren Position."},
   {n:"Rope Hammer Curl", g:"Seil am tiefen Zug · neutraler Griff, Daumen oben",
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"0–1",
@@ -524,32 +553,33 @@ const DAYS = [
  {k:"FR", n:"Freitag", t:"Push", f:"Obere Brust zuerst · seitliche Schulter · Trizeps", loc:"home", ex:[
   {n:"Schrägbrust-Maschine 20–30°", g:"Lehne 20–30° · Griffe auf Höhe der oberen Brust · Sitzhöhe notieren",
    h:"KSK · Smith-Schrägbank 20–30°", hg:"KSK-Stange startet bei 0 kg · Bank 20–30° · Sicherheitsanschläge einstellen",
-   t:"maschine", s:4, lo:8, hi:12, rir:"1–2", rest:180, wu:"3",
+   t:"maschine", s:5, lo:8, hi:12, rir:"1–2", rest:180, wu:"3",
    cue:"Kontrolliert absenken, kein erzwungener Kontakt am Schlüsselbein, keine Maximalversuche."},
   {n:"Konvergierende Brustpresse", g:"Neutraler oder leicht pronierter Griff · Griffe auf Brusthöhe",
    h:"KSK · Smith-Flachbank", hg:"KSK-Stange startet bei 0 kg · Stange zur unteren Brust, Schulterblätter fixiert",
    t:"maschine", s:2, lo:8, hi:12, rir:"1–2", rest:180, wu:"1",
    cue:"Stabile Auflage und kontrollierte Tiefe. Weder stark verkürzen noch hart in den Anschlag drücken."},
-  {n:"Pec Deck", g:"Griffe auf Brusthöhe · Ellbogen leicht gebeugt und fixiert",
-   h:"KSK · Kabel-Fly auf Brusthöhe", hg:"D-Griffe, Züge auf Schulterhöhe · Ellbogen leicht gebeugt, KSK 1:1",
+  {n:"Schrägbank-Kabelfly 30°", g:"Bank 30° mittig zwischen den tiefen Zügen · D-Griffe, Ellbogen leicht gebeugt",
+   was:{n:"Pec Deck", g:"Griffe auf Brusthöhe · Ellbogen leicht gebeugt und fixiert",
+        h:"KSK · Kabel-Fly auf Brusthöhe", hg:"D-Griffe, Züge auf Schulterhöhe · Ellbogen leicht gebeugt, KSK 1:1"},
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"0–1",
-   cue:"Dehnposition kontrollieren, nicht erzwingen."},
+   cue:"V9.3 statt Pec Deck: Die untere Brust ist auf den Fotos gut, die obere flach. Hände im Bogen nach oben-innen über die obere Brust führen, in Faserrichtung der oberen Brust. Dehnung kontrollieren, nicht erzwingen."},
   {n:"Seithebemaschine", g:"Pads an den Oberarmen · nicht mit den Händen ziehen",
    h:"KSK · 1-Arm Kabel-Seitheben", hg:"D-Griff am tiefsten Zug, Kabel vor dem Körper · je Seite, KSK 1:1",
-   t:"iso", s:5, lo:12, hi:20, rir:ISO, rest:120, wu:"1",
+   t:"iso", s:4, lo:12, hi:20, rir:ISO, rest:120, wu:"1",
    cue:"Sitz und Padkontakt notieren; natürliche Schulterblattrotation, kein Schwung."},
   {n:"Überkopf-Kabeltrizeps", g:"Seil am hohen Zug · Rücken zum Turm, Ellbogen neben dem Kopf",
    t:"iso", s:3, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
    cue:"Überkopfposition nur schmerzfrei. Ellbogen kontrolliert beugen und strecken; keine erzwungene Dehnung."},
   {n:"Rope Pushdown", g:"Seil am hohen Zug · unten auseinanderziehen",
-   t:"iso", s:2, lo:12, hi:20, rir:ISO, rest:120, wu:"0–1",
+   t:"iso", s:3, lo:12, hi:20, rir:ISO, rest:120, wu:"0–1",
    cue:"Oberarme ruhig am Rumpf. Ellbogen schmerzfrei strecken; das Seil nicht um jeden Preis auseinanderziehen."},
   {n:"Ab Wheel", g:"Beidhändig, kniend · Hüfte bleibt gestreckt",
    h:"Ab Wheel", hg:"Beidhändig, kniend · Hüfte bleibt gestreckt",
    t:"iso", s:2, lo:8, hi:15, rir:"1–2", rest:120, wu:"1", wut:"3–5 leichte, kürzere Wdh. aus dem Kniestand",
    cue:"Rippen und Becken kontrollieren. Nur so weit rollen, wie die Rückenposition stabil bleibt; Technikverlust beendet den Satz."}]},
 
- {k:"SA", n:"Samstag", t:"Lower B", f:"Hamstrings · Gluteus · Quads · Waden", loc:"gym", ex:[
+ {k:"SA", n:"Samstag", t:"Lower B", f:"Hamstrings · Gluteus · Quads · Waden · Bizeps", loc:"gym", ex:[
   {n:"Romanian Deadlift", g:"Langhantel, pronierter Griff knapp schulterbreit · Stange bleibt am Bein",
    h:"KSK · Smith RDL", hg:"KSK-Stange startet bei 0 kg · Stange am Bein entlang, Hüfte nach hinten",
    t:"schwer", s:3, lo:6, hi:10, rir:"2", rest:240, wu:"3",
@@ -577,7 +607,11 @@ const DAYS = [
   {n:"Stehendes Wadenheben", g:"Fußballen auf der Kante · Knie fast gestreckt",
    h:"KSK · Smith Wadenheben stehend", hg:"Fußballen auf einer Erhöhung · Knie fast gestreckt",
    t:"iso", s:3, lo:10, hi:15, rir:ISO, rest:120, wu:"2",
-   cue:"Unten 1–2 s in der Dehnung halten, nicht federn. Knie weitgehend gestreckt."}]}
+   cue:"Unten 1–2 s in der Dehnung halten, nicht federn. Knie weitgehend gestreckt."},
+  {n:"Kurzhantel-Curl auf der Schrägbank", g:"Bank 45–60° · Untergriff, Arme hängen hinter dem Rumpf",
+   h:"KSK · Bayesian Cable Curl", hg:"D-Griff am tiefsten Zug · Rücken zum Turm, Arm hinter dem Rumpf · je Seite, KSK 1:1",
+   t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
+   cue:"Arm-Priorität: dritter Bizeps-Termin, 48 h nach Donnerstag. Unten nur bis zur schmerzfreien Dehnung, nicht fallen lassen: Unter AAS reißen Oberkörpersehnen häufiger. Kein Schwung."}]}
 ];
 
 /* Alternativen im Gym: gleiches Bewegungsmuster, gleicher Satz- und Wiederholungsbereich. */
@@ -611,7 +645,10 @@ const ALT = {
  "Romanian Deadlift":            ["Smith RDL", "45°-Hyperextension, hamstringbetont"],
  "Smith Split Squat":            ["Einbeinige Beinpresse", "Reverse Lunge an der Smith"],
  "Hip Adduction":                ["Kabel-Adduktion", "Copenhagen Plank"],
- "Hip Abduction":                ["Kabel-Abduktion", "Stehende Kabel-Abduktion"]
+ "Hip Abduction":                ["Kabel-Abduktion", "Stehende Kabel-Abduktion"],
+ "Kurzhantel-Curl auf der Schrägbank": ["Bayesian Cable Curl", "Kabel-Curl, Arm hinter dem Körper"],
+ "Latzug im Untergriff":         ["Neutraler Latzug, Doppel-D-Griff", "Assistierte Klimmzüge, Untergriff"],
+ "Schrägbank-Kabelfly 30°":      ["Kurzhantel-Fly auf der Schrägbank", "Low-to-High Cable Fly"]
 };
 
 /* Ausführung Schritt für Schritt, typische Fehler und Technik-Videos von
@@ -668,6 +705,11 @@ const HOW = {
 };
 HOW["KSK · Smith-Schrägbank 20–30°"] = HOW["Smith-Schrägbank 20–30°"];
 HOW["KSK · 1-Arm Kabel-Seitheben"] = HOW["1-Arm Kabel-Seitheben"];
+HOW["KSK · Bayesian Cable Curl"] = HOW["Bayesian Cable Curl"];
+HOW["Latzug im Untergriff"] = {s:["Oberschenkelpolster fest einstellen. Gerade Stange im Untergriff (Handflächen zu dir), etwa schulterbreit.", "Oben die Arme ganz strecken und die Lats dehnen lassen. Oberkörper nur minimal zurückgelehnt.", "Die Ellbogen eng am Körper nach unten Richtung Hüfte ziehen, bis die Stange etwa an der oberen Brust ist.", "In etwa 2 s kontrolliert zurück in die volle Streckung."], f:"Mit dem Oberkörper zurückwerfen, Ellbogen wandern nach vorn (wird zum Curl), oben die Dehnung abkürzen.", v:[["Jeff Nippard", "The Best And Worst Back Exercises (Ranked By Science)", "https://www.youtube.com/watch?v=jLvqKgW-_G8"]]};
+HOW["KSK · Kniender Latzug, Untergriff"] = HOW["Latzug im Untergriff"];
+HOW["Schrägbank-Kabelfly 30°"] = {s:["Bank auf 30° stellen und mittig zwischen die beiden tiefen Züge schieben. D-Griffe, Rücken an der Lehne.", "Die Arme starten seitlich auf Höhe der Bank in einer angenehmen Dehnung, die Ellbogen leicht gebeugt und fixiert.", "Die Hände in einem Bogen nach oben-innen über der oberen Brust zusammenführen. Kurz anspannen.", "Langsam zurück in die Dehnung, die Schultern bleiben auf der Lehne."], f:"Ellbogen beugen und drücken statt fliegen, Dehnung erzwingen, Schultern rollen nach vorn.", v:[["TNF", "Say Goodbye to Flat Chests! Top 5 Chest Exercises You Should be Doing", "https://www.youtube.com/watch?v=ADfBvG03mlQ"]]};
+HOW["Kurzhantel-Curl auf der Schrägbank"] = {s:["Bank auf 45–60° stellen, Rücken und Kopf an der Lehne. Kurzhanteln im Untergriff, die Arme hängen senkrecht nach unten.", "Die Oberarme bleiben hinter dem Rumpf und ruhig. Der Bizeps ist unten gedehnt.", "Beide Hanteln hochcurlen, ohne die Ellbogen nach vorn zu schieben. Oben kurz anspannen.", "In 2–3 s ablassen, bis die Arme fast gestreckt sind. Unten nicht fallen lassen oder federn."], f:"Ellbogen wandern nach vorn, Schultern rollen von der Lehne, unten aus der Dehnung reißen, Schwung aus dem Oberkörper.", v:[["Jeff Nippard", "The Best And Worst Biceps Exercises", "https://www.youtube.com/watch?v=GNO4OtYoCYk"]]};
 const escH = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function howOf(name, ex){ return HOW[name] || (name === `KSK · ${ex.n}` ? HOW[ex.n] : null); }
 function howHtml(name, ex){
@@ -690,7 +732,7 @@ const WU = {
 };
 const MODES = {std:"Standard", red:"Reduziert", deload:"Deload"};
 const WEEKS = 16;
-const PLAN = "V9";
+const PLAN = "V9";   /* Datenformat: V9.1 nutzt es unverändert, V9-Sicherungen bleiben einlesbar */
 const fmtRest = s => s < 120 ? `${s} s` : `${(s/60).toFixed(s%60 ? 1 : 0).replace(".", ",")} min`;
 const KEY = "traininglog_v9";
 let store = {plan:PLAN, meta:{week:1, day:0}, sets:{}, var:{}, loc:{}, mode:{}, checkin:{}};
@@ -716,6 +758,19 @@ function normalize(){
   if(!store.mode) store.mode = {};
   if(!store.checkin) store.checkin = {};
   if(!store.meta) store.meta = {week:1, day:0};
+  if(!store.since) store.since = {};
+  /* Getauschte Übungen (ex.was): ab der Woche nach dem letzten Eintrag an
+     diesem Platz gilt die neue Übung, davor bleibt der alte Name. */
+  DAYS.forEach((D, d)=> D.ex.forEach((ex, e)=>{
+    const k = `d${d}|e${e}`;
+    if(!ex.was || store.since[k]) return;
+    let last = 0;
+    Object.keys(store.sets).forEach(key =>{
+      const m = key.match(/^w(\d+)\|d(\d+)\|e(\d+)\|/);
+      if(m && +m[2] === d && +m[3] === e) last = Math.max(last, +m[1]);
+    });
+    store.since[k] = last + 1;
+  }));
   store.plan = PLAN;
 }
 
@@ -783,14 +838,20 @@ const locOf = (w,d)=> (store.loc && store.loc[lid(w,d)]) || DAYS[d].loc;
 const vid = (w,d,e)=>`w${w}|d${d}|e${e}`;
 const variant = (w,d,e)=> (store.var && store.var[vid(w,d,e)]) || null;
 
+/* Vor dem Tausch (store.since) gilt an diesem Platz die alte Übung. */
+function baseOf(w,d,e){
+  const ex = DAYS[d].ex[e];
+  return ex.was && w < ((store.since && store.since[`d${d}|e${e}`]) || 1) ? ex.was : ex;
+}
+
 /* Zuhause gilt immer die KSK-Variante, Alternativen gibt es nur im Gym. */
 function nameOf(w,d,e){
-  const ex = DAYS[d].ex[e];
+  const ex = baseOf(w,d,e);
   if(locOf(w,d) === "home") return ex.h || `KSK · ${ex.n}`;
   return variant(w,d,e) || ex.n;
 }
 function gripOf(w,d,e){
-  const ex = DAYS[d].ex[e];
+  const ex = baseOf(w,d,e);
   if(locOf(w,d) === "home") return ex.hg || (ex.g ? `${ex.g} · KSK-Zug 1:1` : "");
   return variant(w,d,e) ? "" : (ex.g || "");
 }
@@ -1124,8 +1185,8 @@ document.getElementById("t-reset").onclick = ()=>{
 };
 
 /* ---------- Check-in-Leiste und -Blatt ---------- */
-const CI_FIELDS = {bw:"ci-bw", waist:"ci-waist", rhr:"ci-rhr", bp:"ci-bp", sleep:"ci-sleep", app:"ci-app", nau:"ci-nau", note:"ci-note"};
-const CI_NUM = new Set(["bw", "waist", "rhr", "sleep"]);
+const CI_FIELDS = {bw:"ci-bw", waist:"ci-waist", arm:"ci-arm", rhr:"ci-rhr", bp:"ci-bp", sleep:"ci-sleep", app:"ci-app", nau:"ci-nau", note:"ci-note"};
+const CI_NUM = new Set(["bw", "waist", "arm", "rhr", "sleep"]);
 
 function paintCi(){
   const w = store.meta.week, el = document.getElementById("ci"), c = ciOf(w), r = lossRate(w);
@@ -1137,6 +1198,7 @@ function paintCi(){
   }
   let html = `Wo. ${w}: <b>${de(c.bw)} kg</b>`;
   if(numOf(c.waist) != null) html += ` · Taille ${de(c.waist)} cm`;
+  if(numOf(c.arm) != null) html += ` · Arm ${de(c.arm)} cm`;
   if(r){
     html += ` · <b>${fmtRate(r.pct)}</b>`;
     if(r.pct > 1){ el.classList.add("fast"); html += " · zu schnell"; }
@@ -1159,7 +1221,7 @@ function showCheckin(){
   const w = store.meta.week, c = ciOf(w) || {};
   Object.entries(CI_FIELDS).forEach(([k, elId])=>{ document.getElementById(elId).value = c[k] == null ? "" : CI_NUM.has(k) ? de(c[k]) : c[k]; });
   paintCiRate();
-  openSheet(`Check-in · Woche ${w}`, "Einmal pro Woche. Gewicht als Durchschnitt mehrerer Morgenmessungen, Blutdruck und Ruhepuls in Ruhe.", {checkin:true});
+  openSheet(`Check-in · Woche ${w}`, "Einmal pro Woche. Gewicht als Durchschnitt mehrerer Morgenmessungen, Blutdruck und Ruhepuls in Ruhe. Oberarm entspannt an der dicksten Stelle, morgens vor dem Training, immer derselbe Arm.", {checkin:true});
 }
 
 function commitCheckin(){
@@ -1195,7 +1257,8 @@ function exportTSV(){
   const rows = [["Woche","Modus","Tag","Ort","Übung","Satz","Last (kg)","Wdh.","RIR"]];
   for(let w=1; w<=WEEKS; w++)
     DAYS.forEach((D, d)=> D.ex.forEach((ex, ei)=>{
-      for(let s=1; s<=ex.s; s++){
+      /* über ex.s hinaus: Sätze aus Wochen, bevor V9.1 die Satzzahl gesenkt hat */
+      for(let s=1; s<=ex.s || get(w,d,ei,s); s++){
         const v = get(w,d,ei,s);
         if(v && (v.l !== "" || v.r !== ""))
           rows.push([w, MODES[modeOf(w)], D.n, locOf(w,d) === "home" ? "Zuhause" : "Gym", nameOf(w,d,ei), s, v.l, v.r, v.rir]);
@@ -1203,8 +1266,8 @@ function exportTSV(){
     }));
   const ci = Object.keys(store.checkin || {}).map(Number).sort((a, b)=> a - b);
   if(ci.length){
-    rows.push([], ["Woche","Check-in","Gewicht Ø kg","Taille cm","Ruhepuls","Blutdruck","Schlaf Ø h","Appetit","Übelkeit","Notiz"]);
-    ci.forEach(w =>{ const c = store.checkin[w]; rows.push([w, "", c.bw ?? "", c.waist ?? "", c.rhr ?? "", c.bp ?? "", c.sleep ?? "", c.app ?? "", c.nau ?? "", c.note ?? ""]); });
+    rows.push([], ["Woche","Check-in","Gewicht Ø kg","Taille cm","Oberarm cm","Ruhepuls","Blutdruck","Schlaf Ø h","Appetit","Übelkeit","Notiz"]);
+    ci.forEach(w =>{ const c = store.checkin[w]; rows.push([w, "", c.bw ?? "", c.waist ?? "", c.arm ?? "", c.rhr ?? "", c.bp ?? "", c.sleep ?? "", c.app ?? "", c.nau ?? "", c.note ?? ""]); });
   }
   const t = $csv();
   t.value = rows.map(r=>r.join("\t")).join("\n");
@@ -1221,7 +1284,7 @@ function backupJSON(){
 }
 
 function showRules(){
-  openSheet("Regeln · V9", "", {info:true});
+  openSheet("Regeln · V9.3", "", {info:true});
 }
 
 (function(){
