@@ -416,6 +416,7 @@ textarea{
       <div class="ci-grid">
         <label>Gewicht Ø kg<input id="ci-bw" inputmode="decimal" placeholder="–"></label>
         <label>Taille cm<input id="ci-waist" inputmode="decimal" placeholder="–"></label>
+        <label>Oberarm cm<input id="ci-arm" inputmode="decimal" placeholder="–"></label>
         <label>Ruhepuls<input id="ci-rhr" inputmode="numeric" placeholder="–"></label>
         <label>Blutdruck<input id="ci-bp" inputmode="text" placeholder="sys/dia"></label>
         <label>Schlaf Ø h<input id="ci-sleep" inputmode="decimal" placeholder="–"></label>
@@ -1152,8 +1153,8 @@ document.getElementById("t-reset").onclick = ()=>{
 };
 
 /* ---------- Check-in-Leiste und -Blatt ---------- */
-const CI_FIELDS = {bw:"ci-bw", waist:"ci-waist", rhr:"ci-rhr", bp:"ci-bp", sleep:"ci-sleep", app:"ci-app", nau:"ci-nau", note:"ci-note"};
-const CI_NUM = new Set(["bw", "waist", "rhr", "sleep"]);
+const CI_FIELDS = {bw:"ci-bw", waist:"ci-waist", arm:"ci-arm", rhr:"ci-rhr", bp:"ci-bp", sleep:"ci-sleep", app:"ci-app", nau:"ci-nau", note:"ci-note"};
+const CI_NUM = new Set(["bw", "waist", "arm", "rhr", "sleep"]);
 
 function paintCi(){
   const w = store.meta.week, el = document.getElementById("ci"), c = ciOf(w), r = lossRate(w);
@@ -1165,6 +1166,7 @@ function paintCi(){
   }
   let html = `Wo. ${w}: <b>${de(c.bw)} kg</b>`;
   if(numOf(c.waist) != null) html += ` · Taille ${de(c.waist)} cm`;
+  if(numOf(c.arm) != null) html += ` · Arm ${de(c.arm)} cm`;
   if(r){
     html += ` · <b>${fmtRate(r.pct)}</b>`;
     if(r.pct > 1){ el.classList.add("fast"); html += " · zu schnell"; }
@@ -1187,7 +1189,7 @@ function showCheckin(){
   const w = store.meta.week, c = ciOf(w) || {};
   Object.entries(CI_FIELDS).forEach(([k, elId])=>{ document.getElementById(elId).value = c[k] == null ? "" : CI_NUM.has(k) ? de(c[k]) : c[k]; });
   paintCiRate();
-  openSheet(`Check-in · Woche ${w}`, "Einmal pro Woche. Gewicht als Durchschnitt mehrerer Morgenmessungen, Blutdruck und Ruhepuls in Ruhe.", {checkin:true});
+  openSheet(`Check-in · Woche ${w}`, "Einmal pro Woche. Gewicht als Durchschnitt mehrerer Morgenmessungen, Blutdruck und Ruhepuls in Ruhe. Oberarm entspannt an der dicksten Stelle, morgens vor dem Training, immer derselbe Arm.", {checkin:true});
 }
 
 function commitCheckin(){
@@ -1232,8 +1234,8 @@ function exportTSV(){
     }));
   const ci = Object.keys(store.checkin || {}).map(Number).sort((a, b)=> a - b);
   if(ci.length){
-    rows.push([], ["Woche","Check-in","Gewicht Ø kg","Taille cm","Ruhepuls","Blutdruck","Schlaf Ø h","Appetit","Übelkeit","Notiz"]);
-    ci.forEach(w =>{ const c = store.checkin[w]; rows.push([w, "", c.bw ?? "", c.waist ?? "", c.rhr ?? "", c.bp ?? "", c.sleep ?? "", c.app ?? "", c.nau ?? "", c.note ?? ""]); });
+    rows.push([], ["Woche","Check-in","Gewicht Ø kg","Taille cm","Oberarm cm","Ruhepuls","Blutdruck","Schlaf Ø h","Appetit","Übelkeit","Notiz"]);
+    ci.forEach(w =>{ const c = store.checkin[w]; rows.push([w, "", c.bw ?? "", c.waist ?? "", c.arm ?? "", c.rhr ?? "", c.bp ?? "", c.sleep ?? "", c.app ?? "", c.nau ?? "", c.note ?? ""]); });
   }
   const t = $csv();
   t.value = rows.map(r=>r.join("\t")).join("\n");
