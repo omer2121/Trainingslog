@@ -376,6 +376,7 @@ textarea{
         <li>V9.3, Übungen nach den Fotos: Do Latzug im Untergriff statt High Row (oberer Rücken ist stark, Lats nicht) und Fr Schrägbank-Kabelfly 30° statt Pec Deck (untere Brust gut, obere flach). Alte Einträge behalten ihren Namen; der Vergleich startet bei der neuen Übung frisch.</li>
         <li>Kein Shrug-Training: Ein eher flacher oberer Trapez lässt die Schultern breiter wirken.</li>
         <li>V9.4: Schrägbrust Fr wieder 4 statt 5 Sätze, dafür Schrägbank-Kabelfly 2→3. Pro Woche bleibt die obere Brust bei 14 Sätzen. Üblich sind 3–4 Arbeitssätze pro Übung; ein 5. Satz derselben Übung bringt nach viel Ermüdung wenig, etwas Übungsvariation hilft dagegen dem Wachstum in einzelnen Muskelbereichen (Kassiano 2022).</li>
+        <li>Zuhause hat die Bank nur 20° und 40°: Schrägbankdrücken und Schrägbank-Fly auf 40°. Die obere Brust ist zwischen 30° und 45° am aktivsten, über 45° übernimmt die vordere Schulter (Rodríguez-Ridao 2020, EMG). 20° liegt näher an der Flachbank. Spürst du bei 40° fast nur die Schulter, nimm 20°. Der Vergleich startet bei 40° frisch, weil die alten Einträge (20–30°) mit anderem Winkel entstanden sind.</li>
       </ul>
       <h4>Cut-Regeln</h4>
       <ul>
@@ -459,6 +460,7 @@ textarea{
    High Row, Fr Schrägbank-Kabelfly 30° statt Pec Deck. Getauschte Plätze
    tragen die alte Übung in „was“; store.since legt die erste neue Woche fest.
    V9.4: Fr Schrägbrust 5→4, Schrägbank-Kabelfly 2→3 (max. 4 Sätze pro Übung).
+   Zuhause hat die Bank 20° und 40°: Schrägbank-Varianten zuhause auf 40°.
    96 Arbeitssätze pro Woche.
    t: 'schwer' | 'maschine' | 'iso' · s: Arbeitssätze · wu: Aufwärmsätze
    loc: Standardort des Tages · h/hg: Variante an der KSK-Station zuhause
@@ -468,7 +470,9 @@ const ISO = "1–2 · letzter 0–1";
 const DAYS = [
  {k:"MO", n:"Montag", t:"Upper A", f:"Obere Brust · Lats · Rückendicke", loc:"gym", ex:[
   {n:"Smith-Schrägbank 20–30°", g:"Bank 20–30° · pronierter Griff, gut schulterbreit · Stange zur oberen Brust",
-   h:"KSK · Smith-Schrägbank 20–30°", hg:"KSK-Stange startet bei 0 kg · Bank 20–30° · Sicherheitsanschläge einstellen",
+   h:"KSK · Smith-Schrägbank 40°", hg:"KSK-Stange startet bei 0 kg · Bank auf 40° · Sicherheitsanschläge einstellen",
+   was:{n:"Smith-Schrägbank 20–30°", g:"Bank 20–30° · pronierter Griff, gut schulterbreit · Stange zur oberen Brust",
+        h:"KSK · Smith-Schrägbank 20–30°", hg:"KSK-Stange startet bei 0 kg · Bank 20–30° · Sicherheitsanschläge einstellen"},
    t:"schwer", s:4, lo:6, hi:10, rir:"1–2", rest:180, wu:"3",
    cue:"Kontrolliert 2–3 s absenken, unten nicht abfedern, keine Maximalversuche. Zur oberen Brust, nicht zum Hals."},
   {n:"Neutraler Latzug", g:"Paralleler Doppel-D-Griff, etwa schulterbreit",
@@ -554,7 +558,9 @@ const DAYS = [
 
  {k:"FR", n:"Freitag", t:"Push", f:"Obere Brust zuerst · seitliche Schulter · Trizeps", loc:"home", ex:[
   {n:"Schrägbrust-Maschine 20–30°", g:"Lehne 20–30° · Griffe auf Höhe der oberen Brust · Sitzhöhe notieren",
-   h:"KSK · Smith-Schrägbank 20–30°", hg:"KSK-Stange startet bei 0 kg · Bank 20–30° · Sicherheitsanschläge einstellen",
+   h:"KSK · Smith-Schrägbank 40°", hg:"KSK-Stange startet bei 0 kg · Bank auf 40° · Sicherheitsanschläge einstellen",
+   was:{n:"Schrägbrust-Maschine 20–30°", g:"Lehne 20–30° · Griffe auf Höhe der oberen Brust · Sitzhöhe notieren",
+        h:"KSK · Smith-Schrägbank 20–30°", hg:"KSK-Stange startet bei 0 kg · Bank 20–30° · Sicherheitsanschläge einstellen"},
    t:"maschine", s:4, lo:8, hi:12, rir:"1–2", rest:180, wu:"3",
    cue:"Kontrolliert absenken, kein erzwungener Kontakt am Schlüsselbein, keine Maximalversuche."},
   {n:"Konvergierende Brustpresse", g:"Neutraler oder leicht pronierter Griff · Griffe auf Brusthöhe",
@@ -562,6 +568,7 @@ const DAYS = [
    t:"maschine", s:2, lo:8, hi:12, rir:"1–2", rest:180, wu:"1",
    cue:"Stabile Auflage und kontrollierte Tiefe. Weder stark verkürzen noch hart in den Anschlag drücken."},
   {n:"Schrägbank-Kabelfly 30°", g:"Bank 30° mittig zwischen den tiefen Zügen · D-Griffe, Ellbogen leicht gebeugt",
+   h:"KSK · Schrägbank-Kabelfly 40°", hg:"Bank auf 40° mittig zwischen den tiefen Zügen · D-Griffe, Ellbogen leicht gebeugt, KSK 1:1",
    was:{n:"Pec Deck", g:"Griffe auf Brusthöhe · Ellbogen leicht gebeugt und fixiert",
         h:"KSK · Kabel-Fly auf Brusthöhe", hg:"D-Griffe, Züge auf Schulterhöhe · Ellbogen leicht gebeugt, KSK 1:1"},
    t:"iso", s:3, lo:10, hi:15, rir:ISO, rest:120, wu:"0–1",
@@ -706,11 +713,17 @@ const HOW = {
  "KSK · Kabel-Abduktion stehend": {s:["Manschette am Knöchel des turmfernen Beins, tiefer Zug, seitlich zum Turm stehen und festhalten.", "Becken stabil, Oberkörper aufrecht oder leicht vorgeneigt.", "Das Bein seitlich nach außen führen.", "Kontrolliert zurück."], f:"Mit dem Rumpf zur Seite lehnen, Bein dreht nach außen (Zehen zeigen nach oben), Schwung.", q:"Renaissance Periodization standing cable hip abduction"}
 };
 HOW["KSK · Smith-Schrägbank 20–30°"] = HOW["Smith-Schrägbank 20–30°"];
+/* Die Bank zuhause hat nur 20° und 40°: für die obere Brust 40° (Bereich 30–45°). */
+HOW["KSK · Smith-Schrägbank 40°"] = {...HOW["Smith-Schrägbank 20–30°"],
+  s:["Bank auf 40° stellen und so unter die Stange schieben, dass sie über der oberen Brust (knapp unter dem Schlüsselbein) landet. Sicherheitsanschläge knapp über Brusthöhe.", ...HOW["Smith-Schrägbank 20–30°"].s.slice(1)],
+  f:"Schulter übernimmt und die Brust spürt wenig: Schulterblätter fester zurück, Ellbogen etwas enger; hilft das nicht, auf 20° wechseln. Außerdem: Stange zum Hals, Abfedern auf der Brust, Gesäß hebt ab."};
 HOW["KSK · 1-Arm Kabel-Seitheben"] = HOW["1-Arm Kabel-Seitheben"];
 HOW["KSK · Bayesian Cable Curl"] = HOW["Bayesian Cable Curl"];
 HOW["Latzug im Untergriff"] = {s:["Oberschenkelpolster fest einstellen. Gerade Stange im Untergriff (Handflächen zu dir), etwa schulterbreit.", "Oben die Arme ganz strecken und die Lats dehnen lassen. Oberkörper nur minimal zurückgelehnt.", "Die Ellbogen eng am Körper nach unten Richtung Hüfte ziehen, bis die Stange etwa an der oberen Brust ist.", "In etwa 2 s kontrolliert zurück in die volle Streckung."], f:"Mit dem Oberkörper zurückwerfen, Ellbogen wandern nach vorn (wird zum Curl), oben die Dehnung abkürzen.", v:[["Jeff Nippard", "The Best And Worst Back Exercises (Ranked By Science)", "https://www.youtube.com/watch?v=jLvqKgW-_G8"]]};
 HOW["KSK · Kniender Latzug, Untergriff"] = HOW["Latzug im Untergriff"];
 HOW["Schrägbank-Kabelfly 30°"] = {s:["Bank auf 30° stellen und mittig zwischen die beiden tiefen Züge schieben. D-Griffe, Rücken an der Lehne.", "Die Arme starten seitlich auf Höhe der Bank in einer angenehmen Dehnung, die Ellbogen leicht gebeugt und fixiert.", "Die Hände in einem Bogen nach oben-innen über der oberen Brust zusammenführen. Kurz anspannen.", "Langsam zurück in die Dehnung, die Schultern bleiben auf der Lehne."], f:"Ellbogen beugen und drücken statt fliegen, Dehnung erzwingen, Schultern rollen nach vorn.", v:[["TNF", "Say Goodbye to Flat Chests! Top 5 Chest Exercises You Should be Doing", "https://www.youtube.com/watch?v=ADfBvG03mlQ"]]};
+HOW["KSK · Schrägbank-Kabelfly 40°"] = {...HOW["Schrägbank-Kabelfly 30°"],
+  s:["Bank auf 40° stellen und mittig zwischen die beiden tiefen Züge schieben. D-Griffe, Rücken an der Lehne.", ...HOW["Schrägbank-Kabelfly 30°"].s.slice(1)]};
 HOW["Kurzhantel-Curl auf der Schrägbank"] = {s:["Bank auf 45–60° stellen, Rücken und Kopf an der Lehne. Kurzhanteln im Untergriff, die Arme hängen senkrecht nach unten.", "Die Oberarme bleiben hinter dem Rumpf und ruhig. Der Bizeps ist unten gedehnt.", "Beide Hanteln hochcurlen, ohne die Ellbogen nach vorn zu schieben. Oben kurz anspannen.", "In 2–3 s ablassen, bis die Arme fast gestreckt sind. Unten nicht fallen lassen oder federn."], f:"Ellbogen wandern nach vorn, Schultern rollen von der Lehne, unten aus der Dehnung reißen, Schwung aus dem Oberkörper.", v:[["Jeff Nippard", "The Best And Worst Biceps Exercises", "https://www.youtube.com/watch?v=GNO4OtYoCYk"]]};
 const escH = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function howOf(name, ex){ return HOW[name] || (name === `KSK · ${ex.n}` ? HOW[ex.n] : null); }
