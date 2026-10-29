@@ -1,16 +1,16 @@
 {
-  "name": "Trainingslog V9",
-  "short_name": "Log V9",
+  "name": "Trainingslog",
+  "short_name": "Trainingslog",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#12151A",
-  "theme_color": "#12151A",
+  "background_color": "#0B0C0F",
+  "theme_color": "#0B0C0F",
   "lang": "de",
   "icons": [
-    { "src": "../icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "../icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "../icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }

@@ -3,369 +3,507 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#12151A">
+<meta name="theme-color" content="#0B0C0F">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Log V9">
+<meta name="apple-mobile-web-app-title" content="Trainingslog">
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="apple-touch-icon" href="../icon-180.png">
-<link rel="icon" href="../icon-192.png">
-<title>Trainingslog V9.4</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="apple-touch-icon" href="./icon-180.png">
+<link rel="icon" href="./icon-192.png">
+<title>Trainingslog</title>
 <style>
+/* ---------- Farben, Maße, Schrift ----------
+   Dunkles Design für schlecht beleuchtete Studios. Systemschrift (SF Pro auf
+   dem iPhone): lädt sofort und funktioniert offline. Diagrammfarben (--series,
+   --cal-*) sind mit dem Palette-Validator gegen --surface geprüft. */
 :root{
-  --ink:#12151A;
-  --slab:#1B2028;
-  --slab-2:#232935;
-  --line:#2E3644;
-  --paper:#E9ECF0;
-  --steel:#8C97A6;
-  --steel-dim:#5D6875;
-  --go:#7BB661;
-  --go-deep:#3E6B2E;
-  --under:#CB6146;
-  --amber:#D9A441;
-  --r:10px;
+  color-scheme:dark;
+  --bg:#0B0C0F;
+  --surface:#15171B;
+  --surface-2:#1C1F25;
+  --surface-3:#262A31;
+  --line:#24272E;
+  --line-2:#30343C;
+  --text:#F3F4F6;
+  --text-2:#B9BFC9;
+  --muted:#8A919D;
+  --faint:#6B7280;
+  --accent:#C6FB50;
+  --accent-ink:#0A0B0D;
+  --accent-soft:rgba(198,251,80,.12);
+  --series:#73A402;
+  --track:rgba(115,164,2,.22);
+  --cal-0:#20232A;
+  --cal-1:#3A5612;
+  --cal-2:#4F7314;
+  --cal-3:#73A402;
+  --good:#3BA946;
+  --warn:#F2B33D;
+  --bad:#E95145;
+  --good-soft:rgba(59,169,70,.15);
+  --warn-soft:rgba(242,179,61,.12);
+  --bad-soft:rgba(233,81,69,.14);
+  --grid:#23262D;
+  --axis:#3A3F48;
+  --r-lg:18px;
+  --r-md:14px;
+  --tab-h:62px;
+  --pad:16px;
+  --font:system-ui,-apple-system,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --ease:cubic-bezier(.2,.8,.2,1);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
 html,body{margin:0;padding:0}
 body{
-  background:var(--ink);
-  color:var(--paper);
-  font-family:"IBM Plex Sans",system-ui,sans-serif;
-  font-size:15px;line-height:1.45;
-  padding-bottom:env(safe-area-inset-bottom);
+  background:var(--bg);color:var(--text);font-family:var(--font);
+  font-size:15px;line-height:1.45;min-height:100vh;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
   overscroll-behavior-y:contain;
 }
-button,input,select{font-family:inherit;color:inherit}
-button{border:0;background:none;cursor:pointer}
+body.sheet-open{overflow:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+button{border:0;background:none;cursor:pointer;padding:0}
+a{color:var(--accent)}
+.ic{width:22px;height:22px;flex:none}
+.ic.sm{width:16px;height:16px}
+.ic.xs{width:13px;height:13px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#app{max-width:640px;margin:0 auto;padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 28px)}
+body.dock-on #app{padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 112px)}
 
-/* ---------- Kopf ---------- */
-.top{
-  position:sticky;top:0;z-index:40;
-  background:rgba(18,21,26,.94);
-  backdrop-filter:blur(12px);
+/* ---------- Kopf (bleibt oben stehen) ---------- */
+.hdr{
+  position:sticky;top:0;z-index:30;
+  background:rgba(11,12,15,.86);
+  -webkit-backdrop-filter:saturate(1.6) blur(20px);backdrop-filter:saturate(1.6) blur(20px);
   border-bottom:1px solid var(--line);
-  padding:calc(10px + env(safe-area-inset-top)) 12px 0;
+  padding:calc(env(safe-area-inset-top) + 10px) var(--pad) 0;
 }
-.top-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
-.brand{
-  font-family:"IBM Plex Sans Condensed",sans-serif;
-  font-weight:700;letter-spacing:.14em;font-size:11px;
-  color:var(--steel-dim);text-transform:uppercase;
+.hdr-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;min-height:36px}
+.hdr-title{margin:0 auto 0 0;font-size:20px;font-weight:800;letter-spacing:-.02em}
+.pill{
+  display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 12px;border-radius:999px;
+  background:var(--surface-2);border:1px solid var(--line-2);font-weight:700;font-size:14px;white-space:nowrap;
 }
-.pickers{margin-left:auto;display:flex;gap:6px}
-.pick{
-  background:var(--slab);border:1px solid var(--line);border-radius:7px;
-  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:12px;font-weight:600;
-  letter-spacing:.05em;padding:6px 8px;color:var(--paper);
-  appearance:none;-webkit-appearance:none;
+.pill em{font-style:normal;font-weight:500;color:var(--muted);font-size:13px}
+.pill .ic{color:var(--muted)}
+.pill.static{font-weight:600;color:var(--text-2)}
+.seg{display:inline-flex;padding:3px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line-2);margin-left:auto}
+.seg button{
+  display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;border-radius:9px;
+  font-size:13.5px;font-weight:650;color:var(--muted);transition:background .2s,color .2s;
 }
-.days{display:flex;gap:5px;padding-bottom:9px;overflow-x:auto;scrollbar-width:none}
+.seg button.on{background:var(--text);color:var(--accent-ink)}
+.days{display:flex;gap:6px;padding-bottom:10px;overflow-x:auto;scrollbar-width:none}
 .days::-webkit-scrollbar{display:none}
-.day{
-  flex:1 0 auto;min-width:58px;padding:9px 6px 8px;border-radius:8px;
-  background:var(--slab);border:1px solid transparent;
-  font-family:"IBM Plex Sans Condensed",sans-serif;
-  text-align:center;transition:background .15s,border-color .15s;
+.dc{
+  position:relative;flex:1 0 58px;min-height:54px;padding:7px 4px 11px;border-radius:14px;
+  background:var(--surface);border:1px solid var(--line);text-align:center;
+  transition:background .2s,border-color .2s,color .2s;
 }
-.day b{display:block;font-size:14px;font-weight:700;letter-spacing:.08em}
-.day span{display:block;font-size:9.5px;letter-spacing:.09em;color:var(--steel-dim);text-transform:uppercase;margin-top:1px}
-.day.on{background:var(--slab-2);border-color:var(--steel-dim)}
-.day.on b{color:var(--paper)}
-.day.on span{color:var(--steel)}
-.day.done b::after{content:"·";color:var(--go);margin-left:4px}
+.dc b{display:block;font-size:14px;font-weight:800;letter-spacing:.05em}
+.dc span{display:block;font-size:10.5px;color:var(--muted);margin-top:1px;white-space:nowrap}
+.dc.on{background:var(--text);border-color:var(--text);color:var(--accent-ink)}
+.dc.on span{color:#3A3F48}
+.dc .dp{position:absolute;left:10px;right:10px;bottom:5px;height:3px;border-radius:2px;background:var(--line-2);overflow:hidden}
+.dc.on .dp{background:rgba(10,11,13,.14)}
+.dc .dp u{display:block;height:100%;background:var(--accent);border-radius:2px}
+.dc.on .dp u{background:#3D6B00}
+.dc.today::after{content:"";position:absolute;top:6px;right:7px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.dc.on.today::after{background:#3D6B00}
+.hprog{height:3px;margin:0 calc(-1 * var(--pad))}
+.hprog i{display:block;height:100%;width:0;background:var(--accent);transition:width .4s var(--ease)}
+.warn{display:none;margin:10px var(--pad) 0;padding:10px 12px;border-radius:12px;background:var(--warn-soft);color:var(--warn);font-size:13px}
+.warn.on{display:block}
 
-/* ---------- Fortschritt ---------- */
-.meter{display:flex;align-items:center;gap:10px;padding:0 12px 9px;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--steel-dim)}
-#focus{flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:56%}
-#cnt{flex:0 0 auto;font-variant-numeric:tabular-nums}
-.bar{flex:1;height:3px;background:var(--line);border-radius:2px;overflow:hidden}
-.bar i{display:block;height:100%;background:var(--go);width:0;transition:width .35s cubic-bezier(.4,0,.2,1)}
+/* ---------- Ansichten ---------- */
+.view{padding:18px var(--pad) 0}
+.eyebrow{margin:0 0 5px;font-size:12px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.eyebrow b{color:var(--accent);font-weight:800}
+.title{margin:0;font-size:32px;line-height:1.05;font-weight:800;letter-spacing:-.03em}
+.sub{margin:7px 0 0;color:var(--text-2);font-size:14.5px}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 2px}
+.stat{display:inline-flex;align-items:baseline;gap:5px;padding:7px 11px;border-radius:11px;background:var(--surface);border:1px solid var(--line);font-size:13px;color:var(--muted)}
+.stat b{color:var(--text);font-size:15px;font-weight:750}
+.sec-h{margin:26px 2px 0;font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.fine{margin:10px 2px 0;font-size:12.5px;color:var(--muted);line-height:1.5}
+.lead{margin:0 0 4px;font-size:14.5px;color:var(--text-2)}
+
+/* ---------- Knöpfe, Hinweise ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;height:44px;padding:0 16px;border-radius:13px;
+  font-weight:700;font-size:14.5px;background:var(--surface-2);border:1px solid var(--line-2);color:var(--text);
+  transition:transform .12s var(--ease),background .2s;
+}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent}
+.btn.danger{color:#FF8A80;border-color:rgba(233,81,69,.38);background:transparent}
+.btn.armed{background:var(--bad);border-color:var(--bad);color:#fff}
+.btn.sm{height:36px;padding:0 12px;font-size:13.5px;border-radius:11px}
+.btn.block{display:flex;width:100%;margin-top:12px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.banner{display:flex;gap:12px;align-items:flex-start;margin:14px 0 0;padding:13px 14px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--line)}
+.banner > .ic{color:var(--accent);margin-top:1px}
+.banner p{margin:0;font-size:14px;color:var(--text-2)}
+.banner b{color:var(--text)}
+.banner .acts{display:flex;gap:8px;margin-top:10px}
 
 /* ---------- Übungskarte ---------- */
-main{padding:12px 12px 128px;max-width:640px;margin:0 auto}
-.card{
-  background:var(--slab);border:1px solid var(--line);border-radius:var(--r);
-  margin-bottom:11px;overflow:hidden;
+.ex{
+  margin:14px 0 0;border-radius:var(--r-lg);overflow:hidden;
+  background:linear-gradient(180deg,#181A1F 0%,var(--surface) 70%);border:1px solid var(--line);
+  scroll-margin-top:calc(env(safe-area-inset-top) + 140px);
+  transition:border-color .3s;
 }
-.card.flag-bulk{border-left:3px solid var(--go-deep)}
-.card.flag-wk5{border-left:3px solid var(--amber)}
-.chead{padding:11px 12px 10px;display:flex;gap:10px;align-items:flex-start}
-.num{
-  font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;
-  color:var(--steel-dim);padding-top:3px;min-width:20px;
+.ex.complete{border-color:rgba(198,251,80,.24)}
+.ex-h{display:flex;gap:12px;padding:14px 14px 0}
+.ex-num{
+  flex:none;width:30px;height:30px;margin-top:1px;border-radius:9px;display:grid;place-items:center;
+  background:var(--surface-3);font-size:12px;font-weight:800;color:var(--text-2);font-variant-numeric:tabular-nums;
 }
-.cname{
-  font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:600;
-  font-size:16.5px;line-height:1.22;letter-spacing:.005em;flex:1;
-}
-.cgrip{
-  font-size:12.5px;color:var(--steel);line-height:1.4;margin-top:5px;
-}
-.cmeta{
-  font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--steel);
-  margin-top:4px;letter-spacing:.01em;
-}
+.ex.complete .ex-num{background:var(--accent);color:var(--accent-ink)}
+.ex-t{flex:1;min-width:0}
+.ex-t h3{margin:2px 0 0;font-size:17px;line-height:1.25;font-weight:750;letter-spacing:-.01em}
+.ex-g{margin:4px 0 0;font-size:13px;color:var(--muted);line-height:1.4}
+.ib{flex:none;width:42px;height:42px;margin:-6px -8px 0 0;border-radius:12px;display:grid;place-items:center;color:var(--text-2)}
+.ib:active{background:var(--surface-3)}
+.tags{display:inline-flex;flex-wrap:wrap;gap:5px;margin-left:7px;vertical-align:2px}
 .tag{
-  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:9.5px;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border-radius:4px;
-  align-self:flex-start;margin-top:2px;
+  display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:6px;
+  font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--surface-3);color:var(--text-2);
 }
-.tag.bulk{background:rgba(123,182,97,.14);color:var(--go)}
-.tag.wk5{background:rgba(217,164,65,.14);color:var(--amber)}
+.tag.pr{background:var(--accent);color:var(--accent-ink)}
+.tag.red{background:var(--warn-soft);color:var(--warn)}
+.tag.deload{background:var(--good-soft);color:#8FE08F}
+.tag.lead{background:transparent;box-shadow:inset 0 0 0 1px var(--line-2);color:var(--muted)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;padding:12px 14px 0}
+.chip{
+  display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 10px;border-radius:999px;
+  background:var(--surface-2);border:1px solid var(--line);font-size:12.5px;font-weight:650;color:var(--text-2);
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.chip .ic{width:14px;height:14px;color:var(--muted)}
+button.chip:active{background:var(--surface-3)}
+.chip.ghost{background:transparent;color:var(--muted)}
 
-/* ---------- Satzzeile ---------- */
-.sets{padding:0 12px 10px}
-.set{
-  display:grid;grid-template-columns:26px 1fr 1fr 1fr;gap:7px;align-items:center;
-  padding:7px 0 7px 8px;border-top:1px solid var(--line);position:relative;
+/* ---------- Satzzeilen ---------- */
+.sets{padding:10px 10px 4px}
+.sets-h,.set{display:grid;grid-template-columns:26px 1fr 1fr .78fr 46px;gap:7px;align-items:center}
+.sets-h{padding:0 4px 6px;font-size:10.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)}
+.sets-h span{text-align:center}
+.set{position:relative;padding:5px 4px;border-radius:13px;transition:background .25s}
+.set + .set{margin-top:2px}
+.sn{font-size:13px;font-weight:800;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
+.fw{position:relative;display:block}
+.in{
+  display:block;width:100%;height:48px;padding:0 4px;border-radius:12px;border:1px solid var(--line-2);
+  background:var(--surface-2);color:var(--text);text-align:center;font-size:19px;font-weight:700;
+  font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none;transition:border-color .2s,box-shadow .2s;
 }
-.set::before{
-  content:"";position:absolute;left:0;top:7px;bottom:7px;width:2px;
-  border-radius:2px;background:transparent;transition:background .25s;
+.in::placeholder{color:var(--faint);font-weight:500;opacity:1}
+.in:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.chk{
+  width:46px;height:48px;border-radius:12px;display:grid;place-items:center;border:1.5px solid var(--line-2);color:var(--faint);
+  transition:transform .15s var(--ease),background .2s,color .2s,border-color .2s;
 }
-.set.go::before{background:var(--go)}
-.set.under::before{background:var(--under)}
-.slab-label{
-  font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--steel-dim);
+.chk .ic{width:22px;height:22px;stroke-width:2.6}
+.chk:active{transform:scale(.9)}
+.set.done{background:rgba(198,251,80,.055)}
+.set.done .chk{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.set.go .in[data-f=r]{border-color:rgba(59,169,70,.85)}
+.set.under .in[data-f=r]{border-color:rgba(233,81,69,.85);color:#FF8A80}
+.beat-b{
+  position:absolute;top:-6px;right:-5px;width:19px;height:19px;border-radius:50%;
+  display:none;place-items:center;background:var(--accent);color:var(--accent-ink);box-shadow:0 0 0 2px var(--surface);
 }
-.f{position:relative}
-.f input{
-  width:100%;background:var(--slab-2);border:1px solid var(--line);
-  border-radius:7px;padding:11px 6px 11px;text-align:center;
-  font-family:"IBM Plex Mono",monospace;font-size:17px;font-weight:500;
-  color:var(--paper);
-}
-.f input::placeholder{color:var(--steel-dim);font-weight:400}
-.f input:focus{outline:2px solid var(--steel);outline-offset:1px;border-color:transparent}
-.set.go .f.reps input{border-color:var(--go);color:var(--go)}
-.set.under .f.reps input{border-color:var(--under);color:var(--under)}
-.units{
-  display:grid;grid-template-columns:26px 1fr 1fr 1fr;gap:7px;
-  padding:6px 0 2px 8px;
-  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:9.5px;
-  letter-spacing:.11em;text-transform:uppercase;color:var(--steel-dim);text-align:center;
-}
-.units span:first-child{text-align:left}
+.beat-b .ic{width:11px;height:11px;stroke-width:3.2}
+.set.beat .beat-b{display:grid}
+.set.shake{animation:shake .35s}
+@keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
 
-/* ---------- Geisterzeile: die Signatur ---------- */
-.ghost{
-  grid-column:2 / -1;display:flex;align-items:center;gap:6px;
-  font-family:"IBM Plex Mono",monospace;font-size:11px;
-  color:var(--steel-dim);padding:1px 0 3px 2px;letter-spacing:.02em;
-}
-.ghost b{font-weight:500;color:var(--steel)}
-.ghost .arrow{color:var(--steel-dim)}
-.ghost.beat b{color:var(--go)}
+/* ---------- Kartenfuß: Urteil, Hinweise, Aufwärmen ---------- */
+.ex-foot{display:grid;gap:8px;padding:6px 14px 14px}
+.vd{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:12px;background:var(--surface-2);font-size:13.5px;font-weight:700}
+.vd .ic{width:18px;height:18px;stroke-width:2.4}
+.vd em{margin-left:auto;font-style:normal;font-weight:550;color:var(--muted);font-size:12.5px;text-align:right}
+.vd.up{background:var(--good-soft)}
+.vd.up .ic{color:var(--good)}
+.vd.down{background:var(--bad-soft)}
+.vd.down .ic{color:var(--bad)}
+.vd.hold .ic{color:var(--muted)}
+.note{display:flex;gap:9px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:var(--warn-soft);font-size:13px;color:var(--text-2)}
+.note .ic{width:17px;height:17px;color:var(--warn);margin-top:1px}
+.note b{color:var(--text)}
+.wu{display:flex;gap:7px;align-items:flex-start;margin:0;padding:0 2px;font-size:12.5px;color:var(--muted)}
+.wu .ic{margin-top:2px;color:var(--faint)}
+.wu b{color:var(--text-2);font-weight:650}
 
-/* ---------- Urteil ---------- */
-.verdict{
-  margin:2px 12px 11px;padding:9px 11px;border-radius:8px;
-  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:13px;font-weight:600;
-  letter-spacing:.02em;display:flex;gap:8px;align-items:baseline;
-}
-.verdict.up{background:rgba(123,182,97,.12);color:var(--go)}
-.verdict.hold{background:var(--slab-2);color:var(--steel)}
-.verdict.down{background:rgba(203,97,70,.12);color:var(--under)}
-.verdict em{font-style:normal;font-family:"IBM Plex Mono",monospace;font-size:11px;opacity:.8}
+/* ---------- Ende des Trainingstags ---------- */
+.day-end{margin:22px 0 0;padding:18px;border-radius:var(--r-lg);border:1px dashed var(--line-2);text-align:center}
+.day-end h3{margin:0 0 4px;font-size:16px;font-weight:750}
+.day-end p{margin:0 0 12px;color:var(--muted);font-size:13.5px}
+.key{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 14px;margin:16px 0 0;font-size:12px;color:var(--muted)}
+.key span{display:inline-flex;align-items:center;gap:6px}
+.key i{display:inline-grid;place-items:center;width:16px;height:16px;border-radius:5px;border:1.5px solid var(--line-2)}
+.key i .ic{width:11px;height:11px;stroke-width:3}
+.key .k-done{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.key .k-go{border-color:rgba(59,169,70,.85)}
+.key .k-under{border-color:rgba(233,81,69,.85)}
+.key .k-beat{border-radius:50%;background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 
-/* ---------- Cue ---------- */
-.cue-t{
-  width:100%;text-align:left;padding:9px 12px 11px;border-top:1px solid var(--line);
-  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:11px;font-weight:600;
-  letter-spacing:.11em;text-transform:uppercase;color:var(--steel-dim);
-  display:flex;justify-content:space-between;align-items:center;
+/* ---------- Tab-Leiste ---------- */
+.tabbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;justify-content:center;
+  height:calc(var(--tab-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(13,14,17,.9);-webkit-backdrop-filter:saturate(1.6) blur(20px);backdrop-filter:saturate(1.6) blur(20px);
+  border-top:1px solid var(--line);
 }
-.cue-b{padding:0 12px 12px;font-size:13.5px;color:var(--steel);line-height:1.5;display:none}
-.cue-b.open{display:block}
-.cue-b .rest{
-  display:block;margin-top:8px;font-family:"IBM Plex Mono",monospace;
-  font-size:11px;color:var(--steel-dim);
-}
+.tabbar-in{display:flex;width:100%;max-width:640px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;font-weight:700;letter-spacing:.02em;color:var(--faint);transition:color .2s}
+.tab .ic{width:24px;height:24px}
+.tab.on{color:var(--text)}
+.tab.on .ic{color:var(--accent)}
 
-/* ---------- Pausenuhr ---------- */
-.timer{
-  position:fixed;left:50%;transform:translateX(-50%);
-  bottom:calc(14px + env(safe-area-inset-bottom));z-index:50;
-  display:flex;align-items:center;gap:0;
-  background:var(--slab-2);border:1px solid var(--line);
-  border-radius:999px;box-shadow:0 8px 26px rgba(0,0,0,.5);
-  overflow:hidden;
+/* ---------- Pausen-Uhr ---------- */
+.dock{
+  position:fixed;left:50%;transform:translateX(-50%);z-index:45;
+  bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 10px);
+  width:calc(100% - 24px);max-width:616px;display:flex;align-items:center;gap:10px;
+  padding:10px 10px 10px 12px;border-radius:20px;background:rgba(30,33,39,.97);border:1px solid var(--line-2);
+  box-shadow:0 14px 40px rgba(0,0,0,.55);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
 }
-.timer button{
-  padding:12px 15px;font-family:"IBM Plex Sans Condensed",sans-serif;
-  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--steel);
-}
-.timer .clock{
-  font-family:"IBM Plex Mono",monospace;font-size:19px;font-weight:600;
-  padding:10px 16px;min-width:88px;text-align:center;
-  border-left:1px solid var(--line);border-right:1px solid var(--line);
-  font-variant-numeric:tabular-nums;
-}
-.timer.run .clock{color:var(--go)}
-.timer.done .clock{color:var(--amber)}
+.dock[hidden]{display:none}
+.ring{width:46px;height:46px;flex:none;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:4}
+.ring .trk{stroke:var(--surface-3)}
+.ring .val{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset .25s linear}
+.dk-mid{flex:1;min-width:0}
+.dk-mid b{display:block;font-size:25px;line-height:1.05;font-weight:800;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.dk-mid span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dk-b{height:42px;min-width:48px;padding:0 10px;border-radius:12px;background:var(--surface-3);font-weight:750;font-size:13.5px;font-variant-numeric:tabular-nums;display:grid;place-items:center}
+.dock.done{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);animation:pulse 1s var(--ease) 3}
+.dock.done .ring{display:none}
+.dock.done .dk-mid span{color:#2C3B06}
+.dock.done .dk-b{background:rgba(10,11,13,.12);color:var(--accent-ink)}
+@keyframes pulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.03)}}
 
-/* ---------- Werkzeugleiste / Export ---------- */
-.tools{display:flex;gap:8px;margin:18px 0 6px}
-.tool{
-  flex:1;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--slab);
-  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:12px;font-weight:600;
-  letter-spacing:.09em;text-transform:uppercase;color:var(--steel);
+/* ---------- Blätter (Bottom Sheets) ---------- */
+.sheet{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center;background:rgba(5,6,8,0);transition:background .24s}
+.sheet[hidden]{display:none}
+.sheet.open{background:rgba(5,6,8,.66)}
+.sh{
+  width:100%;max-width:640px;max-height:88vh;overflow:auto;-webkit-overflow-scrolling:touch;
+  background:var(--surface);border:1px solid var(--line-2);border-bottom:0;border-radius:24px 24px 0 0;
+  padding:8px var(--pad) calc(22px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .28s var(--ease);
 }
-.tool.arm{border-color:var(--under);color:var(--under);background:rgba(203,97,70,.10)}
-.tool[hidden]{display:none}
-.note{font-size:12px;color:var(--steel-dim);line-height:1.55;margin-top:12px}
-.sheet{
-  position:fixed;inset:0;z-index:80;background:rgba(10,12,16,.82);
-  display:none;align-items:flex-end;
-}
-.sheet.open{display:flex}
-.sheet-in{
-  background:var(--slab);border-top-left-radius:14px;border-top-right-radius:14px;
-  width:100%;max-height:82vh;padding:16px 14px calc(16px + env(safe-area-inset-bottom));
-  overflow:auto;border-top:1px solid var(--line);
-}
-.sheet h3{
-  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:13px;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--steel-dim);margin:0 0 10px;
-}
+.sheet.open .sh{transform:none}
+.grab{width:38px;height:5px;border-radius:3px;background:var(--line-2);margin:4px auto 10px}
+.sh-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sh-head h2{flex:1;margin:0;font-size:19px;font-weight:800;letter-spacing:-.015em}
+.sh-x{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--surface-3);color:var(--text-2)}
+.sh h4{margin:18px 0 8px;font-size:11.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.sh p,.sh li{font-size:14.5px;color:var(--text-2)}
+.sh p{margin:0}
+.sh ol,.sh ul{margin:0;padding-left:20px}
+.sh li{margin:5px 0}
+.vid{display:flex;gap:10px;align-items:flex-start;padding:11px 12px;margin-top:6px;border-radius:12px;background:var(--surface-2);text-decoration:none;color:var(--text-2);font-size:13.5px}
+.vid .ic{color:var(--accent);margin-top:2px}
+.vid b{display:block;color:var(--text);font-weight:700}
+.alts{display:grid;gap:6px}
+.alt{display:flex;align-items:center;gap:8px;width:100%;padding:12px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line);text-align:left;font-size:14px;color:var(--text-2)}
+.alt small{margin-left:4px;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.alt .ic{margin-left:auto;color:var(--accent)}
+.alt.on{border-color:var(--accent);color:var(--text)}
 textarea{
-  width:100%;height:190px;background:var(--ink);color:var(--paper);
-  border:1px solid var(--line);border-radius:8px;padding:10px;
-  font-family:"IBM Plex Mono",monospace;font-size:11px;line-height:1.5;
+  display:block;width:100%;height:200px;margin-top:12px;padding:12px;border-radius:12px;border:1px solid var(--line-2);
+  background:var(--bg);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:1.5;
 }
-.empty{
-  text-align:center;padding:44px 20px;color:var(--steel-dim);
-  font-family:"IBM Plex Sans Condensed",sans-serif;
+.wk-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}
+.wk-c{position:relative;height:46px;border-radius:12px;overflow:hidden;background:var(--surface-2);border:1px solid var(--line);font-weight:800;font-variant-numeric:tabular-nums}
+.wk-c i{position:absolute;left:0;bottom:0;height:3px;width:calc(var(--p) * 100%);background:var(--accent)}
+.wk-c.on{background:var(--text);border-color:var(--text);color:var(--accent-ink)}
+.wk-c.on i{background:#3D6B00}
+.seg3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.seg3 button{padding:11px 6px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line);font-weight:750;font-size:14px}
+.seg3 small{display:block;margin-top:2px;font-weight:550;font-size:11.5px;color:var(--muted)}
+.seg3 button.on{background:var(--text);border-color:var(--text);color:var(--accent-ink)}
+.seg3 button.on small{color:#3A3F48}
+.ci-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.ci-grid label{display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ci-grid input,.ci-grid select{
+  width:100%;height:46px;padding:0 10px;border-radius:12px;border:1px solid var(--line-2);background:var(--surface-2);
+  color:var(--text);font-size:16px;font-weight:600;text-transform:none;letter-spacing:0;-webkit-appearance:none;appearance:none;
 }
-.warn{
-  margin:0 12px 10px;padding:9px 11px;border-radius:8px;font-size:12.5px;
-  background:rgba(217,164,65,.12);color:var(--amber);display:none;
-}
-.warn.on{display:block}
-.swapped{
-  display:inline-block;margin-left:7px;padding:1px 6px;border-radius:4px;vertical-align:2px;
-  background:rgba(217,164,65,.16);color:var(--amber);
-  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:9px;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;
-}
-.stall{
-  display:block;margin-top:6px;padding-top:6px;border-top:1px solid rgba(217,164,65,.3);
-  font-family:"IBM Plex Sans",sans-serif;font-size:11.5px;font-weight:400;
-  color:var(--amber);line-height:1.45;letter-spacing:0;
-}
-.ghost.mism{color:var(--amber);opacity:.85}
-.ghost.mism b{color:var(--amber)}
-.alts{margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
-.alt-h{
-  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:10px;font-weight:700;
-  letter-spacing:.11em;text-transform:uppercase;color:var(--steel-dim);margin-bottom:7px;
-}
-.alt{
-  display:block;width:100%;text-align:left;margin-bottom:5px;padding:10px 11px;
-  background:var(--slab-2);border:1px solid var(--line);border-radius:7px;
-  font-size:13.5px;color:var(--steel);
-}
-.alt i{font-style:normal;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel-dim);margin-left:5px}
-.alt.on{border-color:var(--steel);background:var(--line);color:var(--paper)}
-.alt-r{font-size:11.5px;color:var(--steel-dim);line-height:1.5;margin:9px 0 0}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-:focus-visible{outline:2px solid var(--paper);outline-offset:2px}
-/* ---------- V9: Ort, Modus, Regeln ---------- */
-.top-row{flex-wrap:wrap}
-.pickers{flex-wrap:wrap;justify-content:flex-end}
-.tag.home{background:rgba(140,151,166,.16);color:var(--steel)}
-.tag.red{background:rgba(217,164,65,.14);color:var(--amber)}
-.tag.deload{background:rgba(123,182,97,.14);color:var(--go)}
-.cue-b .wu{display:block;margin-top:8px;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--steel)}
-.cue-b .hh{display:block;margin-top:10px;font-family:"IBM Plex Sans Condensed",sans-serif;font-size:11px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--steel-dim)}
-.cue-b .how{margin:4px 0 0;padding-left:18px}
-.cue-b .how li{margin:3px 0}
-.cue-b .err{display:block;margin-top:8px;font-size:12.5px;color:var(--steel)}
-.cue-b .err b,.cue-b .vid b{color:var(--paper);font-weight:600}
-.cue-b .vid{display:block;margin-top:8px;font-size:12.5px;line-height:1.6}
-.cue-b .vid a{color:var(--amber);text-decoration:underline;text-underline-offset:2px;overflow-wrap:anywhere}
-.home-note{margin-top:12px;padding-top:11px;border-top:1px solid var(--line);font-size:12px;color:var(--steel-dim);line-height:1.5}
-#info{display:none}
-#info.on{display:block}
-#info h4{
-  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:11px;font-weight:700;
-  letter-spacing:.11em;text-transform:uppercase;color:var(--steel-dim);margin:16px 0 6px;
-}
-#info h4:first-child{margin-top:0}
-/* Kopf kompakt: keine Markenzeile, Picker in einer Zeile */
-.brand{display:none}
-.top-row{margin-bottom:8px}
-.pickers{margin-left:0;width:100%;justify-content:flex-start;flex-wrap:nowrap}
-.pickers .pick{flex:1 1 0;min-width:0}
-#focus{white-space:normal;max-width:60%}
-/* Stoppuhr klein rechts unten */
-.timer{left:auto;right:12px;transform:none}
-.timer button{padding:10px 11px;font-size:11px}
-.timer .clock{font-size:16px;padding:8px 10px;min-width:70px}
-.verdict.none{display:none}
-/* Wöchentlicher Check-in */
-.ci{display:block;width:calc(100% - 24px);max-width:616px;margin:0 auto 4px;text-align:left;padding:8px 11px;
-  border:1px solid var(--line);border-radius:8px;background:var(--slab);
-  font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--steel)}
-.ci b{color:var(--paper);font-weight:500}
-.ci.ok{border-color:var(--go-deep)}
-.ci.fast{border-color:var(--under);color:var(--under)}
-.ci.fast b{color:var(--under)}
-.ci.slow{border-color:var(--amber)}
-.ci.missing{border-style:dashed;color:var(--steel-dim)}
-#checkin{display:none}
-#checkin.on{display:block}
-.ci-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.ci-grid label{display:flex;flex-direction:column;gap:4px;font-family:"IBM Plex Sans Condensed",sans-serif;
-  font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--steel-dim)}
-.ci-grid input,.ci-grid select{background:var(--slab-2);border:1px solid var(--line);border-radius:7px;padding:10px 8px;
-  font-family:"IBM Plex Mono",monospace;font-size:15px;color:var(--paper);text-transform:none;letter-spacing:0;width:100%}
 .ci-grid .wide{grid-column:1 / -1}
-.ci-rate{margin:10px 0 0;font-size:12.5px;color:var(--steel);line-height:1.5}
-#info ul{margin:0;padding-left:18px}
-#info li{font-size:13px;color:var(--steel);line-height:1.55;margin-bottom:5px}
+.ci-rate{margin:12px 0 0 !important;font-size:13.5px !important}
+
+/* ---------- Fortschritt ---------- */
+.card{margin:14px 0 0;padding:16px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line)}
+.card h2{margin:0;font-size:16.5px;font-weight:800;letter-spacing:-.01em}
+.cap{margin:3px 0 12px;font-size:13px;color:var(--muted)}
+.hero .big{margin-top:6px;font-size:54px;line-height:1;font-weight:800;letter-spacing:-.04em}
+.hero .big span{font-size:24px;font-weight:700;letter-spacing:-.01em;color:var(--muted)}
+.hero .cap{margin:6px 0 0}
+.meterbar{height:10px;margin-top:14px;border-radius:5px;overflow:hidden;background:var(--track)}
+.meterbar i{display:block;height:100%;border-radius:5px;background:var(--series)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.kpi{padding:12px;border-radius:15px;background:var(--surface);border:1px solid var(--line);min-width:0}
+.kpi .lb{font-size:12px;color:var(--muted)}
+.kpi .v{margin-top:3px;font-size:22px;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+.kpi .v small{font-size:12px;font-weight:650;color:var(--muted);letter-spacing:0}
+.kpi .d{display:flex;align-items:center;gap:4px;margin-top:3px;font-size:11.5px;color:var(--text-2)}
+.kpi .d .ic{width:12px;height:12px;stroke-width:2.6}
+.kpi .d.good .ic{color:var(--good)}
+.kpi .d.bad .ic{color:var(--bad)}
+.kpi .d.warn .ic{color:var(--warn)}
+.mrow{display:grid;grid-template-columns:128px 1fr 48px;gap:10px;align-items:center;padding:5px 0}
+.mrow .ml{font-size:13.5px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow .ml .ic{margin-right:5px;vertical-align:-1px;color:var(--accent)}
+.mtrack{height:8px;border-radius:4px;overflow:hidden;background:var(--track)}
+.mtrack i{display:block;height:100%;border-radius:4px;background:var(--series)}
+.mrow .mv{text-align:right;font-size:12.5px;color:var(--text-2);font-variant-numeric:tabular-nums}
+.sel{
+  display:block;width:100%;height:46px;padding:0 38px 0 12px;border-radius:12px;border:1px solid var(--line-2);
+  background:var(--surface-2);color:var(--text);font-weight:650;font-size:15px;-webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238A919D' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 10l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;
+}
+.chart{position:relative;margin-top:12px}
+.chart svg{display:block;max-width:100%;height:auto;overflow:visible;touch-action:pan-y}
+.chart .grid{stroke:var(--grid);stroke-width:1}
+.chart .axis{stroke:var(--axis);stroke-width:1}
+.chart .ytk,.chart .xtk{fill:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+.chart .line{fill:none;stroke:var(--series);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.chart .area{fill:var(--series);fill-opacity:.1;stroke:none}
+.chart .dot,.chart .xd{fill:var(--series);stroke:var(--surface);stroke-width:2}
+.chart .endl{fill:var(--text-2);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+.chart .xh{stroke:var(--axis);stroke-width:1}
+.chart .tt{
+  position:absolute;z-index:2;pointer-events:none;padding:8px 10px;border-radius:11px;white-space:nowrap;
+  background:#0E1013;border:1px solid var(--line-2);font-size:12px;color:var(--text-2);transform:translate(-50%,-100%);
+  box-shadow:0 8px 24px rgba(0,0,0,.45);
+}
+.chart .tt b{display:block;color:var(--text);font-size:14.5px;font-weight:800}
+.chart .tt[hidden]{display:none}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.trio div{padding:10px;border-radius:12px;background:var(--surface-2);min-width:0}
+.trio span{display:block;font-size:11.5px;color:var(--muted)}
+.trio b{font-size:16px;font-weight:800;white-space:nowrap}
+.empty-s{margin:12px 0 0;padding:14px;border-radius:12px;background:var(--surface-2);color:var(--muted);font-size:13.5px}
+details.tbl{margin-top:12px}
+details.tbl summary{cursor:pointer;font-size:13px;font-weight:650;color:var(--text-2)}
+table.t{width:100%;margin-top:8px;border-collapse:collapse;font-size:13px}
+table.t th,table.t td{padding:7px 4px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+table.t th:first-child,table.t td:first-child{text-align:left}
+table.t th{font-size:12px;font-weight:650;color:var(--muted)}
+.pr-list{margin:0;padding:0;list-style:none}
+.pr-list li{display:flex;align-items:center;gap:11px;padding:10px 0;border-top:1px solid var(--line)}
+.pr-list li:first-child{border-top:0}
+.pr-list .ic{color:var(--accent)}
+.pr-list .pn{flex:1;min-width:0}
+.pr-list .pn b{display:block;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pr-list .pn span{font-size:12.5px;color:var(--muted)}
+.pr-list .pv{text-align:right;font-size:12px;color:var(--muted)}
+.pr-list .pv b{display:block;font-size:15px;color:var(--text);font-variant-numeric:tabular-nums}
+.mini-h{margin:16px 0 0;font-size:13px;font-weight:750;color:var(--text-2)}
+.mini-h:first-child{margin-top:0}
+.cal{display:grid;grid-template-columns:24px repeat(16,1fr);gap:3px;align-items:center}
+.cal .cl{font-size:10px;font-weight:800;color:var(--muted)}
+.cal .wl{font-size:9.5px;color:var(--faint);text-align:center;font-variant-numeric:tabular-nums}
+.cc{display:block;aspect-ratio:1;border-radius:4px;background:var(--cal-0)}
+.cc.c1{background:var(--cal-1)}
+.cc.c2{background:var(--cal-2)}
+.cc.c3{background:var(--cal-3)}
+.cc.cur{box-shadow:inset 0 0 0 1.5px var(--text-2)}
+.cc.picked{box-shadow:inset 0 0 0 2px var(--accent)}
+.cal-info{margin:12px 0 0;font-size:13px;color:var(--text-2);min-height:20px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:11px;height:11px;margin-right:6px;border-radius:3px;vertical-align:-1px}
+
+/* ---------- Plan ---------- */
+details.acc{margin:10px 0 0;border-radius:var(--r-md);overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+details.acc summary{list-style:none;display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary > span:not(.dk){flex:1;min-width:0}
+details.acc summary b{display:block;font-weight:750;font-size:15px}
+details.acc summary small{display:block;font-size:12.5px;color:var(--muted)}
+details.acc summary .chev{color:var(--muted);transition:transform .2s}
+details.acc[open] summary .chev{transform:rotate(180deg)}
+.dk{flex:none;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--surface-3);font-size:12.5px;font-weight:800;letter-spacing:.04em}
+.acc-b{padding:0 14px 14px}
+.acc-b ul{margin:0;padding-left:18px}
+.acc-b li{margin:7px 0;font-size:14px;color:var(--text-2)}
+.pl-row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.pl-row b{display:block;font-size:14px;font-weight:650}
+.pl-row span{display:block;font-size:12.5px;color:var(--muted)}
+.pl-row .r{text-align:right;font-size:13.5px;font-weight:700;font-variant-numeric:tabular-nums}
+.pl-row .r span{font-weight:500}
+
+/* ---------- Mehr ---------- */
+.list{margin:10px 0 0;border-radius:var(--r-lg);overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.li{display:flex;align-items:center;gap:12px;width:100%;min-height:58px;padding:12px 14px;text-align:left;border-top:1px solid var(--line)}
+.li:first-child{border-top:0}
+.li > .ic{color:var(--text-2)}
+.lt{flex:1;min-width:0}
+.lt b{display:block;font-weight:650}
+.lt span{display:block;font-size:12.5px;color:var(--muted)}
+.sw{position:relative;flex:none;width:51px;height:31px;border-radius:16px;background:var(--surface-3);transition:background .2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:25px;height:25px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.35);transition:transform .22s var(--ease)}
+.sw.on{background:var(--accent)}
+.sw.on::after{transform:translateX(20px);background:var(--accent-ink)}
+
+/* ---------- Toast ---------- */
+.toast{
+  position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 12px);z-index:70;display:flex;align-items:center;gap:8px;
+  max-width:calc(100% - 32px);padding:11px 15px;border-radius:15px;background:var(--text);color:var(--accent-ink);
+  font-weight:750;font-size:14px;box-shadow:0 12px 32px rgba(0,0,0,.5);transform:translate(-50%,-160%);transition:transform .32s var(--ease);
+}
+.toast.show{transform:translate(-50%,0)}
+.toast.pr{background:var(--accent)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+@media (min-width:600px){.title{font-size:36px}.view{padding-top:24px}}
+@media (max-width:400px){.seg .ic{display:none}.seg button{padding:0 10px}}
 </style>
 </head>
 <body>
-
-<header class="top">
-  <div class="top-row">
-    <span class="brand">Trainingslog V9.4</span>
-    <div class="pickers">
-      <select class="pick" id="week" aria-label="Woche"></select>
-      <select class="pick" id="loc" aria-label="Ort">
-        <option value="gym">Gym</option>
-        <option value="home">Zuhause</option>
-      </select>
-      <select class="pick" id="phase" aria-label="Modus"></select>
-    </div>
-  </div>
-  <nav class="days" id="days"></nav>
-</header>
-
-<div class="meter"><span id="focus"></span><span class="bar"><i id="fill"></i></span><span id="cnt">0/0</span></div>
-<button class="ci missing" id="ci" type="button"></button>
-<div class="warn" id="warn">Speicher nicht verfügbar – Eingaben gelten nur für diese Sitzung.</div>
-
-<main id="main"></main>
-
-<div class="timer" id="timer">
-  <button id="t-reset">Reset</button>
-  <span class="clock" id="t-clock">–:––</span>
-  <button id="t-toggle">Start</button>
+<div id="app">
+  <header class="hdr" id="hdr"></header>
+  <div class="warn" id="warn">Speicher nicht verfügbar – Eingaben gelten nur für diese Sitzung.</div>
+  <main id="main"></main>
 </div>
 
-<div class="sheet" id="sheet">
-  <div class="sheet-in">
-    <h3 id="sheet-h">Export für Excel</h3>
-    <p class="note" id="sheet-p" style="margin-top:0">Tabgetrennt. Kopieren, im Satzlog in die Spalten Last / Wdh. / RIR einfügen.</p>
-    <div id="info">
+<div class="dock" id="dock" hidden role="timer" aria-live="off">
+  <svg class="ring" viewBox="0 0 46 46" aria-hidden="true"><circle class="trk" cx="23" cy="23" r="19"/><circle class="val" cx="23" cy="23" r="19"/></svg>
+  <div class="dk-mid"><b id="dk-time">0:00</b><span id="dk-lbl">Pause</span></div>
+  <button class="dk-b" data-act="dk-minus" aria-label="15 Sekunden weniger">−15</button>
+  <button class="dk-b" data-act="dk-plus" aria-label="15 Sekunden mehr">+15</button>
+  <button class="dk-b" data-act="dk-skip" aria-label="Pause beenden" id="dk-skip"></button>
+</div>
+
+<nav class="tabbar" aria-label="Hauptmenü">
+  <div class="tabbar-in">
+    <button class="tab" data-v="train" data-icon="train"><span>Training</span></button>
+    <button class="tab" data-v="progress" data-icon="progress"><span>Fortschritt</span></button>
+    <button class="tab" data-v="plan" data-icon="plan"><span>Plan</span></button>
+    <button class="tab" data-v="more" data-icon="more"><span>Mehr</span></button>
+  </div>
+</nav>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="sh" role="dialog" aria-modal="true" aria-labelledby="sh-title">
+    <div class="grab" aria-hidden="true"></div>
+    <div class="sh-head"><h2 id="sh-title"></h2><button class="sh-x" id="sh-close" aria-label="Schließen"></button></div>
+    <div id="sh-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<template id="tpl-rules">
       <h4>Schwachstellen · V9.4</h4>
       <ul>
         <li>Fotos vom 23.10.: Seitliche und hintere Schulter sind deine Stärke. Obere Brust und Lat-Breite (vor allem unten am Rücken) hängen hinterher. Beine waren nicht zu sehen und bleiben unverändert.</li>
@@ -398,7 +536,7 @@ textarea{
       </ul>
       <h4>Ausführung und Videos</h4>
       <ul>
-        <li>Unter jeder Übung „Ausführung, Video &amp; Alternativen“ aufklappen: Schritt-für-Schritt-Ausführung, typische Fehler und ein Technik-Video von Science-based-Liftern (TNF, Jeff Nippard, Renaissance Periodization u. a.). Die Videos sind auf Englisch.</li>
+        <li>An jeder Übung oben rechts das ⓘ antippen: Schritt-für-Schritt-Ausführung, typische Fehler und ein Technik-Video von Science-based-Liftern (TNF, Jeff Nippard, Renaissance Periodization u. a.). Die Videos sind auf Englisch.</li>
         <li>Zuhause zeigt die App die Ausführung der KSK-Variante. Für gewählte Gym-Alternativen gibt es keine eigene Anleitung.</li>
       </ul>
       <h4>Gym und Zuhause</h4>
@@ -415,29 +553,8 @@ textarea{
         <li>CJC-1295 und Ipamorelin: vor allem mehr Wasser, keine belegte Kraftwirkung. Das verfälscht Waage und Körperfettmessung, deshalb Taille und Kraft mitbewerten. Ipamorelin steigert den Appetit, Tirzepatid senkt ihn. Blutzucker kontrollieren.</li>
         <li>KLOW (BPC-157, TB-500, GHK-Cu, KPV): keine Studien am Menschen zur Sehnenheilung, nicht zugelassen. Kein Grund, durch Schmerzen zu trainieren.</li>
       </ul>
-    </div>
-    <div id="checkin">
-      <div class="ci-grid">
-        <label>Gewicht Ø kg<input id="ci-bw" inputmode="decimal" placeholder="–"></label>
-        <label>Taille cm<input id="ci-waist" inputmode="decimal" placeholder="–"></label>
-        <label>Oberarm cm<input id="ci-arm" inputmode="decimal" placeholder="–"></label>
-        <label>Ruhepuls<input id="ci-rhr" inputmode="numeric" placeholder="–"></label>
-        <label>Blutdruck<input id="ci-bp" inputmode="text" placeholder="sys/dia"></label>
-        <label>Schlaf Ø h<input id="ci-sleep" inputmode="decimal" placeholder="–"></label>
-        <label>Appetit<select id="ci-app"><option value="">–</option><option>niedrig</option><option>normal</option><option>hoch</option></select></label>
-        <label>Übelkeit<select id="ci-nau"><option value="">–</option><option>keine</option><option>leicht</option><option>stark</option></select></label>
-        <label class="wide">Notiz<input id="ci-note" placeholder="Energie, Verdauung, Schmerzen …"></label>
-      </div>
-      <p class="ci-rate" id="ci-rate"></p>
-    </div>
-    <textarea id="csv" readonly></textarea>
-    <div class="tools">
-      <button class="tool" id="sel">Kopieren</button>
-      <button class="tool" id="restore" hidden>Wiederherstellen</button>
-      <button class="tool" id="close">Schließen</button>
-    </div>
-  </div>
-</div>
+    
+</template>
 
 <script>
 /* =====================================================================
@@ -727,16 +844,6 @@ HOW["KSK · Schrägbank-Kabelfly 40°"] = {...HOW["Schrägbank-Kabelfly 30°"],
 HOW["Kurzhantel-Curl auf der Schrägbank"] = {s:["Bank auf 45–60° stellen, Rücken und Kopf an der Lehne. Kurzhanteln im Untergriff, die Arme hängen senkrecht nach unten.", "Die Oberarme bleiben hinter dem Rumpf und ruhig. Der Bizeps ist unten gedehnt.", "Beide Hanteln hochcurlen, ohne die Ellbogen nach vorn zu schieben. Oben kurz anspannen.", "In 2–3 s ablassen, bis die Arme fast gestreckt sind. Unten nicht fallen lassen oder federn."], f:"Ellbogen wandern nach vorn, Schultern rollen von der Lehne, unten aus der Dehnung reißen, Schwung aus dem Oberkörper.", v:[["Jeff Nippard", "The Best And Worst Biceps Exercises", "https://www.youtube.com/watch?v=GNO4OtYoCYk"]]};
 const escH = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function howOf(name, ex){ return HOW[name] || (name === `KSK · ${ex.n}` ? HOW[ex.n] : null); }
-function howHtml(name, ex){
-  const h = howOf(name, ex);
-  if(!h) return "";
-  const steps = `<span class="hh">Ausführung</span><ol class="how">${h.s.map(x => `<li>${escH(x)}</li>`).join("")}</ol>`;
-  const err = h.f ? `<span class="err"><b>Typische Fehler:</b> ${escH(h.f)}</span>` : "";
-  const vids = h.v
-    ? h.v.map(([c,t,u]) => `<a href="${escH(u)}" target="_blank" rel="noopener">${escH(c)}: ${escH(t)}</a>`).join("<br>")
-    : `<a href="https://www.youtube.com/results?search_query=${encodeURIComponent(h.q)}" target="_blank" rel="noopener">YouTube-Suche: ${escH(h.q)}</a>`;
-  return steps + err + `<span class="vid"><b>Video:</b> ${vids}</span>`;
-}
 const SWAP_OK = "Wechseln nur bei: Schmerz trotz sauberer Technik und reduzierter Last · Gerät nicht reproduzierbar einstellbar oder besetzt · Zielmuskel wird über mehrere Einheiten klar durch Gelenk oder anderen Muskel limitiert. Nicht wegen einem schlechten Training, fehlendem Muskelkater oder schwächerem Pump.";
 
 const WU = {
@@ -748,7 +855,6 @@ const WU = {
 const MODES = {std:"Standard", red:"Reduziert", deload:"Deload"};
 const WEEKS = 16;
 const PLAN = "V9";   /* Datenformat: V9.1 nutzt es unverändert, V9-Sicherungen bleiben einlesbar */
-const fmtRest = s => s < 120 ? `${s} s` : `${(s/60).toFixed(s%60 ? 1 : 0).replace(".", ",")} min`;
 const KEY = "traininglog_v9";
 let store = {plan:PLAN, meta:{week:1, day:0}, sets:{}, var:{}, loc:{}, mode:{}, checkin:{}};
 let memoryOnly = false;
@@ -773,6 +879,7 @@ function normalize(){
   if(!store.mode) store.mode = {};
   if(!store.checkin) store.checkin = {};
   if(!store.meta) store.meta = {week:1, day:0};
+  if(!store.settings) store.settings = {};
   if(!store.since) store.since = {};
   /* Getauschte Übungen (ex.was): ab der Woche nach dem letzten Eintrag an
      diesem Platz gilt die neue Übung, davor bleibt der alte Name. */
@@ -965,310 +1072,797 @@ function verdict(ex, d, ei, n){
           sub: iso ? `alle Sätze auf ${ex.hi}` : `Satz 1 auf ${ex.hi}`};
 }
 
-/* ---------- Aufbau ---------- */
-function render(){
-  const {week, day} = store.meta;
-  const D = DAYS[day];
-  const mode = modeOf(week);
-  const home = locOf(week, day) === "home";
-  const main = document.getElementById("main");
-  main.innerHTML = "";
-
-  let due = 0, done = 0;
-
-  D.ex.forEach((ex, ei)=>{
-    const n = setsFor(ex);
-    if(n === 0) return;
-    due += n;
-
-    const name = nameOf(week, day, ei);
-    const grip = gripOf(week, day, ei);
-    const swapped = !home && variant(week, day, ei);
-    const rir = mode === "deload" ? "3" : ex.rir;
-    const tags = (home && name !== ex.n ? '<span class="tag home">KSK</span>' : '')
-      + (mode === "red" && n < ex.s ? '<span class="tag red">−1 Satz</span>' : '')
-      + (mode === "deload" ? '<span class="tag deload">Deload</span>' : '');
-
-    const card = document.createElement("section");
-    card.className = "card";
-    card.innerHTML = `
-      <div class="chead">
-        <span class="num">${String(ei+1).padStart(2,"0")}</span>
-        <div style="flex:1">
-          <div class="cname">${home ? name.replace(/^KSK · /, "") : name}${swapped ? '<span class="swapped">Alternative</span>' : ''}</div>
-          ${grip ? `<div class="cgrip">${grip}</div>` : ''}
-          <div class="cmeta">${ex.lo}–${ex.hi} Wdh${ex.side ? " je Seite" : ""} · RIR ${rir} · Pause ${fmtRest(ex.rest)} · Aufw. ${ex.wu}</div>
-        </div>${tags}
-      </div>
-      <div class="units"><span></span><span>Last kg</span><span>Wdh.</span><span>RIR</span></div>
-      <div class="sets"></div>
-      <div class="verdict"></div>
-      <button class="cue-t" aria-expanded="false">Ausführung, Video &amp; Alternativen <span>+</span></button>
-      <div class="cue-b">${ex.cue}${howHtml(name, ex)}<span class="wu">Aufwärmen (${ex.wu}): ${ex.wut || WU[ex.wu]}</span><span class="rest">Pause ${fmtRest(ex.rest)} · Uhr unten starten</span>
-        <div class="alts"></div>
-      </div>`;
-
-    const box = card.querySelector(".sets");
-    for(let s=1;s<=n;s++){
-      const cur = get(week, day, ei, s) || {};
-      if(cur.r) done++;
-      const g = ghost(week, day, ei, s);
-
-      const row = document.createElement("div");
-      row.className = "set";
-      row.innerHTML = `
-        <span class="slab-label">S${s}</span>
-        <span class="f load"><input inputmode="decimal" placeholder="–" value="${cur.l ?? ""}"></span>
-        <span class="f reps"><input inputmode="numeric" placeholder="–" value="${cur.r ?? ""}"></span>
-        <span class="f rir"><input inputmode="numeric" placeholder="–" value="${cur.rir ?? ""}"></span>
-        ${g ? `<span class="ghost"><span class="arrow">↳</span> Wo.${g.w}: <b>${g.l ?? "–"} × ${g.r}</b>${g.rir!=null&&g.rir!==""?` @${g.rir}`:""}</span>` : ""}`;
-
-      const [li, ri, ii] = row.querySelectorAll("input");
-      const mark = ()=>{
-        const r = parseFloat(ri.value);
-        row.classList.toggle("go", !isNaN(r) && r >= ex.hi);
-        row.classList.toggle("under", !isNaN(r) && r < ex.lo && ri.value !== "");
-        const gh = row.querySelector(".ghost");
-        if(gh && g) gh.classList.toggle("beat", !isNaN(r) && g.r && r > g.r);
-      };
-      const commit = ()=>{
-        const l = li.value.replace(",", ".");
-        const rec = {l: l === "" ? "" : parseFloat(l),
-                     r: ri.value === "" ? "" : parseInt(ri.value, 10),
-                     rir: ii.value === "" ? "" : parseInt(ii.value, 10)};
-        if(rec.l === "" && rec.r === "" && rec.rir === "") delete store.sets[id(week,day,ei,s)];
-        else store.sets[id(week,day,ei,s)] = rec;
-        save(); mark(); paintVerdict(); meter();
-      };
-      [li, ri, ii].forEach(inp=>{
-        inp.addEventListener("input", ()=>{ mark(); });
-        inp.addEventListener("change", commit);
-        inp.addEventListener("blur", commit);
-      });
-      ri.addEventListener("change", ()=>{ if(ri.value) startTimer(ex.rest); });
-      mark();
-      box.appendChild(row);
-    }
-
-    const vEl = card.querySelector(".verdict");
-    const paintVerdict = ()=>{
-      const logged = Array.from({length:n}, (_, i)=> get(week, day, ei, i+1)).some(v => v && v.r);
-      const st = stalled(day, ei);
-      const drop = ex.t === "schwer" ? cutDrop(day, ei) : null;
-      let notes = "";
-      if(st) notes += `<span class="stall">Stillstand · ${st} · zuerst Schlaf, Kalorien und Technik prüfen, Volumen zuletzt</span>`;
-      if(drop) notes += `<span class="stall">Cut-Check · ${drop} · ${rateHint(week)}</span>`;
-      if(!logged && !notes){ vEl.className = "verdict none"; vEl.innerHTML = ""; return; }
-      if(!logged){ vEl.className = "verdict hold"; vEl.innerHTML = notes.replace('class="stall"', 'class="stall" style="margin-top:0;padding-top:0;border-top:0"'); return; }
-      const v = verdict(ex, day, ei, n);
-      vEl.className = "verdict " + v.k;
-      vEl.innerHTML = `${v.txt}${v.sub ? ` <em>${v.sub}</em>` : ""}` + notes;
-    };
-    paintVerdict();
-
-    /* Alternativen nur im Gym; zuhause läuft die KSK-Variante */
-    const altBox = card.querySelector(".alts");
-    if(home){
-      altBox.className = "home-note";
-      altBox.textContent = "Zuhause an der KSK-Station. Werte werden nur mit KSK-Einheiten verglichen: Multipresse ab 0 kg, Kabelzüge 1:1.";
-    } else {
-      const list = ALT[ex.n] || [];
-      const cur = variant(week, day, ei);
-      altBox.innerHTML = `<div class="alt-h">Alternative wählen</div>` +
-        [ex.n, ...list].map(nm =>
-          `<button class="alt${(cur||ex.n) === nm ? " on" : ""}" data-n="${nm}">${nm}${nm === ex.n ? " <i>Standard</i>" : ""}</button>`
-        ).join("") +
-        `<p class="alt-r">${SWAP_OK}</p>`;
-      altBox.querySelectorAll(".alt").forEach(btn=>{
-        btn.onclick = ()=>{
-          const nm = btn.dataset.n;
-          if(nm === ex.n) delete store.var[vid(week, day, ei)];
-          else store.var[vid(week, day, ei)] = nm;
-          save(); render();
-        };
-      });
-    }
-
-    const t = card.querySelector(".cue-t"), b = card.querySelector(".cue-b");
-    t.addEventListener("click", ()=>{
-      const open = b.classList.toggle("open");
-      t.setAttribute("aria-expanded", open);
-      t.querySelector("span").textContent = open ? "−" : "+";
-    });
-
-    main.appendChild(card);
-  });
-
-  if(!due) main.innerHTML = `<p class="empty">Heute steht nichts an.</p>`;
-
-  const tools = document.createElement("div");
-  tools.className = "tools";
-  tools.innerHTML = `<button class="tool" id="exp">Export</button><button class="tool" id="bak">Sicherung</button><button class="tool" id="rules">Regeln</button>`;
-  main.appendChild(tools);
-  const tools2 = document.createElement("div");
-  tools2.className = "tools";
-  tools2.style.marginTop = "8px";
-  tools2.innerHTML = `<button class="tool" id="clr">Tag leeren</button>`;
-  main.appendChild(tools2);
-  const note = document.createElement("p");
-  note.className = "note";
-  note.textContent = "Grün = oberes Ende des Zielbereichs erreicht. Rot = unter dem Bereich, Last eine Stufe zurück. Die graue Zeile unter jedem Satz zeigt, was du beim letzten Mal an derselben Übung geschafft hast.";
-  main.appendChild(note);
-  const stat = document.createElement("p");
-  stat.className = "note";
-  stat.textContent = memoryOnly ? ""
-    : backend === "claude" ? "Speicher: Claude – Eingaben bleiben über Sitzungen erhalten."
-    : "Speicher: dieses Gerät. Nach jeder Woche eine Sicherung ziehen – iOS räumt Website-Daten irgendwann auf.";
-  if(stat.textContent) main.appendChild(stat);
-
-  document.getElementById("exp").onclick = exportTSV;
-  document.getElementById("bak").onclick = backupJSON;
-  document.getElementById("rules").onclick = showRules;
-  const clrBtn = document.getElementById("clr");
-  let armed = false, armT = null;
-  const disarm = ()=>{ armed = false; clearTimeout(armT); clrBtn.textContent = "Tag leeren"; clrBtn.classList.remove("arm"); };
-  clrBtn.onclick = ()=>{
-    if(!armed){
-      armed = true;
-      clrBtn.textContent = `${D.n} Wo. ${week} leeren?`;
-      clrBtn.classList.add("arm");
-      armT = setTimeout(disarm, 4000);
-      return;
-    }
-    disarm();
-    Object.keys(store.sets).forEach(k=>{ if(k.startsWith(`w${week}|d${day}|`)) delete store.sets[k]; });
-    Object.keys(store.var).forEach(k=>{ if(k.startsWith(`w${week}|d${day}|`)) delete store.var[k]; });
-    save(); render();
-  };
-
-  document.getElementById("focus").textContent = `${D.f} · ${home ? "Zuhause" : "Gym"}`;
-  document.getElementById("cnt").textContent = `${done}/${due}`;
-  document.getElementById("fill").style.width = due ? (done/due*100)+"%" : "0%";
-  paintDays();
-  paintCi();
-}
-
-function meter(){
-  const {week, day} = store.meta;
-  let due = 0, done = 0;
-  DAYS[day].ex.forEach((ex, ei)=>{
-    const n = setsFor(ex); due += n;
-    for(let s=1;s<=n;s++){ const v = get(week,day,ei,s); if(v && v.r) done++; }
-  });
-  document.getElementById("cnt").textContent = `${done}/${due}`;
-  document.getElementById("fill").style.width = due ? (done/due*100)+"%" : "0%";
-  paintDays();
-}
-
-function paintDays(){
-  [...document.querySelectorAll(".day")].forEach((el, i)=>{
-    el.classList.toggle("on", i === store.meta.day);
-    const has = Object.keys(store.sets).some(k=>k.startsWith(`w${store.meta.week}|d${i}|`));
-    el.classList.toggle("done", has);
-  });
-}
-
-/* ---------- Pausenuhr ---------- */
-let tEnd = 0, tLeft = 0, tInt = null;
-const tim = document.getElementById("timer"),
-      clk = document.getElementById("t-clock"),
-      tog = document.getElementById("t-toggle");
-function fmt(s){ s = Math.max(0, Math.round(s)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); }
-function tick(){
-  const left = (tEnd - Date.now())/1000;
-  clk.textContent = fmt(left);
-  if(left <= 0){
-    clearInterval(tInt); tInt = null;
-    tim.classList.remove("run"); tim.classList.add("done");
-    tog.textContent = "Start";
-    if(navigator.vibrate) navigator.vibrate([180,90,180]);
-  }
-}
-function startTimer(sec){
-  tLeft = sec; tEnd = Date.now() + sec*1000;
-  clearInterval(tInt); tInt = setInterval(tick, 250);
-  tim.classList.add("run"); tim.classList.remove("done");
-  tog.textContent = "Stopp"; tick();
-}
-tog.onclick = ()=>{
-  if(tInt){ clearInterval(tInt); tInt = null; tim.classList.remove("run"); tog.textContent = "Start"; }
-  else startTimer(tLeft || 120);
-};
-document.getElementById("t-reset").onclick = ()=>{
-  clearInterval(tInt); tInt = null; tim.className = "timer";
-  clk.textContent = "–:––"; tog.textContent = "Start"; tLeft = 0;
-};
-
-/* ---------- Check-in-Leiste und -Blatt ---------- */
-const CI_FIELDS = {bw:"ci-bw", waist:"ci-waist", arm:"ci-arm", rhr:"ci-rhr", bp:"ci-bp", sleep:"ci-sleep", app:"ci-app", nau:"ci-nau", note:"ci-note"};
+/* =====================================================================
+   Oberfläche · App 2.0 (29.10.2026)
+   Vier Bereiche in der Leiste unten, im Daumenbereich: Training, Fortschritt,
+   Plan, Mehr. Leitlinien aus der Recherche (UX-Leitfäden für Trainings-Apps,
+   openGym, Hacker-News-Threads zu Gym-Trackern): Vorwerte grau vorausgefüllt,
+   ein Satz mit einem Tipp abgehakt, Pausen-Uhr startet von selbst, große
+   Tippflächen, Bildschirm bleibt an, Rekorde und Verlauf sichtbar, alles
+   offline und exportierbar. Datenformat und Trainingslogik oben unverändert;
+   neue Felder: Satz.t (Zeitstempel), store.settings, meta.lastDate.
+   ===================================================================== */
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const hdr = $("#hdr"), main = $("#main");
+const nf1 = new Intl.NumberFormat("de-DE", {maximumFractionDigits:1});
+const nf0 = new Intl.NumberFormat("de-DE", {maximumFractionDigits:0});
+const fmt1 = x => nf1.format(x);
+const nf2 = new Intl.NumberFormat("de-DE", {maximumFractionDigits:2});
+/* Lasten mit zwei Nachkommastellen: 66,25 kg darf nicht als 66,3 erscheinen */
+const kg = x => nf2.format(x);
+const fmt0 = x => nf0.format(Math.round(x));
+const clock = s => { s = Math.max(0, Math.round(s)); return `${Math.floor(s/60)}:${String(s%60).padStart(2, "0")}`; };
+const pad2 = n => String(n).padStart(2, "0");
+const dateKey = t => { const d = new Date(t); return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; };
+const todayKey = () => dateKey(Date.now());
+/* Wochentag (0 = Sonntag) -> Trainingstag in DAYS und zurück */
+const DOW_DAY = {1:0, 2:1, 4:2, 5:3, 6:4};
+const DAY_DOW = [1, 2, 4, 5, 6];
 const CI_NUM = new Set(["bw", "waist", "arm", "rhr", "sleep"]);
 
-function paintCi(){
-  const w = store.meta.week, el = document.getElementById("ci"), c = ciOf(w), r = lossRate(w);
-  el.className = "ci";
-  if(!c || numOf(c.bw) == null){
-    el.classList.add("missing");
-    el.textContent = `Check-in Wo. ${w}: Gewicht, Taille, Ruhepuls eintragen`;
+/* ---------- Symbole (eigene Linien-Icons, 24er Raster) ---------- */
+const IC = {
+  train:'<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/>',
+  progress:'<path d="M4 4v16h16"/><path d="M8 15l3.5-4 3 2.5L19.5 8"/>',
+  plan:'<rect x="5" y="4.5" width="14" height="16" rx="2.5"/><path d="M9 3.5h6v3H9z"/><path d="M8.5 11h7M8.5 15h4.5"/>',
+  more:'<circle cx="6" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="18" cy="12" r="1.5" fill="currentColor" stroke="none"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><path d="M12 7.7v.1"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  timer:'<circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.8"/><path d="M10 3h4"/>',
+  trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5.5A2.5 2.5 0 0 0 8 9.5M16 6h2.5A2.5 2.5 0 0 1 16 9.5"/><path d="M12 13v4M9 20h6"/>',
+  chev:'<path d="M7 10l5 5 5-5"/>',
+  chevR:'<path d="M10 7l5 5-5 5"/>',
+  x:'<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
+  up:'<path d="M12 19V6M6.5 11.5L12 6l5.5 5.5"/>',
+  down:'<path d="M12 5v13M6.5 12.5L12 18l5.5-5.5"/>',
+  hold:'<path d="M5.5 12h13"/>',
+  warn:'<path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.4v.1"/>',
+  home:'<path d="M4 11l8-6.5 8 6.5"/><path d="M6 10v9.5h12V10"/>',
+  gym:'<path d="M6.5 7.5v9M17.5 7.5v9M4 10v4M20 10v4M6.5 12h11"/>',
+  cal:'<rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 9.5h16M9 3v4M15 3v4"/>',
+  scale:'<rect x="4" y="4" width="16" height="16" rx="3.5"/><path d="M8.5 10a5 5 0 0 1 7 0"/><path d="M12 10.5l1.4-2"/>',
+  star:'<path d="M12 4.5l2.3 4.7 5.2.8-3.8 3.7.9 5.2-4.6-2.4-4.6 2.4.9-5.2L4.5 10l5.2-.8z"/>',
+  flame:'<path d="M12 21c4 0 6.5-2.6 6.5-6.2 0-3.6-2.9-5.6-4.3-9.3-.6 2-1.8 3.2-3.2 3.9-.3-1.4-1.1-2.6-2.1-3.4C8.2 9 5.5 11 5.5 14.8 5.5 18.4 8 21 12 21z"/>',
+  play:'<path d="M8 5.5v13l10-6.5z"/>',
+  copy:'<rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M5 15V6a1 1 0 0 1 1-1h9"/>',
+  table:'<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M4 10h16M10 10v9"/>',
+  bell:'<path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 1.5H5z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+  phone:'<rect x="7" y="3.5" width="10" height="17" rx="2.5"/><path d="M3.5 9v6M20.5 9v6"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/>',
+  hist:'<path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v3h3"/><path d="M12 8.5V12l2.5 2"/>'
+};
+const icon = (n, cls = "") => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
+
+/* ---------- Muskeln: Hauptmuskel je Übung (Basisname) ---------- */
+const MUSCLE = {
+  "Smith-Schrägbank 20–30°":"Brust", "Low-to-High Cable Fly":"Brust", "Schrägbrust-Maschine 20–30°":"Brust",
+  "Konvergierende Brustpresse":"Brust", "Schrägbank-Kabelfly 30°":"Brust", "Pec Deck":"Brust",
+  "Neutraler Latzug":"Lats", "1-Arm Latzug zur Hüfte":"Lats", "Latzug im Untergriff":"Lats",
+  "1-Arm Lat-Rudern zur Hüfte":"Lats", "Kabel-Pullover (Straight-Arm Pulldown)":"Lats",
+  "Chest-Supported T-Bar Row":"Oberer Rücken", "Brustgestützte High Row":"Oberer Rücken",
+  "1-Arm Kabel-Seitheben":"Schulter seitlich", "Seithebemaschine":"Schulter seitlich",
+  "Reverse Pec Deck":"Schulter hinten",
+  "Überkopf-Kabeltrizeps":"Trizeps", "Rope Pushdown":"Trizeps",
+  "Bayesian Cable Curl":"Bizeps", "Cable Preacher Curl":"Bizeps", "Rope Hammer Curl":"Bizeps", "Kurzhantel-Curl auf der Schrägbank":"Bizeps",
+  "Hack Squat":"Quadrizeps", "Beinpresse, Füße mittel/tief":"Quadrizeps", "Beinstrecker, Lehne zurück":"Quadrizeps", "Smith Split Squat":"Quadrizeps",
+  "Sitzender Beinbeuger":"Beinbeuger", "Romanian Deadlift":"Beinbeuger",
+  "Stehendes Wadenheben":"Waden", "Kabel-Crunch":"Bauch", "Ab Wheel":"Bauch",
+  "Hip Adduction":"Hüfte", "Hip Abduction":"Hüfte"
+};
+const PRIO = new Set(["Brust", "Lats", "Bizeps", "Trizeps"]);
+const MUSCLE_ORDER = ["Brust", "Lats", "Bizeps", "Trizeps", "Schulter seitlich", "Schulter hinten", "Oberer Rücken",
+                      "Quadrizeps", "Beinbeuger", "Waden", "Bauch", "Hüfte"];
+const muscleOf = (w, d, e) => MUSCLE[baseOf(w, d, e).n] || MUSCLE[DAYS[d].ex[e].n] || "Sonstiges";
+
+/* ---------- Einstellungen ---------- */
+const DEF_SET = {autoRest:true, sound:false, vibrate:true, wake:true};
+const setting = k => (store.settings && typeof store.settings[k] === "boolean") ? store.settings[k] : DEF_SET[k];
+function setSetting(k, v){ if(!store.settings) store.settings = {}; store.settings[k] = v; save(); }
+
+/* ---------- Zählen ---------- */
+const numv = v => (v === "" || v == null || isNaN(+v) ? null : +v);
+function dayCount(w, d){
+  let due = 0, done = 0;
+  DAYS[d].ex.forEach((ex, e)=>{
+    const n = setsIn(ex, modeOf(w)); due += n;
+    for(let s=1;s<=n;s++){ const v = get(w,d,e,s); if(v && v.r) done++; }
+  });
+  return {due, done};
+}
+function weekCount(w){
+  return DAYS.reduce((a, _, d)=>{ const c = dayCount(w, d); return {due:a.due + c.due, done:a.done + c.done}; }, {due:0, done:0});
+}
+/* Volumen = Last × Wiederholungen über alle geloggten Sätze (auch über der heutigen Satzzahl) */
+function volumeOf(w, d){
+  let v = 0;
+  for(const dd of (d == null ? DAYS.map((_, i)=> i) : [d]))
+    DAYS[dd].ex.forEach((ex, e)=>{
+      for(let s=1; s<=ex.s || get(w,dd,e,s); s++){ const r = get(w,dd,e,s); if(r && r.r > 0 && r.l > 0) v += r.l * r.r; }
+    });
+  return v;
+}
+function estMinutes(d){
+  const m = modeOf(store.meta.week); let sec = 0;
+  DAYS[d].ex.forEach(ex =>{
+    const n = setsIn(ex, m); if(!n) return;
+    const wu = ex.wu === "3" ? 3 : ex.wu === "2" ? 2 : 1;
+    sec += n * (ex.rest + 45) + wu * 75 + 60;
+  });
+  return Math.round(sec / 300) * 5;
+}
+const weekHasData = w => Object.keys(store.sets).some(k => k.startsWith(`w${w}|`));
+const weekHasToday = w =>{ const t = todayKey(); return Object.entries(store.sets).some(([k, v]) => k.startsWith(`w${w}|`) && v && v.t && dateKey(v.t) === t); };
+function suggestNextWeek(){
+  const w = store.meta.week;
+  return new Date().getDay() === 1 && w < WEEKS && store.meta.noSuggest !== todayKey()
+      && weekHasData(w) && !weekHasData(w + 1) && !weekHasToday(w);
+}
+function nextTrainingDay(dow){
+  for(let i=1;i<=7;i++){ const d = DOW_DAY[(dow + i) % 7]; if(d != null) return d; }
+  return 0;
+}
+
+/* ---------- Verlauf und Rekorde (geschätztes Maximum, Epley) ----------
+   Pro Übungsname und Woche der beste Satz; Deload-Wochen zählen nicht. Gleiche
+   Übung an mehreren Tagen (z. B. Überkopf-Trizeps) läuft in einem Verlauf. */
+function historyIndex(){
+  const H = new Map();
+  for(const [key, v] of Object.entries(store.sets)){
+    if(!v || !(v.l > 0) || !(v.r > 0)) continue;
+    const m = key.match(/^w(\d+)\|d(\d+)\|e(\d+)\|s(\d+)$/); if(!m) continue;
+    const w = +m[1], d = +m[2], e = +m[3];
+    if(!DAYS[d] || !DAYS[d].ex[e] || modeOf(w) === "deload") continue;
+    const name = nameOf(w, d, e), est = e1rm(v);
+    let W = H.get(name);
+    if(!W){ W = new Map(); W.first = {d, e}; H.set(name, W); }
+    if(d < W.first.d || (d === W.first.d && e < W.first.e)) W.first = {d, e};
+    const cur = W.get(w);
+    if(!cur || est > cur.e) W.set(w, {e:est, l:v.l, r:v.r, d, s:+m[4]});
+  }
+  return H;
+}
+function bestBefore(W, w){ let b = 0; if(W) for(const [k, x] of W) if(k < w && x.e > b) b = x.e; return b; }
+function isPR(H, name, w){ const W = H.get(name); if(!W || !W.has(w)) return false; const b = bestBefore(W, w); return b > 0 && W.get(w).e > b; }
+
+/* ---------- Aufwärmen in kg aus dem Arbeitsgewicht (Satz 1, sonst Vorwert) ---------- */
+const WU_PCT = {"3":[[.45, "8–10"], [.675, "4–5"], [.825, "1–3"]], "2":[[.55, "6–8"], [.775, "3–4"]], "1":[[.55, "6–8"]], "0–1":[[.55, "6–8"]]};
+function warmupLine(ex, w, d, e){
+  if(ex.wut) return ex.wut;
+  const cur = get(w,d,e,1), g = ghost(w,d,e,1), W = numv(cur && cur.l) || numv(g && g.l);
+  if(!W || !WU_PCT[ex.wu]) return WU[ex.wu];
+  const step = W >= 30 ? 2.5 : 1;
+  const parts = WU_PCT[ex.wu].map(([p, reps]) => `${kg(Math.round(W * p / step) * step)} × ${reps}`);
+  return `${ex.wu === "0–1" ? "nur wenn du nicht warm bist: " : ""}${parts.join(" · ")} kg (von ${kg(W)} kg)`;
+}
+
+/* =====================================================================
+   Training
+   ===================================================================== */
+let view = "train";
+
+function renderTrainHeader(){
+  const {week, day} = store.meta, mode = modeOf(week), home = locOf(week, day) === "home";
+  const todayD = DOW_DAY[new Date().getDay()], wc = weekCount(week);
+  hdr.innerHTML = `
+    <div class="hdr-row">
+      <button class="pill" data-act="week" aria-label="Woche und Modus wählen">${icon("cal", "sm")}<span>${mode === "std" ? `Woche ${week}` : `Wo. ${week}`}</span>${mode === "std" ? "" : `<em>${MODES[mode]}</em>`}${icon("chev", "sm")}</button>
+      <div class="seg" role="group" aria-label="Trainingsort">
+        <button data-act="loc" data-loc="gym" class="${home ? "" : "on"}" aria-pressed="${!home}">${icon("gym", "sm")}Gym</button>
+        <button data-act="loc" data-loc="home" class="${home ? "on" : ""}" aria-pressed="${home}">${icon("home", "sm")}Zuhause</button>
+      </div>
+    </div>
+    <nav class="days" aria-label="Trainingstage">${DAYS.map((D, i)=>{
+      const c = dayCount(week, i), p = c.due ? Math.min(1, c.done / c.due) : 0;
+      return `<button class="dc${i === day ? " on" : ""}${i === todayD ? " today" : ""}" data-act="day" data-d="${i}" aria-current="${i === day}" aria-label="${D.n}, ${D.t}, ${c.done} von ${c.due} Sätzen${i === todayD ? ", heute" : ""}"><b>${D.k}</b><span>${escH(D.t)}</span><i class="dp"><u style="width:${p * 100}%"></u></i></button>`;
+    }).join("")}</nav>
+    <div class="hprog" aria-hidden="true"><i style="width:${wc.due ? Math.min(100, wc.done / wc.due * 100) : 0}%"></i></div>`;
+}
+
+function bannersHtml(){
+  const out = [], dow = new Date().getDay(), {week, day} = store.meta;
+  if(suggestNextWeek())
+    out.push(`<div class="banner">${icon("cal")}<div><p><b>Neue Trainingswoche?</b> Woche ${week} hat schon Einträge, heute ist Montag.</p>
+      <div class="acts"><button class="btn sm primary" data-act="next-week">Woche ${week + 1} starten</button><button class="btn sm ghost" data-act="dismiss-next">Nein</button></div></div></div>`);
+  if(DOW_DAY[dow] == null){
+    const nd = nextTrainingDay(dow);
+    out.push(`<div class="banner">${icon("cal")}<div><p><b>Heute ist Ruhetag.</b> Nächste Einheit: ${escH(DAYS[nd].n)} · ${escH(DAYS[nd].t)}.</p></div></div>`);
+  }
+  const c = ciOf(week);
+  if(day === 0 && (!c || numv(c.bw) == null))
+    out.push(`<div class="banner">${icon("scale")}<div><p><b>Check-in Woche ${week} offen.</b> Gewicht, Taille, Oberarm, Ruhepuls und Blutdruck.</p>
+      <div class="acts"><button class="btn sm" data-act="checkin">Jetzt eintragen</button></div></div></div>`);
+  return out.join("");
+}
+
+function setRowHtml(ex, ei, s, n, cur, g, rir){
+  const r = numv(cur.r), l = numv(cur.l), cls = ["set"];
+  if(r != null){
+    cls.push("done");
+    if(r >= ex.hi) cls.push("go");
+    if(r < ex.lo) cls.push("under");
+    const gl = numv(g && g.l) ?? 0, gr = numv(g && g.r);
+    if(gr != null && ((r > gr && (l ?? 0) >= gl) || ((l ?? 0) > gl && r >= gr))) cls.push("beat");
+  }
+  const phL = g && numv(g.l) != null ? kg(numv(g.l)) : "kg";
+  const phR = g && g.r ? g.r : `${ex.lo}–${ex.hi}`;
+  const lastIso = rir.includes("letzter") && s === n;
+  const phI = g && g.rir !== "" && g.rir != null ? g.rir : (rir === "3" ? "3" : lastIso ? "0–1" : rir.split(" ")[0]);
+  const val = x => x == null || x === "" ? "" : String(x).replace(".", ",");
+  return `<div class="${cls.join(" ")}" data-s="${s}">
+    <span class="sn">${s}</span>
+    <input class="in" data-f="l" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-label="Satz ${s}: Last in kg" placeholder="${escH(phL)}" value="${escH(val(cur.l))}">
+    <span class="fw"><input class="in" data-f="r" inputmode="numeric" enterkeyhint="next" autocomplete="off" aria-label="Satz ${s}: Wiederholungen" placeholder="${escH(String(phR))}" value="${escH(val(cur.r))}"><i class="beat-b" title="besser als letztes Mal">${icon("up")}</i></span>
+    <input class="in" data-f="rir" inputmode="numeric" enterkeyhint="done" autocomplete="off" aria-label="Satz ${s}: Wiederholungen in Reserve" placeholder="${escH(String(phI))}" value="${escH(val(cur.rir))}">
+    <button class="chk" data-act="chk" aria-label="Satz ${s} abhaken">${icon("check")}</button>
+  </div>`;
+}
+
+function footHtml(ex, ei){
+  const {week, day} = store.meta, n = setsIn(ex, modeOf(week));
+  const logged = Array.from({length:n}, (_, i)=> get(week, day, ei, i + 1)).some(v => v && v.r);
+  const st = stalled(day, ei), drop = ex.t === "schwer" ? cutDrop(day, ei) : null;
+  let out = "";
+  if(logged){
+    const v = verdict(ex, day, ei, n);
+    out += `<div class="vd ${v.k}">${icon(v.k === "up" ? "up" : v.k === "down" ? "down" : "hold")}<span>${escH(v.txt)}</span>${v.sub ? `<em>${escH(v.sub)}</em>` : ""}</div>`;
+  }
+  if(st) out += `<div class="note">${icon("warn")}<span><b>Stillstand</b> · ${escH(st)} · zuerst Schlaf, Kalorien und Technik prüfen, Volumen zuletzt</span></div>`;
+  if(drop) out += `<div class="note">${icon("warn")}<span><b>Cut-Check</b> · ${escH(drop)} · ${escH(rateHint(week))}</span></div>`;
+  out += `<p class="wu">${icon("flame", "xs")}<span><b>Aufwärmen</b> · ${escH(warmupLine(ex, week, day, ei))}</span></p>`;
+  return out;
+}
+
+function cardHtml(ex, ei, H){
+  const {week, day} = store.meta, mode = modeOf(week), home = locOf(week, day) === "home";
+  const n = setsIn(ex, mode);
+  if(!n) return "";
+  const name = nameOf(week, day, ei), grip = gripOf(week, day, ei), swapped = !home && variant(week, day, ei);
+  const rir = mode === "deload" ? "3" : ex.rir;
+  const tags = [
+    home && name !== ex.n ? `<span class="tag">KSK</span>` : "",
+    swapped ? `<span class="tag">Alternative</span>` : "",
+    ex.t === "schwer" ? `<span class="tag lead">Leitübung</span>` : "",
+    mode === "red" && n < ex.s ? `<span class="tag red">−1 Satz</span>` : "",
+    mode === "deload" ? `<span class="tag deload">Deload</span>` : "",
+    isPR(H, name, week) ? `<span class="tag pr">${icon("trophy", "xs")}Rekord</span>` : ""
+  ].join("");
+  let done = 0, gWeek = null; const rows = [];
+  for(let s=1;s<=n;s++){
+    const cur = get(week, day, ei, s) || {}, g = ghost(week, day, ei, s);
+    if(g && gWeek == null) gWeek = g.w;
+    if(cur.r) done++;
+    rows.push(setRowHtml(ex, ei, s, n, cur, g, rir));
+  }
+  const complete = done >= n;
+  return `<section class="ex${complete ? " complete" : ""}" id="ex-${ei}" data-e="${ei}">
+    <header class="ex-h">
+      <span class="ex-num">${complete ? icon("check", "sm") : pad2(ei + 1)}</span>
+      <div class="ex-t"><h3>${escH(home ? name.replace(/^KSK · /, "") : name)}${tags ? `<span class="tags">${tags}</span>` : ""}</h3>${grip ? `<p class="ex-g">${escH(grip)}</p>` : ""}</div>
+      <button class="ib" data-act="tech" aria-label="Ausführung, Video und Alternativen">${icon("info")}</button>
+    </header>
+    <div class="meta">
+      <span class="chip">${n} × ${ex.lo}–${ex.hi}${ex.side ? " je Seite" : ""}</span>
+      <span class="chip">RIR ${escH(rir)}</span>
+      <button class="chip" data-act="rest" aria-label="Pause ${clock(ex.rest)} starten">${icon("timer")}${clock(ex.rest)}</button>
+      ${gWeek ? `<span class="chip ghost">${icon("hist")}grau = Wo. ${gWeek}</span>` : ""}
+    </div>
+    <div class="sets">
+      <div class="sets-h" aria-hidden="true"><span>#</span><span>kg</span><span>Wdh.</span><span>RIR</span><span></span></div>
+      ${rows.join("")}
+    </div>
+    <div class="ex-foot">${footHtml(ex, ei)}</div>
+  </section>`;
+}
+
+function renderTrain(){
+  const {week, day} = store.meta, D = DAYS[day], mode = modeOf(week), home = locOf(week, day) === "home";
+  const H = historyIndex(), c = dayCount(week, day), vol = volumeOf(week, day);
+  const isToday = DAY_DOW[day] === new Date().getDay();
+  renderTrainHeader();
+  main.innerHTML = `<div class="view">
+    <p class="eyebrow">${isToday ? "<b>Heute</b> · " : ""}${home ? "Zuhause · KSK" : "Gym"}${mode !== "std" ? ` · ${MODES[mode]}` : ""}</p>
+    <h1 class="title">${escH(D.n)}</h1>
+    <p class="sub">${escH(D.t)} · ${escH(D.f)}</p>
+    <div class="stats">
+      <span class="stat" id="st-sets"><b>${c.done}/${c.due}</b> Sätze</span>
+      <span class="stat" id="st-vol"><b>${fmt0(vol)}</b> kg Volumen</span>
+      <span class="stat"><b>≈ ${estMinutes(day)}</b> min</span>
+    </div>
+    ${bannersHtml()}
+    <div id="cards">${D.ex.map((ex, ei)=> cardHtml(ex, ei, H)).join("")}</div>
+    <div class="day-end">
+      <h3>${c.due && c.done >= c.due ? "Einheit geschafft" : "Ende der Einheit"}</h3>
+      <p id="st-end">${c.done}/${c.due} Sätze · ${fmt0(vol)} kg Volumen</p>
+      <button class="btn sm danger" data-act="clear">Tag leeren</button>
+      <div class="key">
+        <span><i class="k-done">${icon("check")}</i>abgehakt</span>
+        <span><i class="k-go"></i>oberes Ende erreicht</span>
+        <span><i class="k-under"></i>unter dem Bereich</span>
+        <span><i class="k-beat">${icon("up")}</i>besser als letztes Mal</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* Satz speichern, ohne die Karte neu zu zeichnen (Fokus bleibt im Feld) */
+function parseIn(x, int){
+  x = String(x).trim().replace(",", ".");
+  if(x === "") return "";
+  const v = int ? parseInt(x, 10) : parseFloat(x);
+  return isNaN(v) ? "" : v;
+}
+function commitRow(row){
+  const {week, day} = store.meta, ei = +row.closest(".ex").dataset.e, s = +row.dataset.s;
+  const [li, ri, ii] = $$(".in", row);
+  const rec = {l:parseIn(li.value), r:parseIn(ri.value, true), rir:parseIn(ii.value, true)};
+  const k = id(week, day, ei, s), prev = store.sets[k] ? {...store.sets[k]} : null;
+  if(rec.l === "" && rec.r === "" && rec.rir === "") delete store.sets[k];
+  else { rec.t = (prev && prev.t) || Date.now(); store.sets[k] = rec; }
+  save();
+  return {ei, s, rec, prev};
+}
+function rowState(row){
+  const {week, day} = store.meta, ei = +row.closest(".ex").dataset.e, s = +row.dataset.s;
+  const ex = DAYS[day].ex[ei], cur = get(week, day, ei, s) || {}, g = ghost(week, day, ei, s);
+  const r = numv(cur.r), l = numv(cur.l);
+  const gl = numv(g && g.l) ?? 0, gr = numv(g && g.r);
+  row.classList.toggle("done", r != null);
+  row.classList.toggle("go", r != null && r >= ex.hi);
+  row.classList.toggle("under", r != null && r < ex.lo);
+  row.classList.toggle("beat", r != null && gr != null && ((r > gr && (l ?? 0) >= gl) || ((l ?? 0) > gl && r >= gr)));
+}
+function liveMark(inp){
+  const row = inp.closest(".set"), ex = DAYS[store.meta.day].ex[+row.closest(".ex").dataset.e];
+  const r = parseIn($(".in[data-f=r]", row).value, true);
+  row.classList.toggle("go", r !== "" && r >= ex.hi);
+  row.classList.toggle("under", r !== "" && r < ex.lo);
+}
+const prShown = new Set();
+function afterCommit(ei, rec){
+  const {week, day} = store.meta, ex = DAYS[day].ex[ei], card = $(`#ex-${ei}`);
+  const n = setsIn(ex, modeOf(week));
+  let done = 0; for(let s=1;s<=n;s++){ const v = get(week, day, ei, s); if(v && v.r) done++; }
+  const was = card.classList.contains("complete"), complete = done >= n;
+  card.classList.toggle("complete", complete);
+  $(".ex-num", card).innerHTML = complete ? icon("check", "sm") : pad2(ei + 1);
+  $(".ex-foot", card).innerHTML = footHtml(ex, ei);
+  /* Rekord: bester Satz dieser Woche über allen früheren Wochen */
+  const H = historyIndex(), name = nameOf(week, day, ei), pr = isPR(H, name, week);
+  const tags = $(".tags", card), prTag = $(".tag.pr", card);
+  if(pr && !prTag){
+    const t = `<span class="tag pr">${icon("trophy", "xs")}Rekord</span>`;
+    if(tags) tags.insertAdjacentHTML("beforeend", t); else $(".ex-t h3", card).insertAdjacentHTML("beforeend", `<span class="tags">${t}</span>`);
+  } else if(!pr && prTag) prTag.remove();
+  if(pr && rec && rec.l > 0 && rec.r > 0){
+    const W = H.get(name), best = W.get(week), key = `${name}|${week}|${best.e.toFixed(1)}`;
+    if(Math.abs(e1rm(rec) - best.e) < 1e-6 && !prShown.has(key)){
+      prShown.add(key);
+      toast(`${icon("trophy", "sm")}<span>Neuer Rekord · ${kg(rec.l)} kg × ${rec.r}</span>`, "pr");
+    }
+  }
+  /* Zähler oben aktualisieren */
+  const c = dayCount(week, day), vol = volumeOf(week, day);
+  const st = $("#st-sets"), sv = $("#st-vol"), se = $("#st-end");
+  if(st) st.innerHTML = `<b>${c.done}/${c.due}</b> Sätze`;
+  if(sv) sv.innerHTML = `<b>${fmt0(vol)}</b> kg Volumen`;
+  if(se) se.textContent = `${c.done}/${c.due} Sätze · ${fmt0(vol)} kg Volumen`;
+  renderTrainHeader();
+  return {was, complete};
+}
+function onInputCommit(inp){
+  const row = inp.closest(".set"), {ei, rec, prev} = commitRow(row);
+  rowState(row);
+  if(inp.dataset.f === "r" && rec.r !== "" && (!prev || prev.r !== rec.r) && setting("autoRest")) startRest(ei);
+  afterCommit(ei, rec);
+}
+function onCheck(row){
+  unlockAudio();
+  const {week, day} = store.meta, ei = +row.closest(".ex").dataset.e, s = +row.dataset.s;
+  const [li, ri, ii] = $$(".in", row);
+  if(ri.value.trim() === ""){
+    const g = ghost(week, day, ei, s);
+    if(!(g && g.r)){
+      row.classList.add("shake"); setTimeout(()=> row.classList.remove("shake"), 400);
+      ri.focus(); toast("Erst die Wiederholungen eintragen");
+      return;
+    }
+    if(li.value.trim() === "" && numv(g.l) != null) li.value = String(g.l).replace(".", ",");
+    ri.value = g.r;
+    if(ii.value.trim() === "" && g.rir !== "" && g.rir != null) ii.value = g.rir;
+  }
+  const {rec} = commitRow(row);
+  rowState(row);
+  haptic();
+  if(setting("autoRest")) startRest(ei);
+  const {was, complete} = afterCommit(ei, rec);
+  /* Übung fertig: zur nächsten Karte springen */
+  if(complete && !was){
+    const next = $(`#ex-${ei}`).nextElementSibling;
+    if(next) setTimeout(()=> next.scrollIntoView({behavior:"smooth", block:"start"}), 380);
+  }
+}
+let clearT = null;
+function armClear(b){
+  const {week, day} = store.meta;
+  if(!b.classList.contains("armed")){
+    b.classList.add("armed"); b.textContent = `${DAYS[day].n} Wo. ${week} wirklich leeren?`;
+    clearTimeout(clearT);
+    clearT = setTimeout(()=>{ b.classList.remove("armed"); b.textContent = "Tag leeren"; }, 4000);
     return;
   }
-  let html = `Wo. ${w}: <b>${de(c.bw)} kg</b>`;
-  if(numOf(c.waist) != null) html += ` · Taille ${de(c.waist)} cm`;
-  if(numOf(c.arm) != null) html += ` · Arm ${de(c.arm)} cm`;
-  if(r){
-    html += ` · <b>${fmtRate(r.pct)}</b>`;
-    if(r.pct > 1){ el.classList.add("fast"); html += " · zu schnell"; }
-    else if(r.pct < 0.3){ el.classList.add("slow"); html += " · langsam"; }
-    else el.classList.add("ok");
+  clearTimeout(clearT);
+  Object.keys(store.sets).forEach(k =>{ if(k.startsWith(`w${week}|d${day}|`)) delete store.sets[k]; });
+  Object.keys(store.var).forEach(k =>{ if(k.startsWith(`w${week}|d${day}|`)) delete store.var[k]; });
+  save(); toast("Tag geleert"); render();
+}
+
+/* ---------- Ausführung, Video, Alternativen ---------- */
+function openTech(ei){
+  const {week, day} = store.meta, ex = DAYS[day].ex[ei], home = locOf(week, day) === "home";
+  const name = nameOf(week, day, ei), hw = howOf(name, ex);
+  let b = `<p class="lead">${escH(ex.cue)}</p>`;
+  if(hw){
+    b += `<h4>Ausführung</h4><ol>${hw.s.map(x => `<li>${escH(x)}</li>`).join("")}</ol>`;
+    if(hw.f) b += `<h4>Typische Fehler</h4><p>${escH(hw.f)}</p>`;
+    b += `<h4>Video</h4>` + (hw.v
+      ? hw.v.map(([c, t, u]) => `<a class="vid" href="${escH(u)}" target="_blank" rel="noopener">${icon("play", "sm")}<span><b>${escH(c)}</b>${escH(t)}</span></a>`).join("")
+      : `<a class="vid" href="https://www.youtube.com/results?search_query=${encodeURIComponent(hw.q)}" target="_blank" rel="noopener">${icon("play", "sm")}<span><b>YouTube-Suche</b>${escH(hw.q)}</span></a>`);
+    b += `<p class="fine">Die Videos sind auf Englisch.</p>`;
+  } else b += `<p class="fine">Für diese Alternative gibt es keine eigene Anleitung.</p>`;
+  b += `<h4>Aufwärmen · ${escH(ex.wu)} ${ex.wu === "1" ? "Satz" : "Sätze"}</h4><p>${escH(warmupLine(ex, week, day, ei))}</p>`;
+  b += `<h4>Pause</h4><p>${clock(ex.rest)} min zwischen den Arbeitssätzen</p>`;
+  if(home) b += `<h4>Zuhause</h4><p>An der KSK-Station. Werte werden nur mit KSK-Einheiten verglichen: Multipresse ab 0 kg, Kabelzüge 1:1.</p>`;
+  else {
+    const list = ALT[ex.n] || [], cur = variant(week, day, ei) || ex.n;
+    b += `<h4>Alternative wählen</h4><div class="alts">${[ex.n, ...list].map(nm =>
+      `<button class="alt${cur === nm ? " on" : ""}" data-sa="alt" data-alt="${escH(nm)}">${escH(nm)}${nm === ex.n ? "<small>Standard</small>" : ""}${cur === nm ? icon("check", "sm") : ""}</button>`).join("")}</div>
+      <p class="fine">${escH(SWAP_OK)}</p>`;
   }
-  el.innerHTML = html;
+  openSheet(home ? name.replace(/^KSK · /, "") : name, b, {click: el =>{
+    if(el.dataset.sa !== "alt") return;
+    const nm = el.dataset.alt;
+    if(nm === ex.n) delete store.var[vid(week, day, ei)]; else store.var[vid(week, day, ei)] = nm;
+    save(); closeSheet(); render();
+  }});
 }
 
-function paintCiRate(){
-  const w = store.meta.week, r = lossRate(w), el = document.getElementById("ci-rate");
-  if(!r){ el.textContent = "Noch kein Vergleich. Trag nächste Woche wieder ein, dann zeigt die App das Abnahmetempo."; return; }
+/* ---------- Woche und Modus ---------- */
+function openWeek(){
+  const cur = store.meta.week, mode = modeOf(cur);
+  const b = `<div class="wk-grid">${Array.from({length:WEEKS}, (_, i)=>{
+      const w = i + 1, c = weekCount(w), p = c.due ? Math.min(1, c.done / c.due) : 0;
+      return `<button class="wk-c${w === cur ? " on" : ""}" data-sa="week" data-w="${w}" aria-label="Woche ${w}, ${c.done} von ${c.due} Sätzen">${w}<i style="--p:${p}"></i></button>`;
+    }).join("")}</div>
+    <h4>Modus für Woche ${cur}</h4>
+    <div class="seg3">${Object.entries(MODES).map(([k, l]) => `<button data-sa="mode" data-mode="${k}" class="${k === mode ? "on" : ""}">${l}<small>${totalSets(k)} Sätze</small></button>`).join("")}</div>
+    <p class="fine">Reduziert: jede Isolationsübung ein Satz weniger, Last und RIR bleiben. Deload: etwa halbe Satzzahl, gleiche Last, RIR 3; zählt nicht für Vorwerte und Cut-Check.</p>`;
+  openSheet("Woche & Modus", b, {click: el =>{
+    if(el.dataset.sa === "week"){ store.meta.week = +el.dataset.w; save(); closeSheet(); render(); }
+    else if(el.dataset.sa === "mode"){
+      const w = store.meta.week;
+      if(el.dataset.mode === "std") delete store.mode[w]; else store.mode[w] = el.dataset.mode;
+      save(); closeSheet(); render();
+    }
+  }});
+}
+
+/* ---------- Wöchentlicher Check-in ---------- */
+function ciRateText(w){
+  const r = lossRate(w);
+  if(!r) return "Noch kein Vergleich. Trag nächste Woche wieder ein, dann zeigt die App das Abnahmetempo.";
   const txt = `Veränderung seit Wo. ${r.from}: ${fmtRate(r.pct)}. Ziel im Cut: 0,5–1 % pro Woche.`;
-  el.textContent = r.pct > 1 ? `${txt} Zu schnell: zuerst Kalorien und Eiweiß erhöhen, den Trainingsumfang halten.`
-    : r.pct < 0.3 ? `${txt} Langsam: Taille und Kraft prüfen; Wasser durch die GH-Peptide kann die Waage verfälschen.`
-    : `${txt} Im Zielbereich.`;
+  return r.pct > 1 ? `${txt} Zu schnell: zuerst Kalorien und Eiweiß erhöhen, den Trainingsumfang halten.`
+       : r.pct < 0.3 ? `${txt} Langsam: Taille und Kraft prüfen; Wasser durch die GH-Peptide kann die Waage verfälschen.`
+       : `${txt} Im Zielbereich.`;
 }
-
-function showCheckin(){
+function openCheckin(){
   const w = store.meta.week, c = ciOf(w) || {};
-  Object.entries(CI_FIELDS).forEach(([k, elId])=>{ document.getElementById(elId).value = c[k] == null ? "" : CI_NUM.has(k) ? de(c[k]) : c[k]; });
-  paintCiRate();
-  openSheet(`Check-in · Woche ${w}`, "Einmal pro Woche. Gewicht als Durchschnitt mehrerer Morgenmessungen, Blutdruck und Ruhepuls in Ruhe. Oberarm entspannt an der dicksten Stelle, morgens vor dem Training, immer derselbe Arm.", {checkin:true});
+  const val = k => c[k] == null ? "" : CI_NUM.has(k) ? de(c[k]) : c[k];
+  const f = (k, label, mode, ph = "–", wide = false) =>
+    `<label${wide ? ` class="wide"` : ""}>${label}<input data-ci="${k}" inputmode="${mode}" placeholder="${ph}" value="${escH(val(k))}"></label>`;
+  const sel = (k, label, opts) => `<label>${label}<select data-ci="${k}">${opts.map(o => `<option value="${o}"${(c[k] || "") === o ? " selected" : ""}>${o || "–"}</option>`).join("")}</select></label>`;
+  const b = `<p class="lead">Einmal pro Woche. Gewicht als Durchschnitt mehrerer Morgenmessungen, Blutdruck und Ruhepuls in Ruhe. Oberarm entspannt an der dicksten Stelle, morgens vor dem Training, immer derselbe Arm.</p>
+    <div class="ci-grid">${f("bw", "Gewicht Ø kg", "decimal")}${f("waist", "Taille cm", "decimal")}${f("arm", "Oberarm cm", "decimal")}${f("rhr", "Ruhepuls", "numeric")}${f("bp", "Blutdruck", "text", "sys/dia")}${f("sleep", "Schlaf Ø h", "decimal")}
+      ${sel("app", "Appetit", ["", "niedrig", "normal", "hoch"])}${sel("nau", "Übelkeit", ["", "keine", "leicht", "stark"])}
+      ${f("note", "Notiz", "text", "Energie, Verdauung, Schmerzen …", true)}</div>
+    <p class="ci-rate" id="ci-rate">${escH(ciRateText(w))}</p>`;
+  openSheet(`Check-in · Woche ${w}`, b, {change: el =>{
+    if(!el.dataset.ci) return;
+    const rec = {};
+    $$("[data-ci]", $("#sh-body")).forEach(x =>{
+      const k = x.dataset.ci, raw = x.value.trim();
+      if(raw === "") return;
+      const v = CI_NUM.has(k) ? parseFloat(raw.replace(",", ".")) : raw;
+      if(!(CI_NUM.has(k) && isNaN(v))) rec[k] = v;
+    });
+    if(Object.keys(rec).length) store.checkin[w] = rec; else delete store.checkin[w];
+    save();
+    $("#ci-rate").textContent = ciRateText(w);
+    render();
+  }});
 }
 
-function commitCheckin(){
-  const w = store.meta.week, rec = {};
-  Object.entries(CI_FIELDS).forEach(([k, elId])=>{
-    const raw = document.getElementById(elId).value.trim();
-    if(raw === "") return;
-    const v = CI_NUM.has(k) ? parseFloat(raw.replace(",", ".")) : raw;
-    if(!(CI_NUM.has(k) && isNaN(v))) rec[k] = v;
+/* =====================================================================
+   Fortschritt
+   ===================================================================== */
+function latestCheckin(){
+  for(let w=store.meta.week; w>=1; w--){ const c = ciOf(w); if(c && numv(c.bw) != null) return {w, c}; }
+  return null;
+}
+function muscleRows(w){
+  const plan = {}, done = {}, m = modeOf(w);
+  DAYS.forEach((D, d)=> D.ex.forEach((ex, e)=>{
+    const n = setsIn(ex, m), mus = muscleOf(w, d, e);
+    plan[mus] = (plan[mus] || 0) + n;
+    for(let s=1;s<=n;s++){ const v = get(w,d,e,s); if(v && v.r) done[mus] = (done[mus] || 0) + 1; }
+  }));
+  return MUSCLE_ORDER.filter(k => plan[k]).map(k =>{
+    const p = plan[k], dn = done[k] || 0;
+    return `<div class="mrow"><span class="ml">${PRIO.has(k) ? icon("star", "xs") : ""}${escH(k)}</span>
+      <span class="mtrack" role="meter" aria-label="${escH(k)}: ${dn} von ${p} Sätzen" aria-valuemin="0" aria-valuemax="${p}" aria-valuenow="${dn}"><i style="width:${Math.min(100, dn / p * 100)}%"></i></span>
+      <span class="mv">${dn}/${p}</span></div>`;
+  }).join("");
+}
+function exerciseNames(H){
+  return [...H.keys()].sort((a, b)=>{
+    const A = H.get(a).first, B = H.get(b).first;
+    return A.d - B.d || A.e - B.e || a.localeCompare(b, "de");
   });
-  if(Object.keys(rec).length) store.checkin[w] = rec;
-  else delete store.checkin[w];
-  save(); paintCiRate(); render();
+}
+function pickDefault(H){
+  const names = exerciseNames(H);
+  if(store.meta.pick && H.has(store.meta.pick)) return store.meta.pick;
+  return names.find(n =>{ const f = H.get(n).first; return DAYS[f.d].ex[f.e].t === "schwer"; }) || names[0] || null;
+}
+function calendarHtml(){
+  let cells = `<span></span>` + Array.from({length:WEEKS}, (_, i)=> `<span class="wl">${i % 4 === 0 ? i + 1 : ""}</span>`).join("");
+  DAYS.forEach((D, d)=>{
+    cells += `<span class="cl">${D.k}</span>`;
+    for(let w=1; w<=WEEKS; w++){
+      const c = dayCount(w, d), p = c.due ? c.done / c.due : 0;
+      const lvl = p >= 1 ? 3 : p >= .5 ? 2 : p > 0 ? 1 : 0;
+      cells += `<button class="cc c${lvl}${w === store.meta.week ? " cur" : ""}" data-act="cal" data-w="${w}" data-d="${d}" aria-label="Woche ${w}, ${D.n}: ${c.done} von ${c.due} Sätzen"></button>`;
+    }
+  });
+  return `<div class="cal">${cells}</div>
+    <p class="cal-info" id="cal-info">Tippe ein Feld für Details.</p>
+    <div class="legend"><span><i style="background:var(--cal-0)"></i>offen</span><span><i style="background:var(--cal-1)"></i>begonnen</span><span><i style="background:var(--cal-2)"></i>mind. Hälfte</span><span><i style="background:var(--cal-3)"></i>komplett</span></div>`;
 }
 
-/* ---------- Export, Sicherung, Regeln ---------- */
-const $csv = ()=> document.getElementById("csv");
-
-function openSheet(title, text, {info = false, restore = false, checkin = false} = {}){
-  document.getElementById("sheet-h").textContent = title;
-  const p = document.getElementById("sheet-p");
-  p.textContent = text;
-  p.hidden = !text;
-  document.getElementById("info").classList.toggle("on", info);
-  document.getElementById("checkin").classList.toggle("on", checkin);
-  $csv().hidden = info || checkin;
-  document.getElementById("sel").hidden = info || checkin;
-  document.getElementById("restore").hidden = !restore;
-  document.getElementById("sheet").classList.add("open");
+function renderProgress(){
+  const w = store.meta.week, wc = weekCount(w), H = historyIndex();
+  hdr.innerHTML = `<div class="hdr-row"><h2 class="hdr-title">Fortschritt</h2>
+    <button class="pill" data-act="week" aria-label="Woche wählen">${icon("cal", "sm")}<span>Woche ${w}</span>${icon("chev", "sm")}</button></div>`;
+  const vol = volumeOf(w), volPrev = w > 1 ? volumeOf(w - 1) : 0;
+  const prs = [...H.keys()].filter(n => isPR(H, n, w));
+  const lc = latestCheckin(), rate = lc ? lossRate(lc.w) : null;
+  const volD = volPrev > 0 && wc.done >= wc.due ? Math.round((vol - volPrev) / volPrev * 100) : null;
+  const rateCls = !rate ? "" : rate.pct > 1 ? "bad" : rate.pct < 0.3 ? "warn" : "good";
+  const rateTxt = !rate ? (lc ? `Wo. ${lc.w}` : "kein Check-in") : `${fmtRate(rate.pct)}${rate.pct > 1 ? " · zu schnell" : rate.pct < 0.3 ? " · langsam" : " · im Ziel"}`;
+  const pct = wc.due ? Math.min(100, wc.done / wc.due * 100) : 0;
+  const recs = [...H.entries()].map(([n, W])=>{
+    let best = null, bw = 0; for(const [k, x] of W) if(!best || x.e > best.e){ best = x; bw = k; }
+    return {n, best, bw};
+  }).sort((a, b)=> b.bw - a.bw || b.best.e - a.best.e).slice(0, 8);
+  main.innerHTML = `<div class="view">
+    <section class="card hero">
+      <p class="eyebrow">Woche ${w} · ${MODES[modeOf(w)]}</p>
+      <div class="big">${wc.done}<span> / ${wc.due}</span></div>
+      <p class="cap">Sätze erledigt diese Woche</p>
+      <div class="meterbar" role="meter" aria-label="Sätze erledigt" aria-valuemin="0" aria-valuemax="${wc.due}" aria-valuenow="${wc.done}"><i style="width:${pct}%"></i></div>
+    </section>
+    <div class="kpis">
+      <div class="kpi"><div class="lb">Volumen</div><div class="v">${fmt0(vol)}<small> kg</small></div>
+        <div class="d ${volD == null ? "" : volD >= 0 ? "good" : "bad"}">${volD == null ? (volPrev > 0 ? `Wo. ${w - 1}: ${fmt0(volPrev)} kg` : "Woche " + w) : `${icon(volD >= 0 ? "up" : "down")}${volD >= 0 ? "+" : "−"}${Math.abs(volD)} % zu Wo. ${w - 1}`}</div></div>
+      <div class="kpi"><div class="lb">Rekorde</div><div class="v">${prs.length}</div><div class="d">${icon("trophy")}diese Woche</div></div>
+      <div class="kpi"><div class="lb">Gewicht Ø</div><div class="v">${lc ? fmt1(lc.c.bw) : "–"}<small>${lc ? " kg" : ""}</small></div>
+        <div class="d ${rateCls}">${rate ? icon(rate.pct > 0 ? "down" : "up") : ""}${escH(rateTxt)}</div></div>
+    </div>
+    <section class="card">
+      <h2>Sätze pro Muskel</h2>
+      <p class="cap">Woche ${w}: erledigt von geplant · ${icon("star", "xs")} Priorität</p>
+      ${muscleRows(w)}
+    </section>
+    <section class="card">
+      <h2>Kraftverlauf</h2>
+      <p class="cap">Geschätztes Maximum (e1RM nach Epley) aus dem besten Satz pro Woche, ohne Deload-Wochen</p>
+      <div id="ex-wrap"></div>
+    </section>
+    <section class="card">
+      <h2>Rekorde</h2>
+      <p class="cap">Bester Satz je Übung</p>
+      ${recs.length ? `<ul class="pr-list">${recs.map(x => `<li>${icon("trophy")}<span class="pn"><b>${escH(x.n.replace(/^KSK · /, "KSK: "))}</b><span>${kg(x.best.l)} kg × ${x.best.r} · Woche ${x.bw}</span></span><span class="pv"><b>${fmt1(x.best.e)}</b>e1RM kg</span></li>`).join("")}</ul>` : `<p class="empty-s">Noch keine Sätze mit Last geloggt.</p>`}
+    </section>
+    <section class="card">
+      <h2>Körper</h2>
+      <p class="cap">Aus dem wöchentlichen Check-in · ${escH(lc ? ciRateText(lc.w) : "noch keine Einträge")}</p>
+      <div id="body-wrap"></div>
+      <button class="btn block" data-act="checkin">${icon("scale", "sm")}Check-in Woche ${w}</button>
+    </section>
+    <section class="card">
+      <h2>Trainingskalender</h2>
+      <p class="cap">16 Wochen × 5 Trainingstage, Füllung nach erledigten Sätzen</p>
+      ${calendarHtml()}
+    </section>
+  </div>`;
+  mountExercise(H);
+  mountBody();
 }
 
-function exportTSV(){
+function mountExercise(H){
+  const wrap = $("#ex-wrap"); if(!wrap) return;
+  H = H || historyIndex();
+  const names = exerciseNames(H), pick = pickDefault(H);
+  if(!pick){ wrap.innerHTML = `<p class="empty-s">Sobald du Sätze mit Last loggst, erscheint hier der Verlauf.</p>`; return; }
+  wrap.innerHTML = `<select class="sel" id="ex-pick" aria-label="Übung wählen">${names.map(n =>{
+      const f = H.get(n).first;
+      return `<option value="${escH(n)}"${n === pick ? " selected" : ""}>${DAYS[f.d].k} · ${escH(n.replace(/^KSK · /, "KSK: "))}</option>`;
+    }).join("")}</select>
+    <div class="chart" id="ex-chart"></div><div class="trio" id="ex-trio"></div><details class="tbl"><summary>Als Tabelle</summary><div id="ex-table"></div></details>`;
+  drawExercise(H, pick);
+}
+function drawExercise(H, name){
+  const W = H.get(name); if(!W) return;
+  const pts = [...W.entries()].sort((a, b)=> a[0] - b[0]).map(([w, x])=> ({x:w, y:x.e, info:`${kg(x.l)} kg × ${x.r}`}));
+  lineChart($("#ex-chart"), pts, {unit:"kg", label:`e1RM ${name}`});
+  const best = Math.max(...pts.map(p => p.y)), last = pts[pts.length - 1], first = pts[0];
+  const ch = first.y ? (last.y - first.y) / first.y * 100 : 0;
+  $("#ex-trio").innerHTML = `<div><span>Bestwert</span><b>${fmt1(best)} kg</b></div><div><span>Zuletzt (Wo. ${last.x})</span><b>${fmt1(last.y)} kg</b></div><div><span>seit Wo. ${first.x}</span><b>${ch >= 0 ? "+" : "−"}${fmt1(Math.abs(ch))} %</b></div>`;
+  $("#ex-table").innerHTML = `<table class="t"><thead><tr><th>Woche</th><th>Bester Satz</th><th>e1RM kg</th></tr></thead><tbody>${pts.map(p => `<tr><td>${p.x}</td><td>${escH(p.info)}</td><td>${fmt1(p.y)}</td></tr>`).join("")}</tbody></table>`;
+}
+function mountBody(){
+  const wrap = $("#body-wrap"); if(!wrap) return;
+  const series = [["bw", "Gewicht Ø", "kg"], ["waist", "Taille", "cm"], ["arm", "Oberarm", "cm"]].map(([k, label, unit])=>{
+    const pts = Object.keys(store.checkin || {}).map(Number).sort((a, b)=> a - b)
+      .map(w => ({x:w, y:numv(store.checkin[w][k])})).filter(p => p.y != null);
+    return {k, label, unit, pts};
+  }).filter(s => s.pts.length);
+  if(!series.length){ wrap.innerHTML = `<p class="empty-s">Noch kein Check-in eingetragen.</p>`; return; }
+  wrap.innerHTML = series.map(s => `<p class="mini-h">${s.label} · ${s.unit}</p><div class="chart" id="ch-${s.k}"></div>${s.pts.length < 2 ? `<p class="fine">Ab dem zweiten Check-in wird daraus ein Verlauf.</p>` : ""}`).join("");
+  series.forEach(s => lineChart($(`#ch-${s.k}`), s.pts, {unit:s.unit, h:140, label:`${s.label} in ${s.unit}`}));
+}
+
+/* ---------- Liniendiagramm (eine Reihe, SVG, mit Fadenkreuz) ----------
+   2px Linie, Fläche 10 %, Endpunkt mit Ring und Wert, Haarlinien-Raster,
+   Tooltip per Zeiger, Antippen und Pfeiltasten; Tabelle als Alternative. */
+function niceTicks(lo, hi, n){
+  const raw = (hi - lo) / Math.max(1, n - 1), mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = [1, 2, 2.5, 5, 10].map(m => m * mag).find(s => s >= raw) || 10 * mag;
+  const out = []; for(let t = Math.floor(lo / step) * step; t <= hi + step * 1e-6; t += step) out.push(+t.toFixed(6));
+  if(out[out.length - 1] < hi) out.push(+(out[out.length - 1] + step).toFixed(6));
+  return out;
+}
+function lineChart(host, pts, {h = 180, unit = "", label = ""} = {}){
+  if(!host) return;
+  const Wd = Math.max(240, Math.round(host.clientWidth || 300)), Ht = h, pl = 42, pr = 58, pt = 14, pb = 26;
+  let x0 = Math.min(...pts.map(p => p.x)), x1 = Math.max(...pts.map(p => p.x));
+  if(x0 === x1){ x0 -= 1; x1 += 1; }
+  let y0 = Math.min(...pts.map(p => p.y)), y1 = Math.max(...pts.map(p => p.y));
+  const span = (y1 - y0) || Math.max(1, Math.abs(y1) * 0.04);
+  const ticks = niceTicks(y0 - span * 0.2, y1 + span * 0.2, 4);
+  y0 = ticks[0]; y1 = ticks[ticks.length - 1];
+  const X = x => pl + (x - x0) / (x1 - x0) * (Wd - pl - pr);
+  const Y = y => pt + (1 - (y - y0) / (y1 - y0)) * (Ht - pt - pb);
+  const base = Ht - pb, last = pts[pts.length - 1];
+  const line = pts.map((p, i)=> `${i ? "L" : "M"}${X(p.x).toFixed(1)},${Y(p.y).toFixed(1)}`).join("");
+  const every = pts.length > 8 ? Math.ceil(pts.length / 6) : 1;
+  let s = `<svg viewBox="0 0 ${Wd} ${Ht}" width="${Wd}" height="${Ht}" role="img" aria-label="${escH(label)}: ${pts.length} Werte, zuletzt ${fmt1(last.y)} ${unit}">`;
+  ticks.forEach(t =>{ s += `<line class="grid" x1="${pl}" x2="${Wd - pr}" y1="${Y(t).toFixed(1)}" y2="${Y(t).toFixed(1)}"/><text class="ytk" x="${pl - 8}" y="${(Y(t) + 4).toFixed(1)}" text-anchor="end">${fmt1(t)}</text>`; });
+  s += `<line class="axis" x1="${pl}" x2="${Wd - pr}" y1="${base}" y2="${base}"/>`;
+  pts.forEach((p, i)=>{ if(i % every === 0 || i === pts.length - 1) s += `<text class="xtk" x="${X(p.x).toFixed(1)}" y="${Ht - 7}" text-anchor="middle">W${p.x}</text>`; });
+  if(pts.length > 1) s += `<path class="area" d="${line}L${X(last.x).toFixed(1)},${base}L${X(pts[0].x).toFixed(1)},${base}Z"/><path class="line" d="${line}"/>`;
+  s += `<circle class="dot" cx="${X(last.x).toFixed(1)}" cy="${Y(last.y).toFixed(1)}" r="4.5"/>`;
+  s += `<text class="endl" x="${(X(last.x) + 10).toFixed(1)}" y="${(Y(last.y) + 4).toFixed(1)}">${fmt1(last.y)}</text>`;
+  s += `<line class="xh" x1="0" x2="0" y1="${pt}" y2="${base}" style="display:none"/><circle class="xd" r="4.5" style="display:none"/>`;
+  s += `<rect class="hit" x="0" y="0" width="${Wd}" height="${Ht}" fill="transparent"/></svg><div class="tt" hidden></div>`;
+  host.innerHTML = s;
+  const svg = $("svg", host), tt = $(".tt", host), xh = $(".xh", svg), xd = $(".xd", svg), hit = $(".hit", svg);
+  let ki = pts.length - 1;
+  const show = i =>{
+    ki = i; const p = pts[i], sx = svg.clientWidth / Wd, sy = svg.clientHeight / Ht;
+    xh.setAttribute("x1", X(p.x)); xh.setAttribute("x2", X(p.x)); xh.style.display = "";
+    xd.setAttribute("cx", X(p.x)); xd.setAttribute("cy", Y(p.y)); xd.style.display = "";
+    tt.textContent = "";
+    const b = document.createElement("b"); b.textContent = `${fmt1(p.y)} ${unit}`.trim();
+    const sp = document.createElement("span"); sp.textContent = `Woche ${p.x}${p.info ? " · " + p.info : ""}`;
+    tt.append(b, sp); tt.hidden = false;
+    const left = X(p.x) * sx, half = tt.offsetWidth / 2 + 4;
+    tt.style.left = `${Math.min(Math.max(left, half), host.clientWidth - half)}px`;
+    tt.style.top = `${Math.max(Y(p.y) * sy - 12, tt.offsetHeight)}px`;
+  };
+  const hide = ()=>{ xh.style.display = "none"; xd.style.display = "none"; tt.hidden = true; };
+  const nearest = cx =>{
+    const r = svg.getBoundingClientRect(), vx = (cx - r.left) / r.width * Wd;
+    let bi = 0, bd = Infinity; pts.forEach((p, i)=>{ const d = Math.abs(X(p.x) - vx); if(d < bd){ bd = d; bi = i; } });
+    return bi;
+  };
+  hit.addEventListener("pointermove", e => show(nearest(e.clientX)));
+  hit.addEventListener("pointerdown", e => show(nearest(e.clientX)));
+  hit.addEventListener("pointerleave", e =>{ if(e.pointerType === "mouse") hide(); });
+  svg.setAttribute("tabindex", "0");
+  svg.addEventListener("focus", ()=> show(ki));
+  svg.addEventListener("blur", hide);
+  svg.addEventListener("keydown", e =>{
+    if(e.key === "ArrowLeft"){ show(Math.max(0, ki - 1)); e.preventDefault(); }
+    else if(e.key === "ArrowRight"){ show(Math.min(pts.length - 1, ki + 1)); e.preventDefault(); }
+    else if(e.key === "Escape") hide();
+  });
+}
+
+/* =====================================================================
+   Plan
+   ===================================================================== */
+function rulesAcc(){
+  const out = []; let title = null;
+  [...$("#tpl-rules").content.children].forEach(el =>{
+    if(el.tagName === "H4") title = el.textContent;
+    else if(el.tagName === "UL" && title){
+      out.push(`<details class="acc"><summary><span><b>${escH(title)}</b></span>${icon("chev", "chev")}</summary><div class="acc-b">${el.outerHTML}</div></details>`);
+      title = null;
+    }
+  });
+  return out.join("");
+}
+function renderPlan(){
+  const m = modeOf(store.meta.week);
+  hdr.innerHTML = `<div class="hdr-row"><h2 class="hdr-title">Plan</h2><span class="pill static">V9.4 · Cut-Block</span></div>`;
+  const plan = {};
+  DAYS.forEach(D => D.ex.forEach(ex =>{ const k = MUSCLE[ex.n] || "Sonstiges"; plan[k] = (plan[k] || 0) + setsIn(ex, m); }));
+  main.innerHTML = `<div class="view">
+    <p class="eyebrow">Woche ${store.meta.week} · ${MODES[m]} · ${totalSets(m)} Sätze</p>
+    <h1 class="title">Dein Plan</h1>
+    <p class="sub">5 Tage, Mittwoch und Sonntag frei · Priorität obere Brust, Lats und Arme</p>
+    ${DAYS.map((D, d)=>{
+      const total = D.ex.reduce((a, ex)=> a + setsIn(ex, m), 0);
+      return `<details class="acc"${d === store.meta.day ? " open" : ""}><summary><span class="dk">${D.k}</span><span><b>${escH(D.n)} · ${escH(D.t)}</b><small>${escH(D.f)} · ${D.loc === "home" ? "Zuhause" : "Gym"} · ${total} Sätze</small></span>${icon("chev", "chev")}</summary>
+        <div class="acc-b">${D.ex.map(ex => `<div class="pl-row"><div><b>${escH(ex.n)}</b><span>${escH(ex.h ? ex.h.replace(/^KSK · /, "Zuhause: ") : "Zuhause: gleiche Übung an der KSK")}</span></div>
+          <div class="r">${setsIn(ex, m)} × ${ex.lo}–${ex.hi}<span>RIR ${escH(m === "deload" ? "3" : ex.rir)} · ${clock(ex.rest)}</span></div></div>`).join("")}
+          <button class="btn sm block" data-act="goto-day" data-d="${d}">${icon("train", "sm")}${escH(D.n)} öffnen</button></div></details>`;
+    }).join("")}
+    <h3 class="sec-h">Direkte Sätze pro Muskel und Woche</h3>
+    <section class="card"><table class="t"><thead><tr><th>Muskel</th><th>Sätze</th></tr></thead><tbody>${MUSCLE_ORDER.filter(k => plan[k]).map(k => `<tr><td>${PRIO.has(k) ? "★ " : ""}${escH(k)}</td><td>${plan[k]}</td></tr>`).join("")}</tbody></table>
+      <p class="fine">★ Priorität. Indirekte Sätze (z. B. Bizeps beim Latzug) zählen etwa halb und sind hier nicht eingerechnet.</p></section>
+    <h3 class="sec-h">Regeln & Wissen</h3>
+    ${rulesAcc()}
+  </div>`;
+}
+
+/* =====================================================================
+   Mehr
+   ===================================================================== */
+function toggleRow(k, title, sub, ic){
+  const on = setting(k);
+  return `<button class="li" data-act="toggle" data-k="${k}" role="switch" aria-checked="${on}">${icon(ic)}<span class="lt"><b>${title}</b><span>${sub}</span></span><span class="sw${on ? " on" : ""}"></span></button>`;
+}
+function renderMore(){
+  const w = store.meta.week, c = ciOf(w);
+  hdr.innerHTML = `<div class="hdr-row"><h2 class="hdr-title">Mehr</h2></div>`;
+  const where = memoryOnly ? "nicht verfügbar – Eingaben gelten nur für diese Sitzung" : backend === "claude" ? "Claude – bleibt über Sitzungen erhalten" : "dieses Gerät";
+  main.innerHTML = `<div class="view">
+    <h3 class="sec-h" style="margin-top:4px">Training</h3>
+    <div class="list">
+      ${toggleRow("autoRest", "Pause startet automatisch", "Nach jedem abgehakten Satz", "timer")}
+      ${toggleRow("sound", "Ton am Ende der Pause", "Drei kurze Pieptöne", "bell")}
+      ${toggleRow("vibrate", "Vibration", "Beim Abhaken und am Pausenende (Android)", "phone")}
+      ${toggleRow("wake", "Bildschirm anlassen", "Solange der Training-Tab offen ist", "sun")}
+    </div>
+    <h3 class="sec-h">Körper</h3>
+    <div class="list"><button class="li" data-act="checkin">${icon("scale")}<span class="lt"><b>Check-in Woche ${w}</b><span>${c && numv(c.bw) != null ? `${de(c.bw)} kg${numv(c.waist) != null ? ` · Taille ${de(c.waist)} cm` : ""}${numv(c.arm) != null ? ` · Arm ${de(c.arm)} cm` : ""}` : "noch offen"}</span></span>${icon("chevR", "sm")}</button></div>
+    <h3 class="sec-h">Daten</h3>
+    <div class="list">
+      <button class="li" data-act="export">${icon("table")}<span class="lt"><b>Export für Excel</b><span>Alle Sätze und Check-ins, tabgetrennt</span></span>${icon("chevR", "sm")}</button>
+      <button class="li" data-act="backup">${icon("copy")}<span class="lt"><b>Sicherung</b><span>Kompletter Stand als Text · Wiederherstellen</span></span>${icon("chevR", "sm")}</button>
+    </div>
+    <p class="fine">Speicher: ${where}.${backend === "local" ? " Nach jeder Woche eine Sicherung ziehen – iOS räumt Website-Daten irgendwann auf." : ""}</p>
+    <h3 class="sec-h">Über</h3>
+    <div class="list"><div class="li">${icon("info")}<span class="lt"><b>Trainingslog</b><span>Plan V9.4 · App 2.0 · Datenformat ${PLAN}</span></span></div></div>
+    <p class="fine">Nach einem Update die App einmal ganz schließen und neu öffnen.</p>
+  </div>`;
+}
+
+/* ---------- Export und Sicherung ---------- */
+function buildTSV(){
   const rows = [["Woche","Modus","Tag","Ort","Übung","Satz","Last (kg)","Wdh.","RIR"]];
   for(let w=1; w<=WEEKS; w++)
     DAYS.forEach((D, d)=> D.ex.forEach((ex, ei)=>{
@@ -1284,112 +1878,273 @@ function exportTSV(){
     rows.push([], ["Woche","Check-in","Gewicht Ø kg","Taille cm","Oberarm cm","Ruhepuls","Blutdruck","Schlaf Ø h","Appetit","Übelkeit","Notiz"]);
     ci.forEach(w =>{ const c = store.checkin[w]; rows.push([w, "", c.bw ?? "", c.waist ?? "", c.arm ?? "", c.rhr ?? "", c.bp ?? "", c.sleep ?? "", c.app ?? "", c.nau ?? "", c.note ?? ""]); });
   }
-  const t = $csv();
-  t.value = rows.map(r=>r.join("\t")).join("\n");
-  t.readOnly = true;
-  openSheet("Export für Excel", "Tabgetrennt. Kopieren, im Satzlog in die Spalten Last / Wdh. / RIR einfügen.");
+  return rows.map(r => r.join("\t")).join("\n");
+}
+function flash(btn, msg){ const t = btn.textContent; btn.textContent = msg; setTimeout(()=>{ btn.textContent = t; }, 1800); }
+async function copyFrom(ta, btn){
+  ta.focus(); ta.select(); ta.setSelectionRange(0, 9999999);
+  let ok = false;
+  try{ await navigator.clipboard.writeText(ta.value); ok = true; }
+  catch(e){ try{ ok = document.execCommand("copy"); }catch(e2){ ok = false; } }
+  flash(btn, ok ? "Kopiert" : "Markiert – jetzt kopieren");
+}
+function openExport(){
+  openSheet("Export für Excel", `<p class="lead">Tabgetrennt. Kopieren, im Satzlog in die Spalten Last / Wdh. / RIR einfügen.</p>
+    <textarea id="tx" readonly>${escH(buildTSV())}</textarea>
+    <button class="btn primary block" data-sa="copy">${icon("copy", "sm")}Kopieren</button>`,
+    {click: el =>{ if(el.dataset.sa === "copy") copyFrom($("#tx"), el); }});
+}
+let restoreT = null;
+function openBackup(){
+  openSheet("Sicherung", `<p class="lead">Der komplette Stand als Text – kopieren und in Notizen oder Dateien ablegen. Zum Zurückholen eine V9-Sicherung hier einfügen und „Wiederherstellen“ tippen.</p>
+    <textarea id="bk" spellcheck="false">${escH(JSON.stringify(store))}</textarea>
+    <div class="row2"><button class="btn primary" data-sa="copy">${icon("copy", "sm")}Kopieren</button><button class="btn" data-sa="restore">Wiederherstellen</button></div>`,
+    {click: el =>{
+      if(el.dataset.sa === "copy") return copyFrom($("#bk"), el);
+      if(el.dataset.sa !== "restore") return;
+      let data;
+      try{ data = JSON.parse($("#bk").value); }catch(e){ return flash(el, "Text nicht lesbar"); }
+      if(!data || typeof data !== "object" || !data.sets || !data.meta) return flash(el, "Keine gültige Sicherung");
+      if(data.plan !== PLAN) return flash(el, "Andere Version – nicht übernommen");
+      if(!el.classList.contains("armed")){
+        el.classList.add("armed"); el.textContent = "Stand ersetzen?";
+        clearTimeout(restoreT);
+        restoreT = setTimeout(()=>{ el.classList.remove("armed"); el.textContent = "Wiederherstellen"; }, 4000);
+        return;
+      }
+      clearTimeout(restoreT);
+      store = data; normalize(); save();
+      closeSheet(); toast("Sicherung wiederhergestellt"); render();
+    }});
 }
 
-/* Sicherung: kompletter Stand als Text, wieder einlesbar. */
-function backupJSON(){
-  const t = $csv();
-  t.value = JSON.stringify(store);
-  t.readOnly = false;
-  openSheet("Sicherung", "Der komplette Stand als Text – kopieren und in Notizen oder Dateien ablegen. Zum Zurückholen eine alte V9-Sicherung hier einfügen und Wiederherstellen tippen.", {restore:true});
+/* =====================================================================
+   Blätter, Toast, Pausen-Uhr, Bildschirm, Ton
+   ===================================================================== */
+const sheet = $("#sheet"), shBody = $("#sh-body");
+let shHandlers = null, lastFocus = null, sheetT = null;
+function openSheet(title, html, handlers = {}){
+  clearTimeout(sheetT);
+  $("#sh-title").textContent = title;
+  shBody.innerHTML = html; shHandlers = handlers;
+  lastFocus = document.activeElement;
+  sheet.hidden = false; document.body.classList.add("sheet-open");
+  requestAnimationFrame(()=> requestAnimationFrame(()=> sheet.classList.add("open")));
+  $(".sh", sheet).scrollTop = 0;
+}
+function closeSheet(){
+  if(sheet.hidden) return;
+  sheet.classList.remove("open"); shHandlers = null; document.body.classList.remove("sheet-open");
+  sheetT = setTimeout(()=>{ sheet.hidden = true; shBody.innerHTML = ""; }, 280);
+  if(lastFocus && lastFocus.isConnected && lastFocus.focus) lastFocus.focus({preventScroll:true});
+}
+sheet.addEventListener("click", e =>{
+  if(e.target === sheet || e.target.closest("#sh-close")) return closeSheet();
+  const el = e.target.closest("[data-sa]");
+  if(el && shHandlers && shHandlers.click) shHandlers.click(el, e);
+});
+sheet.addEventListener("change", e =>{ if(shHandlers && shHandlers.change) shHandlers.change(e.target); });
+
+let toastT = null;
+function toast(html, kind = ""){
+  const el = $("#toast");
+  el.innerHTML = html; el.className = `toast show ${kind}`;
+  clearTimeout(toastT); toastT = setTimeout(()=>{ el.className = "toast"; }, 2800);
+}
+function haptic(){ if(setting("vibrate") && navigator.vibrate) navigator.vibrate(12); }
+
+let actx = null;
+function unlockAudio(){
+  if(!setting("sound")) return;
+  try{
+    if(!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+    if(actx.state === "suspended") actx.resume();
+  }catch(e){ actx = null; }
+}
+function beep(){
+  if(!actx) return;
+  try{
+    [0, .24, .48].forEach(o =>{
+      const t = actx.currentTime + o, osc = actx.createOscillator(), g = actx.createGain();
+      osc.type = "sine"; osc.frequency.value = 880;
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.35, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
+      osc.connect(g).connect(actx.destination); osc.start(t); osc.stop(t + 0.2);
+    });
+  }catch(e){}
 }
 
-function showRules(){
-  openSheet("Regeln · V9.4", "", {info:true});
+const dock = $("#dock"), T = {end:0, total:0, label:"", int:null, doneT:null};
+function startTimer(sec, label){
+  clearTimeout(T.doneT);
+  T.total = sec; T.end = Date.now() + sec * 1000; T.label = label || "Pause";
+  try{ sessionStorage.setItem("tl_timer", JSON.stringify({end:T.end, total:T.total, label:T.label})); }catch(e){}
+  dock.hidden = false; dock.classList.remove("done"); document.body.classList.add("dock-on");
+  clearInterval(T.int); T.int = setInterval(tick, 250); tick();
+}
+function startRest(ei){
+  const {week, day} = store.meta, ex = DAYS[day].ex[ei];
+  startTimer(ex.rest, nameOf(week, day, ei).replace(/^KSK · /, ""));
+}
+function tick(){
+  const left = (T.end - Date.now()) / 1000;
+  if(left <= 0) return finishTimer();
+  $("#dk-time").textContent = clock(left);
+  $("#dk-lbl").textContent = `Pause · ${T.label}`;
+  const C = 2 * Math.PI * 19, val = $(".ring .val", dock);
+  val.style.strokeDasharray = C; val.style.strokeDashoffset = C * (1 - left / T.total);
+}
+function finishTimer(){
+  clearInterval(T.int); T.int = null; T.end = 0;
+  try{ sessionStorage.removeItem("tl_timer"); }catch(e){}
+  $("#dk-time").textContent = "Weiter geht's";
+  $("#dk-lbl").textContent = `Pause vorbei · ${T.label}`;
+  dock.classList.add("done");
+  if(setting("vibrate") && navigator.vibrate) navigator.vibrate([220, 100, 220]);
+  if(setting("sound")) beep();
+  T.doneT = setTimeout(hideDock, 10000);
+}
+function hideDock(){
+  clearInterval(T.int); clearTimeout(T.doneT); T.int = null; T.end = 0;
+  dock.hidden = true; dock.classList.remove("done"); document.body.classList.remove("dock-on");
+  try{ sessionStorage.removeItem("tl_timer"); }catch(e){}
+}
+function adjustTimer(d){
+  if(!T.end){ if(d > 0) startTimer(d, T.label); return; }
+  T.end += d * 1000; T.total = Math.max(1, T.total + d);
+  if(T.end <= Date.now()) return finishTimer();
+  try{ sessionStorage.setItem("tl_timer", JSON.stringify({end:T.end, total:T.total, label:T.label})); }catch(e){}
+  tick();
+}
+function resumeTimer(){
+  try{
+    const t = JSON.parse(sessionStorage.getItem("tl_timer") || "null");
+    if(t && t.end > Date.now()){
+      T.total = t.total; T.end = t.end; T.label = t.label;
+      dock.hidden = false; document.body.classList.add("dock-on");
+      clearInterval(T.int); T.int = setInterval(tick, 250); tick();
+    }
+  }catch(e){}
 }
 
-(function(){
-  const rb = document.getElementById("restore");
-  let armed = false, armT = null;
-  const flash = msg =>{ rb.textContent = msg; setTimeout(()=>{ rb.textContent = "Wiederherstellen"; }, 2200); };
-  const disarm = ()=>{ armed = false; clearTimeout(armT); rb.classList.remove("arm"); rb.textContent = "Wiederherstellen"; };
-  rb.onclick = ()=>{
-    let data;
-    try{ data = JSON.parse($csv().value); }
-    catch(e){ disarm(); flash("Text nicht lesbar"); return; }
-    if(!data || typeof data !== "object" || !data.sets || !data.meta){ disarm(); flash("Keine gültige Sicherung"); return; }
-    if(data.plan !== PLAN){ disarm(); flash("Andere Version – nicht übernommen"); return; }
-    if(!armed){
-      armed = true; rb.classList.add("arm");
-      rb.textContent = "Stand ersetzen?";
-      armT = setTimeout(disarm, 4000);
+let wakeLock = null;
+async function syncWake(){
+  const want = setting("wake") && view === "train" && document.visibilityState === "visible";
+  try{
+    if(want && !wakeLock && "wakeLock" in navigator){
+      wakeLock = await navigator.wakeLock.request("screen");
+      wakeLock.addEventListener("release", ()=>{ wakeLock = null; });
+    } else if(!want && wakeLock){ const l = wakeLock; wakeLock = null; await l.release(); }
+  }catch(e){ wakeLock = null; }
+}
+/* Beim Wegwechseln sofort speichern: save() wartet sonst 0,4 s, und iOS kann
+   die App in der Zeit beenden. */
+function flushSave(){
+  if(memoryOnly) return;
+  clearTimeout(saveT);
+  const json = JSON.stringify(store);
+  try{
+    if(backend === "claude") window.storage.set(KEY, json);
+    else localStorage.setItem(KEY, json);
+  }catch(e){}
+}
+document.addEventListener("visibilitychange", ()=>{
+  if(document.visibilityState === "hidden") flushSave();
+  syncWake();
+  if(document.visibilityState === "visible" && T.end) tick();
+});
+window.addEventListener("pagehide", flushSave);
+
+/* =====================================================================
+   Navigation und Ereignisse
+   ===================================================================== */
+function render(){
+  $$(".tab").forEach(t =>{ const on = t.dataset.v === view; t.classList.toggle("on", on); t.setAttribute("aria-current", on ? "page" : "false"); });
+  if(view === "train") renderTrain();
+  else if(view === "progress") renderProgress();
+  else if(view === "plan") renderPlan();
+  else renderMore();
+  syncWake();
+}
+function go(v){
+  if(v === view){ window.scrollTo({top:0, behavior:"smooth"}); return; }
+  view = v; window.scrollTo(0, 0); render();
+}
+function autoDay(){
+  const k = todayKey();
+  if(store.meta.lastDate === k) return;
+  store.meta.lastDate = k;
+  const d = DOW_DAY[new Date().getDay()];
+  if(d != null) store.meta.day = d;
+  save();
+}
+
+document.addEventListener("click", e =>{
+  const tab = e.target.closest(".tab");
+  if(tab) return go(tab.dataset.v);
+  const b = e.target.closest("[data-act]");
+  if(!b) return;
+  const {week, day} = store.meta;
+  switch(b.dataset.act){
+    case "week": return openWeek();
+    case "loc": store.loc[lid(week, day)] = b.dataset.loc; save(); return render();
+    case "day": store.meta.day = +b.dataset.d; save(); window.scrollTo(0, 0); return render();
+    case "chk": return onCheck(b.closest(".set"));
+    case "tech": return openTech(+b.closest(".ex").dataset.e);
+    case "rest": unlockAudio(); return startRest(+b.closest(".ex").dataset.e);
+    case "clear": return armClear(b);
+    case "next-week": store.meta.week = Math.min(WEEKS, week + 1); save(); window.scrollTo(0, 0); return render();
+    case "dismiss-next": store.meta.noSuggest = todayKey(); save(); return render();
+    case "checkin": return openCheckin();
+    case "goto-day": store.meta.day = +b.dataset.d; save(); view = "train"; window.scrollTo(0, 0); return render();
+    case "toggle":{
+      const k = b.dataset.k; setSetting(k, !setting(k));
+      if(k === "sound" && setting(k)){ unlockAudio(); beep(); }
+      return render();
+    }
+    case "export": return openExport();
+    case "backup": return openBackup();
+    case "cal":{
+      const w = +b.dataset.w, d = +b.dataset.d, c = dayCount(w, d), info = $("#cal-info");
+      $$(".cc.picked").forEach(x => x.classList.remove("picked")); b.classList.add("picked");
+      info.innerHTML = `<b>Woche ${w} · ${escH(DAYS[d].n)}</b>: ${c.done} von ${c.due} Sätzen · ${fmt0(volumeOf(w, d))} kg <button class="btn sm" data-act="cal-open" data-w="${w}" data-d="${d}" style="margin-left:6px">Öffnen</button>`;
       return;
     }
-    disarm();
-    store = data;
-    normalize();
-    save();
-    document.getElementById("sheet").classList.remove("open");
-    syncPickers();
-    render();
-  };
-})();
-document.getElementById("sel").onclick = async ()=>{
-  const t = document.getElementById("csv"), btn = document.getElementById("sel");
-  t.focus(); t.select(); t.setSelectionRange(0, 99999);
-  let ok = false;
-  try{ await navigator.clipboard.writeText(t.value); ok = true; }
-  catch(e){ try{ ok = document.execCommand("copy"); }catch(e2){ ok = false; } }
-  btn.textContent = ok ? "Kopiert" : "Markiert – jetzt kopieren";
-  setTimeout(()=>{ btn.textContent = "Kopieren"; }, 1800);
-};
-document.getElementById("close").onclick = ()=> document.getElementById("sheet").classList.remove("open");
+    case "cal-open": store.meta.week = +b.dataset.w; store.meta.day = +b.dataset.d; save(); view = "train"; window.scrollTo(0, 0); return render();
+    case "dk-minus": return adjustTimer(-15);
+    case "dk-plus": return adjustTimer(15);
+    case "dk-skip": return hideDock();
+  }
+});
+document.addEventListener("input", e =>{ if(e.target.matches("#main .in")) liveMark(e.target); });
+document.addEventListener("change", e =>{
+  if(e.target.matches("#main .in")) return onInputCommit(e.target);
+  if(e.target.id === "ex-pick"){ store.meta.pick = e.target.value; save(); drawExercise(historyIndex(), e.target.value); }
+});
+document.addEventListener("keydown", e =>{
+  if(e.key === "Escape" && !sheet.hidden) return closeSheet();
+  if(e.key === "Enter" && e.target.matches("#main .in")){
+    const ins = $$(".in", e.target.closest(".set")), i = ins.indexOf(e.target);
+    if(i < ins.length - 1) ins[i + 1].focus(); else e.target.blur();
+    e.preventDefault();
+  }
+});
+let resizeT = null;
+window.addEventListener("resize", ()=>{ clearTimeout(resizeT); resizeT = setTimeout(()=>{ if(view === "progress"){ mountExercise(); mountBody(); } }, 200); });
 
 /* ---------- Start ---------- */
-function syncPickers(){
-  const {week, day} = store.meta;
-  document.getElementById("week").value = week;
-  document.getElementById("phase").value = modeOf(week);
-  document.getElementById("loc").value = locOf(week, day);
-}
-
 (async function init(){
-  const wsel = document.getElementById("week");
-  for(let i=1;i<=WEEKS;i++) wsel.add(new Option(`Wo. ${i}`, i));
-  wsel.onchange = ()=>{ store.meta.week = +wsel.value; save(); syncPickers(); render(); };
-
-  const psel = document.getElementById("phase");
-  Object.entries(MODES).forEach(([k, label])=> psel.add(new Option(`${label} · ${totalSets(k)}`, k)));
-  psel.onchange = ()=>{
-    if(psel.value === "std") delete store.mode[store.meta.week];
-    else store.mode[store.meta.week] = psel.value;
-    save(); render();
-  };
-
-  const lsel = document.getElementById("loc");
-  lsel.onchange = ()=>{ store.loc[lid(store.meta.week, store.meta.day)] = lsel.value; save(); render(); };
-
-  document.getElementById("ci").onclick = showCheckin;
-  Object.values(CI_FIELDS).forEach(elId => document.getElementById(elId).addEventListener("change", commitCheckin));
-
-  const nav = document.getElementById("days");
-  DAYS.forEach((D, i)=>{
-    const b = document.createElement("button");
-    b.className = "day";
-    b.innerHTML = `<b>${D.k}</b><span>${D.t}</span>`;
-    b.onclick = ()=>{ store.meta.day = i; save(); syncPickers(); render(); window.scrollTo({top:0, behavior:"smooth"}); };
-    nav.appendChild(b);
-  });
-
-  /* Erst zeichnen, dann laden: die Oberflaeche steht sofort,
-     auch wenn der Speicher hakt. */
-  syncPickers(); render();
-
+  $$(".tab").forEach(t => t.insertAdjacentHTML("afterbegin", icon(t.dataset.icon)));
+  $("#sh-close").innerHTML = icon("x", "sm");
+  $("#dk-skip").innerHTML = icon("x", "sm");
+  /* Erst zeichnen, dann laden: die Oberfläche steht sofort, auch wenn der Speicher hakt. */
+  render();
   try{ await load(); }
-  catch(e){
-    memoryOnly = true;
-    document.getElementById("warn").classList.add("on");
-  }
-
-  syncPickers(); render();
-
-  if("serviceWorker" in navigator && location.protocol === "https:"){
+  catch(e){ memoryOnly = true; $("#warn").classList.add("on"); }
+  autoDay();
+  render();
+  resumeTimer();
+  if("serviceWorker" in navigator && location.protocol === "https:")
     navigator.serviceWorker.register("./sw.js").catch(()=>{});
-  }
 })();
 </script>
 </body>
