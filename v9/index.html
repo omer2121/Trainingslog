@@ -516,6 +516,30 @@ button.stat{align-items:center;text-align:left}
 }
 .ci-grid.c3{grid-template-columns:repeat(3,1fr)}
 
+/* ---------- Cardio ---------- */
+.btn:disabled{opacity:.45}
+.card h4{margin:18px 0 8px;font-size:11.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.cx-head{display:flex;align-items:center;gap:12px}
+.cx-head > .ic{flex:none;color:var(--accent)}
+.cx-head .lt b{font-size:15.5px;font-weight:750}
+.cx-head .lt span{font-size:13px;color:var(--text-2)}
+.cx-p{margin:10px 0 0;font-size:13.5px;color:var(--muted)}
+.cx-sum{margin-top:2px;font-size:13px;color:var(--muted)}
+.cx-sum b{font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.cx-sum + .meterbar{margin-top:8px}
+.cx-wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:12px}
+.cx-d{padding:7px 1px 6px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);text-align:center;font-variant-numeric:tabular-nums}
+.cx-d span{display:block;font-size:10.5px;font-weight:800;letter-spacing:.05em;color:var(--muted)}
+.cx-d b{display:block;margin-top:1px;font-size:15px;font-weight:800;color:var(--text)}
+.cx-d small{display:block;font-size:10.5px;color:var(--faint)}
+.cx-d.done{background:var(--accent-soft);border-color:rgba(198,251,80,.35)}
+.cx-d.done span{color:var(--accent)}
+.cx-d.today{box-shadow:inset 0 0 0 1.5px var(--text-2)}
+.cx-ul{margin:0;padding-left:18px}
+.cx-ul li{margin:7px 0;font-size:14px;color:var(--text-2)}
+.cx-kcal td:first-child{font-variant-numeric:normal}
+.cx-kcal td:last-child{white-space:nowrap;padding-left:12px}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 @media (min-width:600px){.title{font-size:36px}.view{padding-top:24px}}
 @media (max-width:400px){.seg .ic{display:none}.seg button{padding:0 10px}}
@@ -575,7 +599,7 @@ button.stat{align-items:center;text-align:left}
         <li>„Cut-Check“ erscheint, wenn eine Leitübung zwei Einheiten hintereinander mehr als 5 % unter ihrem Bestwert davor liegt (geschätztes Maximum aus Satz 1). Dann zuerst Schlaf, Essen und Pausen prüfen. Erst wenn es so bleibt: Modus „Reduziert“ (jede Isolationsübung einen Satz weniger, Last und RIR bleiben). Das ist ein praktisches Werkzeug, keine belegte Methode.</li>
         <li>Deload: Ob geplante Deloads nötig sind, ist nicht belegt; eine Woche Pause kostete in einer Studie kein Wachstum (Coleman 2024). Einsetzen beim Übergang vom Cut in den Aufbau oder bei deutlicher Erschöpfung: etwa halbe Satzzahl, gleiche Last, RIR 3. Deload-Wochen zählen nicht für den Cut-Check.</li>
         <li>Abnahme etwa 0,5–1 % Körpergewicht pro Woche im Wochendurchschnitt; mit 0,7 % pro Woche blieb mehr Muskelmasse erhalten als mit schnellerem Abnehmen (Garthe 2011). Eiweiß 2,3–3,1 g pro kg fettfreie Masse.</li>
-        <li>Cardio: Gehen (10.000–12.000 Schritte) oder Rad. Laufen und HIIT sparsam und nicht vor Beintagen, sonst stört es mehr.</li>
+        <li>Cardio nach dem Cardio-Plan oben: 12.000 Schritte am Tag plus etwa 3 Stunden Zone 2 pro Woche auf dem Rad oder gehend. Kein Laufen und kein HIIT, an Beintagen keine Extra-Einheit.</li>
         <li>Isolationsübungen: letzter Satz 0–1 RIR, wenn die Erholung stimmt. Grund- und Druckübungen bleiben bei 1–2, der RDL bei 2.</li>
       </ul>
       <h4>Aufwärmen</h4>
@@ -908,7 +932,7 @@ const MODES = {std:"Standard", red:"Reduziert", deload:"Deload"};
 const WEEKS = 16;
 const PLAN = "V9";   /* Datenformat: V9.1 nutzt es unverändert, V9-Sicherungen bleiben einlesbar */
 const KEY = "traininglog_v9";
-let store = {plan:PLAN, meta:{week:1, day:0}, sets:{}, var:{}, loc:{}, mode:{}, checkin:{}, notes:{}, weights:{}};
+let store = {plan:PLAN, meta:{week:1, day:0}, sets:{}, var:{}, loc:{}, mode:{}, checkin:{}, notes:{}, weights:{}, cardio:{}};
 let memoryOnly = false;
 
 /* ---------- Speicher ----------
@@ -935,6 +959,7 @@ function normalize(){
   if(!store.since) store.since = {};
   if(!store.notes) store.notes = {};
   if(!store.weights) store.weights = {};
+  if(!store.cardio) store.cardio = {};
   /* Getauschte Übungen (ex.was): ab der Woche nach dem letzten Eintrag an
      diesem Platz gilt die neue Übung, davor bleibt der alte Name. */
   DAYS.forEach((D, d)=> D.ex.forEach((ex, e)=>{
@@ -1137,6 +1162,7 @@ function verdict(ex, d, ei, n){
    neue Felder: Satz.t (Zeitstempel), store.settings, meta.lastDate.
    Nachtrag (30.10.2026): store.notes (Notiz pro Übungsname), store.weights
    (Tagesgewicht pro Datum), meta.lastBackup/noBackup, Check-in kcal/prot/steps.
+   V9.5 (31.10.2026): store.cardio (Cardio-Minuten und Art pro Datum).
    ===================================================================== */
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -1164,6 +1190,31 @@ const agoText = ts =>{ const n = daysAgo(ts); return n <= 0 ? "heute" : n === 1 
 const DOW_DAY = {1:0, 2:1, 4:2, 5:3, 6:4};
 const DAY_DOW = [1, 2, 4, 5, 6];
 const CI_NUM = new Set(["bw", "waist", "arm", "rhr", "sleep", "kcal", "prot", "steps"]);
+
+/* ---------- Cardio-Plan V9.5 (Wochentag 0 = Sonntag) ----------
+   12.000 Schritte täglich plus etwa 3 h Zone 2 pro Woche, auf dem Rad oder gehend.
+   Ausdauertraining bremst das Muskelwachstum nicht (Schumann 2022), Laufen bremste
+   Kraft und Fasern aber stärker als Radfahren (Wilson 2012; Lundberg 2022). Keine
+   Extra-Einheit an Beintagen, vor Beintagen nur locker. t = Zielminuten. */
+const CARDIO = {
+  1:{t:25, r:"20–25 min", what:"Rad", def:"Rad", when:"direkt nach dem Training", hint:"Locker bleiben, morgen ist Beintag."},
+  2:{t:0, hint:"Beintag: kein extra Cardio, damit sich die Beine erholen."},
+  3:{t:50, r:"45–60 min", what:"Gehen (gern bergauf), Rad oder Crosstrainer", def:"Gehen", when:"Ruhetag, wann es passt", hint:"Längste Einheit der Woche."},
+  4:{t:30, r:"30 min", what:"Zügig gehen oder Rad", def:"Gehen", when:"nach dem Training oder mit 3 h Abstand", hint:""},
+  5:{t:25, r:"20–30 min", what:"Lockeres Gehen", def:"Gehen", when:"nach dem Training", hint:"Morgen ist Beintag: kein Steigungsband, kein Stepper."},
+  6:{t:0, hint:"Beintag: kein extra Cardio, damit sich die Beine erholen."},
+  0:{t:50, r:"45–60 min", what:"Gehen (gern bergauf), Rad oder Crosstrainer", def:"Gehen", when:"Ruhetag, wann es passt", hint:"Wie am Mittwoch."}
+};
+const CARDIO_TARGET = Object.values(CARDIO).reduce((a, c)=> a + c.t, 0);
+const CARDIO_TYPES = ["Rad", "Gehen", "Steigungsband", "Crosstrainer", "Stepper", "Anderes"];
+const CARDIO_RULES = [
+  "Zone 2: Du kannst noch in ganzen Sätzen reden, atmest aber hörbar. Puls etwa 60 bis 70\u00a0% vom Maximum (grob 208\u00a0−\u00a00,7\u00a0×\u00a0Alter).",
+  "Rad, Gehen und Crosstrainer statt Laufen. Ausdauertraining bremst das Muskelwachstum nicht (Schumann 2022, 43 Studien), Laufen bremste Kraft und Muskelfasern aber stärker als Radfahren (Wilson 2012; Lundberg 2022).",
+  "Kein HIIT: Es brachte nicht mehr Fettverlust als lockeres Cardio (Wewege 2017) und kostet bei 5 Krafttagen mehr Erholung.",
+  "Am Trainingstag nach dem Krafttraining oder mit mindestens 3 h Abstand (Schumann 2022; Murlasits 2018). Am Tag vor einem Beintag nur locker.",
+  "Nüchtern oder nach dem Essen ist egal (Schoenfeld 2014). Mach es, wann es in deinen Tag passt.",
+  "Nebeneffekt: Ausdauertraining senkt den Blutdruck im Schnitt um 3,5/2,5 mmHg, bei Bluthochdruck um etwa 8/5 mmHg (Cornelissen & Smart 2013)."
+];
 
 /* ---------- Symbole (eigene Linien-Icons, 24er Raster) ---------- */
 const IC = {
@@ -1196,6 +1247,7 @@ const IC = {
   sun:'<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/>',
   hist:'<path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v3h3"/><path d="M12 8.5V12l2.5 2"/>',
   pen:'<path d="M15.5 5l3.5 3.5L8.5 19H5v-3.5z"/><path d="M13 7.5l3.5 3.5"/>',
+  bike:'<circle cx="6" cy="16" r="3.5"/><circle cx="18" cy="16" r="3.5"/><path d="M6 16l3-7h6l3 7M9 9l2.5 7L15 9"/><path d="M9 9V7M7.5 7h3M15 9l1-2.5h2"/>',
   save:'<path d="M5.5 4.5h10.5l3.5 3.5v10.5a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1v-13a1 1 0 0 1 1-1z"/><path d="M8.5 4.5v4.5h6.5V4.5M8 19.5v-5.5h8v5.5"/>'
 };
 const icon = (n, cls = "") => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
@@ -1331,8 +1383,9 @@ function bannersHtml(){
     out.push(`<div class="banner">${icon("cal")}<div><p><b>Neue Trainingswoche?</b> Woche ${week} hat schon Einträge, heute ist Montag.</p>
       <div class="acts"><button class="btn sm primary" data-act="next-week">Woche ${week + 1} starten</button><button class="btn sm ghost" data-act="dismiss-next">Nein</button></div></div></div>`);
   if(DOW_DAY[dow] == null){
-    const nd = nextTrainingDay(dow);
-    out.push(`<div class="banner">${icon("cal")}<div><p><b>Heute ist Ruhetag.</b> Nächste Einheit: ${escH(DAYS[nd].n)} · ${escH(DAYS[nd].t)}.</p></div></div>`);
+    const nd = nextTrainingDay(dow), cp = CARDIO[dow], cv = store.cardio[todayKey()];
+    out.push(`<div class="banner">${icon("cal")}<div><p><b>Heute ist Ruhetag.</b> Nächste Einheit: ${escH(DAYS[nd].n)} · ${escH(DAYS[nd].t)}.${cp.t ? ` Cardio heute: ${escH(cp.r)} Zone 2, ${escH(cp.what)}.` : ""}</p>
+      ${cp.t ? `<div class="acts"><button class="btn sm${cv ? "" : " primary"}" data-act="cardio">${cv ? `${icon("check", "sm")}${cv.min} min erledigt` : `${icon("bike", "sm")}Cardio eintragen`}</button></div>` : ""}</div></div>`);
   }
   const c = ciOf(week);
   if(day === 0 && (!c || numv(c.bw) == null))
@@ -1433,6 +1486,7 @@ function renderTrain(){
   const {week, day} = store.meta, D = DAYS[day], mode = modeOf(week), home = locOf(week, day) === "home";
   const H = historyIndex(), c = dayCount(week, day), vol = volumeOf(week, day);
   const isToday = DAY_DOW[day] === new Date().getDay(), tw = numv(store.weights[todayKey()]);
+  const ct = CARDIO[new Date().getDay()], cv = store.cardio[todayKey()];
   renderTrainHeader();
   main.innerHTML = `<div class="view">
     <p class="eyebrow">${isToday ? "<b>Heute</b> · " : ""}${home ? "Zuhause · KSK" : "Gym"}${mode !== "std" ? ` · ${MODES[mode]}` : ""}</p>
@@ -1443,9 +1497,11 @@ function renderTrain(){
       <span class="stat" id="st-vol"><b>${fmt0(vol)}</b> kg Volumen</span>
       <span class="stat"><b>≈ ${estMinutes(day)}</b> min</span>
       <button class="stat${tw == null ? " due" : ""}" data-act="weigh" id="st-weigh">${icon("scale")}${tw == null ? "<b>Gewicht</b> eintragen" : `<b>${kg(tw)}</b> kg heute`}</button>
+      ${DOW_DAY[new Date().getDay()] != null && (ct.t || cv) ? `<button class="stat${cv ? "" : " due"}" data-act="cardio" id="st-cardio">${icon("bike")}${cv ? `<b>${cv.min}</b> min Cardio` : "<b>Cardio</b> eintragen"}</button>` : ""}
     </div>
     ${bannersHtml()}
     <div id="cards">${D.ex.map((ex, ei)=> cardHtml(ex, ei, H)).join("")}</div>
+    ${cardioCardHtml(day, isToday)}
     <div class="day-end">
       <h3>${c.due && c.done >= c.due ? "Einheit geschafft" : "Ende der Einheit"}</h3>
       <p id="st-end">${c.done}/${c.due} Sätze · ${fmt0(vol)} kg Volumen</p>
@@ -1749,6 +1805,78 @@ function openWeights(){
   });
 }
 
+/* ---------- Cardio: Plan pro Wochentag, abgehakt wird pro Datum ---------- */
+const weekStart = k => addDays(k, -((keyDate(k).getUTCDay() + 6) % 7));
+function cardioWeek(k = todayKey()){
+  const mon = weekStart(k), days = Array.from({length:7}, (_, i)=>{
+    const d = addDays(mon, i), dow = keyDate(d).getUTCDay(), v = store.cardio[d];
+    return {d, dow, plan:CARDIO[dow], min: v ? numv(v.min) || 0 : 0, type: v ? v.type : ""};
+  });
+  return {mon, days, done: days.reduce((a, x)=> a + x.min, 0)};
+}
+function cardioWeekHtml(k = todayKey()){
+  const W = cardioWeek(k), t = todayKey();
+  return `<p class="cx-sum"><b>${W.done}</b> von ${CARDIO_TARGET} min Zone 2</p>
+    <div class="meterbar" role="meter" aria-label="Cardio diese Woche" aria-valuemin="0" aria-valuemax="${CARDIO_TARGET}" aria-valuenow="${W.done}"><i style="width:${Math.min(100, W.done / CARDIO_TARGET * 100)}%"></i></div>
+    <div class="cx-wk">${W.days.map(x => `<div class="cx-d${x.min ? " done" : ""}${x.d === t ? " today" : ""}" role="img" aria-label="${dayLabel(x.d)}: ${x.min ? `${x.min} min ${x.type}` : "nichts eingetragen"}, Plan ${x.plan.t || 0} min"><span>${WD[x.dow].toUpperCase()}</span><b>${x.min || "–"}</b><small>${x.plan.t || "–"}</small></div>`).join("")}</div>
+    <p class="fine">Große Zahl: erledigt · klein: Plan, jeweils in Minuten</p>`;
+}
+/* Summen der vier Wochen davor, neueste zuerst */
+function cardioPrevHtml(){
+  const mon = weekStart(todayKey()), prev = [1, 2, 3, 4].map(i => cardioWeek(addDays(mon, -7 * i)));
+  if(!prev.some(W => W.done)) return "";
+  return `<p class="fine">Vorwochen, neueste zuerst: ${prev.map(W => `${W.done} min`).join(" · ")}</p>`;
+}
+function cardioCardHtml(day, isToday){
+  const c = CARDIO[DAY_DOW[day]], cv = isToday ? store.cardio[todayKey()] : null;
+  const btn = !isToday ? "" : cv ? `<button class="btn block" data-act="cardio">${icon("check", "sm")}${cv.min} min ${escH(cv.type)} erledigt</button>`
+            : `<button class="btn block${c.t ? " primary" : ""}" data-act="cardio">${icon("bike", "sm")}${c.t ? "Cardio eintragen" : "Trotzdem Cardio eintragen"}</button>`;
+  return `<section class="card cx" id="cx-card">
+    <div class="cx-head">${icon("bike")}<div class="lt"><b>Cardio · ${escH(DAYS[day].n)}</b><span>${escH(c.t ? `${c.r} Zone 2 · ${c.what}` : "Kein extra Cardio, nur 12.000 Schritte")}</span></div></div>
+    <p class="cx-p">${escH(c.t ? `${c.when[0].toUpperCase()}${c.when.slice(1)}.${c.hint ? " " + c.hint : ""} Dazu 12.000 Schritte, Spaziergänge zählen mit.` : `${c.hint} 12.000 Schritte, Spaziergänge zählen mit.`)}</p>
+    ${btn}
+  </section>`;
+}
+function openCardio(){
+  const t = todayKey(), c = CARDIO[keyDate(t).getUTCDay()], v = store.cardio[t] || {};
+  const today = c.t ? `${c.r} Zone 2 · ${c.what}, ${c.when}.${c.hint ? " " + c.hint : ""}` : `${c.hint} Nur 12.000 Schritte.`;
+  const b = `<p class="lead"><b>Heute · ${dayLabel(t)}:</b> ${escH(today)}</p>
+    <div class="ci-grid"><label>Minuten<input id="cx-min" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="${c.t || "–"}" value="${v.min ?? ""}"></label>
+      <label>Art<select id="cx-type">${CARDIO_TYPES.map(o => `<option${(v.type || c.def || "Gehen") === o ? " selected" : ""}>${o}</option>`).join("")}</select></label></div>
+    <div class="row2"><button class="btn primary" data-sa="cx-save">Speichern</button><button class="btn" data-sa="cx-del"${v.min ? "" : " disabled"}>Löschen</button></div>
+    <h4>Diese Woche</h4>${cardioWeekHtml(t)}
+    <p class="fine">Zone 2: Du kannst noch in ganzen Sätzen reden. Rad und Gehen statt Laufen, kein HIIT. Den ganzen Plan findest du im Tab „Plan“.</p>`;
+  openSheet("Cardio", b, {click: el =>{
+    if(el.dataset.sa === "cx-save"){
+      const inp = $("#cx-min"), m = parseInt(inp.value, 10);
+      if(!(m > 0 && m <= 600)){ inp.focus(); return flash(el, "Minuten eintragen"); }
+      store.cardio[t] = {min:m, type:$("#cx-type").value, t:Date.now()};
+      save(); closeSheet(); render();
+      toast(`${icon("bike", "sm")}<span>Cardio gespeichert · ${m} min ${escH(store.cardio[t].type)}</span>`);
+    } else if(el.dataset.sa === "cx-del"){
+      delete store.cardio[t]; save(); closeSheet(); render(); toast("Cardio von heute gelöscht");
+    }
+  }});
+}
+function cardioPlanHtml(){
+  return `<h3 class="sec-h">Cardio-Plan</h3>
+    <section class="card" id="cx-plan">
+      <p class="cap" style="margin-top:0">Täglich 12.000 Schritte (Spaziergänge zählen mit) plus etwa 3 Stunden Zone 2 pro Woche, insgesamt ${CARDIO_TARGET} min.</p>
+      ${[1, 2, 3, 4, 5, 6, 0].map(dow =>{ const c = CARDIO[dow];
+        return `<div class="pl-row"><div><b>${WD[dow]} · ${escH(c.t ? c.what : "nur Schritte")}</b><span>${escH(c.t ? `${c.when}${c.hint ? " · " + c.hint : ""}` : c.hint)}</span></div><div class="r">${c.t ? escH(c.r) : "–"}</div></div>`; }).join("")}
+      <h4>So geht's</h4>
+      <ul class="cx-ul">${CARDIO_RULES.map(r => `<li>${escH(r)}</li>`).join("")}</ul>
+      <h4>Kalorien</h4>
+      <table class="t cx-kcal"><tbody>
+        <tr><td>Erhalt ohne Cardio-Plan (deine Angabe)</td><td>3.000–3.200</td></tr>
+        <tr><td>+ Cardio-Plan, vorsichtig gerechnet</td><td>+200–300</td></tr>
+        <tr><td><b>Erhalt mit Cardio-Plan</b></td><td><b>3.200–3.500</b></td></tr>
+        <tr><td><b>Ziel im Cut</b> (500–700 kcal Defizit)</td><td><b>2.600–2.900</b></td></tr>
+      </tbody></table>
+      <p class="fine">kcal pro Tag. Start mit 2.750 kcal, dann nach 2 Wochen am 7-Tage-Schnitt prüfen: unter 0,5 % pro Woche zuerst 2.000 Schritte oder eine Zone-2-Einheit mehr, über 1 % pro Woche 150–200 kcal mehr essen. Nicht nach Uhr-Kalorien essen: Fitnessuhren lagen beim Verbrauch im Mittel 27–93 % daneben (Shcherbina 2017).</p>
+    </section>`;
+}
+
 /* ---------- Wöchentlicher Check-in ---------- */
 function ciRateText(w){
   const r = lossRate(w);
@@ -1758,7 +1886,7 @@ function ciRateText(w){
             : kcal != null ? ` Bei Ø ${fmt0(kcal)} kcal.` : steps != null ? ` Bei Ø ${fmt0(steps)} Schritten.` : "";
   const txt = `Veränderung seit Wo. ${r.from}: ${fmtRate(r.pct)}. Ziel im Cut: 0,5–1 % pro Woche.${ctx}`;
   return r.pct > 1 ? `${txt} Zu schnell: zuerst Kalorien und Eiweiß erhöhen, den Trainingsumfang halten.`
-       : r.pct < 0.3 ? `${txt} Langsam: Taille und Kraft prüfen; Wasser durch die GH-Peptide kann die Waage verfälschen.${steps != null && steps < 10000 ? " Schritte zuerst auf 10.000–12.000 bringen." : ""}`
+       : r.pct < 0.3 ? `${txt} Langsam: Taille und Kraft prüfen; Wasser durch die GH-Peptide kann die Waage verfälschen. Bleibt es zwei Wochen so: ${steps != null && steps < 12000 ? "zuerst die Schritte auf 12.000 bringen" : "zuerst eine Zone-2-Einheit mehr"}, Kalorien zuletzt.`
        : `${txt} Im Zielbereich.`;
 }
 function openCheckin(){
@@ -1777,7 +1905,7 @@ function openCheckin(){
     <p class="fine">${escH(avgTxt)}</p>
     <h4>Essen und Bewegung · Ø pro Tag</h4>
     <div class="ci-grid c3">${f("kcal", "Kalorien", "numeric")}${f("prot", "Eiweiß g", "numeric")}${f("steps", "Schritte", "numeric")}</div>
-    <p class="fine">Laut Plan: 10.000–12.000 Schritte, Eiweiß 2,3–3,1 g pro kg fettfreie Masse.</p>
+    <p class="fine">Laut Plan: 12.000 Schritte, Eiweiß 2,3–3,1 g pro kg fettfreie Masse. Kalorien mit Cardio-Plan: Start bei 2.750 kcal.</p>
     <div class="ci-grid">${sel("app", "Appetit", ["", "niedrig", "normal", "hoch"])}${sel("nau", "Übelkeit", ["", "keine", "leicht", "stark"])}
       ${f("note", "Notiz", "text", "Energie, Verdauung, Schmerzen …", true)}</div>
     <p class="ci-rate" id="ci-rate">${escH(ciRateText(w))}</p>`;
@@ -1892,7 +2020,14 @@ function renderProgress(){
       <h2>Körper</h2>
       <p class="cap">Aus dem wöchentlichen Check-in · ${escH(lc ? ciRateText(lc.w) : "noch keine Einträge")}</p>
       <div id="body-wrap"></div>
-      <div class="row2"><button class="btn" data-act="weigh">${icon("scale", "sm")}Gewicht heute</button><button class="btn" data-act="checkin">${icon("cal", "sm")}Check-in Wo. ${w}</button></div>
+      <div class="row2"><button class="btn" data-act="weigh">${icon("scale", "sm")}Gewicht</button><button class="btn" data-act="checkin" aria-label="Check-in Woche ${w}">${icon("cal", "sm")}Check-in</button></div>
+    </section>
+    <section class="card" id="cx-prog">
+      <h2>Cardio</h2>
+      <p class="cap">Diese Woche, Montag bis Sonntag · dazu täglich 12.000 Schritte</p>
+      ${cardioWeekHtml()}
+      ${cardioPrevHtml()}
+      <button class="btn block" data-act="cardio">${icon("bike", "sm")}Cardio heute eintragen</button>
     </section>
     <section class="card">
       <h2>Trainingskalender</h2>
@@ -2033,13 +2168,13 @@ function rulesAcc(){
 }
 function renderPlan(){
   const m = modeOf(store.meta.week);
-  hdr.innerHTML = `<div class="hdr-row"><h2 class="hdr-title">Plan</h2><span class="pill static">V9.4 · Cut-Block</span></div>`;
+  hdr.innerHTML = `<div class="hdr-row"><h2 class="hdr-title">Plan</h2><span class="pill static">V9.5 · Cut-Block</span></div>`;
   const plan = {};
   DAYS.forEach(D => D.ex.forEach(ex =>{ const k = MUSCLE[ex.n] || "Sonstiges"; plan[k] = (plan[k] || 0) + setsIn(ex, m); }));
   main.innerHTML = `<div class="view">
     <p class="eyebrow">Woche ${store.meta.week} · ${MODES[m]} · ${totalSets(m)} Sätze</p>
     <h1 class="title">Dein Plan</h1>
-    <p class="sub">5 Tage, Mittwoch und Sonntag frei · Priorität obere Brust, Lats und Arme</p>
+    <p class="sub">5 Krafttage, Mittwoch und Sonntag frei · Priorität obere Brust, Lats und Arme · Cardio nach Plan</p>
     ${DAYS.map((D, d)=>{
       const total = D.ex.reduce((a, ex)=> a + setsIn(ex, m), 0);
       return `<details class="acc"${d === store.meta.day ? " open" : ""}><summary><span class="dk">${D.k}</span><span><b>${escH(D.n)} · ${escH(D.t)}</b><small>${escH(D.f)} · ${D.loc === "home" ? "Zuhause" : "Gym"} · ${total} Sätze</small></span>${icon("chev", "chev")}</summary>
@@ -2047,6 +2182,7 @@ function renderPlan(){
           <div class="r">${setsIn(ex, m)} × ${ex.lo}–${ex.hi}<span>RIR ${escH(m === "deload" ? "3" : ex.rir)} · ${clock(ex.rest)}</span></div></div>`).join("")}
           <button class="btn sm block" data-act="goto-day" data-d="${d}">${icon("train", "sm")}${escH(D.n)} öffnen</button></div></details>`;
     }).join("")}
+    ${cardioPlanHtml()}
     <h3 class="sec-h">Direkte Sätze pro Muskel und Woche</h3>
     <section class="card"><table class="t"><thead><tr><th>Muskel</th><th>Sätze</th></tr></thead><tbody>${MUSCLE_ORDER.filter(k => plan[k]).map(k => `<tr><td>${PRIO.has(k) ? "★ " : ""}${escH(k)}</td><td>${plan[k]}</td></tr>`).join("")}</tbody></table>
       <p class="fine">★ Priorität. Indirekte Sätze (z. B. Bizeps beim Latzug) zählen etwa halb und sind hier nicht eingerechnet.</p></section>
@@ -2063,7 +2199,7 @@ function toggleRow(k, title, sub, ic){
   return `<button class="li" data-act="toggle" data-k="${k}" role="switch" aria-checked="${on}">${icon(ic)}<span class="lt"><b>${title}</b><span>${sub}</span></span><span class="sw${on ? " on" : ""}"></span></button>`;
 }
 function renderMore(){
-  const w = store.meta.week, c = ciOf(w), tw = numv(store.weights[todayKey()]), wa = weightAvg(), lb = store.meta.lastBackup;
+  const w = store.meta.week, c = ciOf(w), tw = numv(store.weights[todayKey()]), wa = weightAvg(), lb = store.meta.lastBackup, cvm = store.cardio[todayKey()];
   hdr.innerHTML = `<div class="hdr-row"><h2 class="hdr-title">Mehr</h2></div>`;
   const where = memoryOnly ? "nicht verfügbar – Eingaben gelten nur für diese Sitzung" : backend === "claude" ? "Claude – bleibt über Sitzungen erhalten" : "dieses Gerät";
   main.innerHTML = `<div class="view">
@@ -2076,15 +2212,16 @@ function renderMore(){
     </div>
     <h3 class="sec-h">Körper</h3>
     <div class="list"><button class="li" data-act="weigh">${icon("scale")}<span class="lt"><b>Gewicht heute</b><span>${tw != null ? `${de(tw)} kg` : "noch nicht eingetragen"}${wa ? ` · Ø 7 Tage ${fmt1(wa.avg)} kg` : ""}</span></span>${icon("chevR", "sm")}</button>
+      <button class="li" data-act="cardio">${icon("bike")}<span class="lt"><b>Cardio heute</b><span>${cvm ? `${cvm.min} min ${escH(cvm.type)}` : "noch nicht eingetragen"} · diese Woche ${cardioWeek().done} von ${CARDIO_TARGET} min</span></span>${icon("chevR", "sm")}</button>
       <button class="li" data-act="checkin">${icon("cal")}<span class="lt"><b>Check-in Woche ${w}</b><span>${c && numv(c.bw) != null ? `${de(c.bw)} kg${numv(c.waist) != null ? ` · Taille ${de(c.waist)} cm` : ""}${numv(c.arm) != null ? ` · Arm ${de(c.arm)} cm` : ""}` : "noch offen"}</span></span>${icon("chevR", "sm")}</button></div>
     <h3 class="sec-h">Daten</h3>
     <div class="list">
-      <button class="li" data-act="export">${icon("table")}<span class="lt"><b>Export für Excel</b><span>Sätze, Check-ins und Tagesgewicht, tabgetrennt</span></span>${icon("chevR", "sm")}</button>
+      <button class="li" data-act="export">${icon("table")}<span class="lt"><b>Export für Excel</b><span>Sätze, Check-ins, Tagesgewicht und Cardio, tabgetrennt</span></span>${icon("chevR", "sm")}</button>
       <button class="li" data-act="backup">${icon("save")}<span class="lt"><b>Sicherung</b><span>Letzte: ${lb ? agoText(lb) : "noch keine"} · als Datei oder Text</span></span>${icon("chevR", "sm")}</button>
     </div>
     <p class="fine">Speicher: ${where}.${backend === "local" ? " iOS kann Website-Daten irgendwann aufräumen. Die App erinnert dich nach 7 Tagen an eine Sicherung." : ""}</p>
     <h3 class="sec-h">Über</h3>
-    <div class="list"><div class="li">${icon("info")}<span class="lt"><b>Trainingslog</b><span>Plan V9.4 · App 2.0 · Datenformat ${PLAN}</span></span></div></div>
+    <div class="list"><div class="li">${icon("info")}<span class="lt"><b>Trainingslog</b><span>Plan V9.5 · App 2.0 · Datenformat ${PLAN}</span></span></div></div>
     <p class="fine">Nach einem Update die App einmal ganz schließen und neu öffnen.</p>
   </div>`;
 }
@@ -2110,6 +2247,11 @@ function buildTSV(){
   if(days.length){
     rows.push([], ["Datum","Tagesgewicht kg"]);
     days.forEach(k => rows.push([k, store.weights[k]]));
+  }
+  const cdays = Object.keys(store.cardio || {}).filter(k => numv(store.cardio[k].min) > 0).sort();
+  if(cdays.length){
+    rows.push([], ["Datum","Cardio min","Art"]);
+    cdays.forEach(k => rows.push([k, store.cardio[k].min, store.cardio[k].type || ""]));
   }
   return rows.map(r => r.join("\t")).join("\n");
 }
@@ -2363,6 +2505,7 @@ document.addEventListener("click", e =>{
     case "tech": return openTech(+b.closest(".ex").dataset.e);
     case "hist": return openHistory(+b.closest(".ex").dataset.e);
     case "weigh": return openWeights();
+    case "cardio": return openCardio();
     case "backup-now": return backupFile().then(ok =>{ if(ok){ toast(`${icon("save", "sm")}<span>Sicherung erstellt</span>`); render(); } });
     case "backup-later": store.meta.noBackup = todayKey(); save(); return render();
     case "rest": unlockAudio(); return startRest(+b.closest(".ex").dataset.e);
@@ -2401,7 +2544,9 @@ document.addEventListener("change", e =>{
 document.addEventListener("keydown", e =>{
   if(e.key === "Escape" && !sheet.hidden) return closeSheet();
   if(e.key === "Enter" && !e.shiftKey && (e.target.matches("#main .nt") || e.target.matches(".wg-ed"))){ e.preventDefault(); return e.target.blur(); }
-  if(e.key === "Enter" && e.target.id === "wg-in"){ e.preventDefault(); const sb = $('[data-sa="wg-save"]'); if(sb) sb.click(); return; }
+  if(e.key === "Enter" && (e.target.id === "wg-in" || e.target.id === "cx-min")){
+    e.preventDefault(); const sb = $(e.target.id === "wg-in" ? '[data-sa="wg-save"]' : '[data-sa="cx-save"]'); if(sb) sb.click(); return;
+  }
   if(e.key === "Enter" && e.target.matches("#main .in")){
     const ins = $$(".in", e.target.closest(".set")), i = ins.indexOf(e.target);
     if(i < ins.length - 1) ins[i + 1].focus(); else e.target.blur();
