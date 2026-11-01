@@ -580,7 +580,7 @@ button.stat{align-items:center;text-align:left}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <template id="tpl-rules">
-      <h4>Schwachstellen · V9.4</h4>
+      <h4>Schwachstellen · V9.6</h4>
       <ul>
         <li>Fotos vom 23.10.: Seitliche und hintere Schulter sind deine Stärke. Obere Brust und Lat-Breite (vor allem unten am Rücken) hängen hinterher. Beine waren nicht zu sehen und bleiben unverändert.</li>
         <li>V9.1: 4 Sätze weg von den Schultern, hin zu Brust und Lats: Mo Latzug 3→4, Low-to-High Fly 2→3, Seitheben 3→2, Reverse Pec Deck 2→1 · Do Lat-Rudern 2→3, Reverse Pec Deck 3→2 · Fr Schrägbrust 4→5, Seithebemaschine 5→4. Schultern laufen auf Erhaltung: seitlich 6, hinten 3 plus Anteile aus dem Rudern.</li>
@@ -590,6 +590,7 @@ button.stat{align-items:center;text-align:left}
         <li>V9.3, Übungen nach den Fotos: Do Latzug im Untergriff statt High Row (oberer Rücken ist stark, Lats nicht) und Fr Schrägbank-Kabelfly 30° statt Pec Deck (untere Brust gut, obere flach). Alte Einträge behalten ihren Namen; der Vergleich startet bei der neuen Übung frisch.</li>
         <li>Kein Shrug-Training: Ein eher flacher oberer Trapez lässt die Schultern breiter wirken.</li>
         <li>V9.4: Schrägbrust Fr wieder 4 statt 5 Sätze, dafür Schrägbank-Kabelfly 2→3. Pro Woche bleibt die obere Brust bei 14 Sätzen. Üblich sind 3–4 Arbeitssätze pro Übung; ein 5. Satz derselben Übung bringt nach viel Ermüdung wenig, etwas Übungsvariation hilft dagegen dem Wachstum in einzelnen Muskelbereichen (Kassiano 2022).</li>
+        <li>V9.6, Bauch: Di Kabel-Crunch 2→3, Fr Ab Wheel 2→3, neu Sa Hängendes Knieheben 2 Sätze. Bauch 8 statt 4 direkte Sätze an drei Tagen, zusammen 100 statt 96 Sätze. Sichtbar wird der Bauch weiter vor allem über den Körperfettanteil; Bauchtraining allein senkte das Bauchfett nicht (Vispute 2011).</li>
         <li>Zuhause hat die Bank nur 20° und 40°: Schrägbankdrücken und Schrägbank-Fly auf 40°. Die obere Brust ist zwischen 30° und 45° am aktivsten, über 45° übernimmt die vordere Schulter (Rodríguez-Ridao 2020, EMG). 20° liegt näher an der Flachbank. Spürst du bei 40° fast nur die Schulter, nimm 20°. Der Vergleich startet bei 40° frisch, weil die alten Einträge (20–30°) mit anderem Winkel entstanden sind.</li>
       </ul>
       <h4>Cut-Regeln</h4>
@@ -654,6 +655,8 @@ button.stat{align-items:center;text-align:left}
    tragen die alte Übung in „was“; store.since legt die erste neue Woche fest.
    V9.4: Fr Schrägbrust 5→4, Schrägbank-Kabelfly 2→3 (max. 4 Sätze pro Übung).
    Zuhause hat die Bank 20° und 40°: Schrägbank-Varianten zuhause auf 40°.
+   V9.6 (01.11.2026): Bauch 4→8 Sätze: Di Kabel-Crunch 2→3, Fr Ab Wheel 2→3,
+   neu Sa Hängendes Knieheben 2 (hinten angehängt: Indizes bleiben).
    96 Arbeitssätze pro Woche.
    t: 'schwer' | 'maschine' | 'iso' · s: Arbeitssätze · wu: Aufwärmsätze
    loc: Standardort des Tages · h/hg: Variante an der KSK-Station zuhause
@@ -715,7 +718,7 @@ const DAYS = [
    t:"iso", s:3, lo:8, hi:15, rir:ISO, rest:120, wu:"2",
    cue:"Unten 1–2 s in der Dehnung halten, nicht federn. Knie weitgehend gestreckt, nicht durchdrücken."},
   {n:"Kabel-Crunch", g:"Seil am hohen Zug · kniend, Seil neben dem Kopf",
-   t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:105, wu:"0–1",
+   t:"iso", s:3, lo:10, hi:15, rir:ISO, rest:105, wu:"0–1",
    cue:"Rippen kontrolliert Richtung Becken einrollen. Nicht nur aus der Hüfte nach vorn kippen."},
   {n:"Überkopf-Kabeltrizeps", g:"Seil am hohen Zug · Rücken zum Turm, Ellbogen neben dem Kopf",
    t:"iso", s:3, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
@@ -778,10 +781,10 @@ const DAYS = [
    cue:"Oberarme ruhig am Rumpf. Ellbogen schmerzfrei strecken; das Seil nicht um jeden Preis auseinanderziehen."},
   {n:"Ab Wheel", g:"Beidhändig, kniend · Hüfte bleibt gestreckt",
    h:"Ab Wheel", hg:"Beidhändig, kniend · Hüfte bleibt gestreckt",
-   t:"iso", s:2, lo:8, hi:15, rir:"1–2", rest:120, wu:"1", wut:"3–5 leichte, kürzere Wdh. aus dem Kniestand",
+   t:"iso", s:3, lo:8, hi:15, rir:"1–2", rest:120, wu:"1", wut:"3–5 leichte, kürzere Wdh. aus dem Kniestand",
    cue:"Rippen und Becken kontrollieren. Nur so weit rollen, wie die Rückenposition stabil bleibt; Technikverlust beendet den Satz."}]},
 
- {k:"SA", n:"Samstag", t:"Lower B", f:"Hamstrings · Gluteus · Quads · Waden · Bizeps", loc:"gym", ex:[
+ {k:"SA", n:"Samstag", t:"Lower B", f:"Hamstrings · Gluteus · Quads · Waden · Bizeps · Bauch", loc:"gym", ex:[
   {n:"Romanian Deadlift", g:"Langhantel, pronierter Griff knapp schulterbreit · Stange bleibt am Bein",
    h:"KSK · Smith RDL", hg:"KSK-Stange startet bei 0 kg · Stange am Bein entlang, Hüfte nach hinten",
    t:"schwer", s:3, lo:6, hi:10, rir:"2", rest:240, wu:"3",
@@ -813,7 +816,11 @@ const DAYS = [
   {n:"Kurzhantel-Curl auf der Schrägbank", g:"Bank 45–60° · Untergriff, Arme hängen hinter dem Rumpf",
    h:"KSK · Bayesian Cable Curl", hg:"D-Griff am tiefsten Zug · Rücken zum Turm, Arm hinter dem Rumpf · je Seite, KSK 1:1",
    t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:120, wu:"1",
-   cue:"Arm-Priorität: dritter Bizeps-Termin, 48 h nach Donnerstag. Unten nur bis zur schmerzfreien Dehnung, nicht fallen lassen: Unter AAS reißen Oberkörpersehnen häufiger. Kein Schwung."}]}
+   cue:"Arm-Priorität: dritter Bizeps-Termin, 48 h nach Donnerstag. Unten nur bis zur schmerzfreien Dehnung, nicht fallen lassen: Unter AAS reißen Oberkörpersehnen häufiger. Kein Schwung."},
+  {n:"Hängendes Knieheben", g:"Im Hang an der Klimmzugstange oder im Dip-Stuhl · Rücken an der Lehne",
+   h:"KSK · Reverse Crunch liegend", hg:"Rückenlage, Hände neben dem Körper · Knie zur Brust, Becken einrollen",
+   t:"iso", s:2, lo:10, hi:15, rir:ISO, rest:90, wu:"0–1",
+   cue:"Dritter Bauch-Termin der Woche. Das Becken einrollen, nicht nur die Beine heben: Erst wenn das Becken Richtung Rippen kippt, arbeitet der Bauch. Ohne Schwung, unten kurz ruhig werden."}]}
 ];
 
 /* Alternativen im Gym: gleiches Bewegungsmuster, gleicher Satz- und Wiederholungsbereich. */
@@ -844,6 +851,7 @@ const ALT = {
  "Seithebemaschine":             ["1-Arm Kabel-Seitheben", "Kurzhantel-Seitheben, angelehnt"],
  "Rope Pushdown":                ["Pushdown mit gerader Stange", "Trizeps-Pushdown-Maschine"],
  "Ab Wheel":                     ["Kabel-Crunch stehend, Seil", "Hängendes Knieheben"],
+ "Hängendes Knieheben":          ["Knieheben im Dip-Stuhl", "Reverse Crunch auf der Schrägbank"],
  "Romanian Deadlift":            ["Smith RDL", "45°-Hyperextension, hamstringbetont"],
  "Smith Split Squat":            ["Einbeinige Beinpresse", "Reverse Lunge an der Smith"],
  "Hip Adduction":                ["Kabel-Adduktion", "Copenhagen Plank"],
@@ -885,6 +893,8 @@ const HOW = {
  "Seithebemaschine": {s:["Sitz so einstellen, dass die Schulter auf Höhe der Drehachse ist. Die Pads liegen an den Oberarmen.", "Aufrecht oder mit der Brust am Pad, je nach Gerät. Die Griffe nur locker halten.", "Die Arme über die Pads bis etwa Schulterhöhe nach außen führen.", "Kontrolliert absenken, unten nicht ablegen."], f:"Mit den Händen ziehen statt mit den Oberarmen drücken, Schultern hochziehen, Schwung.", q:"Renaissance Periodization lateral raise machine"},
  "Rope Pushdown": {s:["Seil am hohen Zug, aufrecht oder leicht vorgeneigt stehen.", "Oberarme am Rumpf fixiert. Start mit deutlich gebeugten Ellbogen.", "Das Seil nach unten strecken, am Ende leicht auseinanderziehen, kurz anspannen.", "Kontrolliert zurück, bis die Ellbogen wieder deutlich gebeugt sind."], f:"Ellbogen wandern nach vorn, der Oberkörper drückt mit, Schultern rollen nach vorn.", q:"Renaissance Periodization rope triceps pushdown"},
  "Ab Wheel": {s:["Kniend, Hände schulterbreit am Rad. Becken leicht einrollen, Gesäß anspannen.", "Die Rippen bleiben Richtung Becken gezogen.", "Langsam nach vorn rollen, nur so weit, wie der untere Rücken neutral bleibt.", "Mit dem Bauch zurückziehen, nicht zuerst mit der Hüfte."], f:"Hohlkreuz am Umkehrpunkt, zu weit rollen, Hüfte knickt beim Zurückrollen ein.", v:[["Jeff Nippard", "How To Build A Better Core & Six Pack Abs: Optimal Training Explained", "https://www.youtube.com/watch?v=1G0y8D5rFDc"]]},
+ "Hängendes Knieheben": {s:["An die Stange hängen oder im Dip-Stuhl mit dem Rücken an die Lehne, Schultern aktiv nach unten.", "Die Knie Richtung Brust ziehen und dabei das Becken einrollen, bis es Richtung Rippen kippt.", "Oben kurz halten.", "Langsam absenken und unten ruhig werden, ohne zu schwingen."], f:"Nur die Beine heben, ohne das Becken einzurollen (dann arbeiten vor allem die Hüftbeuger), Schwung aus dem Pendeln.", q:"hanging knee raise technique posterior pelvic tilt"},
+ "KSK · Reverse Crunch liegend": {s:["Auf den Rücken legen, Hände neben dem Körper, Knie gebeugt über der Hüfte.", "Die Knie Richtung Brust ziehen, bis sich das Becken vom Boden abrollt.", "Kurz halten.", "Langsam ablegen, bis der untere Rücken wieder flach am Boden ist."], f:"Mit Schwung aus den Beinen arbeiten, die Hände in den Boden drücken, Hohlkreuz beim Ablegen.", q:"reverse crunch technique"},
  "Romanian Deadlift": {s:["Langhantel knapp schulterbreit, pronierter Griff. Hüftbreiter Stand, Knie leicht gebeugt.", "Rumpf anspannen, Rücken neutral, Schulterblätter leicht zurück.", "Die Hüfte nach hinten schieben, die Stange am Bein entlang absenken, bis die Beinbeuger stark gedehnt sind (meist knapp unter dem Knie).", "Die Hüfte nach vorn bringen und aufrichten, oben nicht überstrecken."], f:"Rundrücken, Stange entfernt sich vom Bein, Knie zu stark beugen (wird zur Kniebeuge), tiefer gehen als der Rücken neutral bleibt.", v:[["Jeff Nippard", "HOW TO DO ROMANIAN DEADLIFTS (RDLs): Build Beefy Hamstrings With Perfect Technique", "https://www.youtube.com/watch?v=_oyxCn2iSjU"]]},
  "Smith Split Squat": {s:["Stange auf dem oberen Rücken. Großer Schritt: vorderer Fuß vor, hinterer auf dem Ballen. Standlänge markieren, Anschläge einstellen.", "Das Gewicht liegt vor allem auf dem vorderen Fuß, Oberkörper leicht nach vorn geneigt.", "Gerade nach unten absenken, bis das hintere Knie knapp über dem Boden ist.", "Über den ganzen vorderen Fuß hochdrücken. Erst alle Wiederholungen einer Seite, dann wechseln."], f:"Stand zu kurz (Ferse hebt ab), vorderes Knie fällt nach innen, mit dem hinteren Bein drücken.", v:[["Jeff Nippard", "The Best & Worst QUAD Exercises (Ranked Using Science)", "https://www.youtube.com/watch?v=kIXcoivzGf8"]]},
  "Hip Adduction": {s:["Pads innen an den Knien. Startweite so wählen, dass eine angenehme Dehnung entsteht.", "Aufrecht sitzen, das Becken bleibt fest am Sitz.", "Die Beine kraftvoll zusammendrücken und kurz halten.", "Langsam zurück in die Dehnung."], f:"Aus der Dehnung federn, Becken kippt, eine zu weite Startposition erzwingen.", q:"Renaissance Periodization hip adduction machine"},
@@ -1265,7 +1275,7 @@ const MUSCLE = {
   "Bayesian Cable Curl":"Bizeps", "Cable Preacher Curl":"Bizeps", "Rope Hammer Curl":"Bizeps", "Kurzhantel-Curl auf der Schrägbank":"Bizeps",
   "Hack Squat":"Quadrizeps", "Beinpresse, Füße mittel/tief":"Quadrizeps", "Beinstrecker, Lehne zurück":"Quadrizeps", "Smith Split Squat":"Quadrizeps",
   "Sitzender Beinbeuger":"Beinbeuger", "Romanian Deadlift":"Beinbeuger",
-  "Stehendes Wadenheben":"Waden", "Kabel-Crunch":"Bauch", "Ab Wheel":"Bauch",
+  "Stehendes Wadenheben":"Waden", "Kabel-Crunch":"Bauch", "Ab Wheel":"Bauch", "Hängendes Knieheben":"Bauch",
   "Hip Adduction":"Hüfte", "Hip Abduction":"Hüfte"
 };
 const PRIO = new Set(["Brust", "Lats", "Bizeps", "Trizeps"]);
@@ -2168,7 +2178,7 @@ function rulesAcc(){
 }
 function renderPlan(){
   const m = modeOf(store.meta.week);
-  hdr.innerHTML = `<div class="hdr-row"><h2 class="hdr-title">Plan</h2><span class="pill static">V9.5 · Cut-Block</span></div>`;
+  hdr.innerHTML = `<div class="hdr-row"><h2 class="hdr-title">Plan</h2><span class="pill static">V9.6 · Cut-Block</span></div>`;
   const plan = {};
   DAYS.forEach(D => D.ex.forEach(ex =>{ const k = MUSCLE[ex.n] || "Sonstiges"; plan[k] = (plan[k] || 0) + setsIn(ex, m); }));
   main.innerHTML = `<div class="view">
@@ -2221,7 +2231,7 @@ function renderMore(){
     </div>
     <p class="fine">Speicher: ${where}.${backend === "local" ? " iOS kann Website-Daten irgendwann aufräumen. Die App erinnert dich nach 7 Tagen an eine Sicherung." : ""}</p>
     <h3 class="sec-h">Über</h3>
-    <div class="list"><div class="li">${icon("info")}<span class="lt"><b>Trainingslog</b><span>Plan V9.5 · App 2.0 · Datenformat ${PLAN}</span></span></div></div>
+    <div class="list"><div class="li">${icon("info")}<span class="lt"><b>Trainingslog</b><span>Plan V9.6 · App 2.0 · Datenformat ${PLAN}</span></span></div></div>
     <p class="fine">Nach einem Update die App einmal ganz schließen und neu öffnen.</p>
   </div>`;
 }
